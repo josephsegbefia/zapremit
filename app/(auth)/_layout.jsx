@@ -12,7 +12,7 @@ const AuthLayout = () => {
             headerShown: false,
           }}
         />
-        <Stack.Screen name='signup' options={{ headerShown: false }} />
+        <Stack.Screen name='signup1' options={{ headerShown: false }} />
       </Stack>
     </>
   );
