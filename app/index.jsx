@@ -26,7 +26,11 @@ export default function App() {
             containerStyles='w-full mt-10'
             handlePress={() => router.push('/login')}
           />
-          <CustomButton title='SIGN UP' containerStyles='w-full mt-4' />
+          <CustomButton
+            title='SIGN UP'
+            containerStyles='w-full mt-4'
+            handlePress={() => router.push('/signup1')}
+          />
           <Text className='text-white font-pregular text-sm mt-7'>
             or continue with
           </Text>

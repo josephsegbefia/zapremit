@@ -17,7 +17,7 @@ import FormField from '../../components/FormField';
 import Logo from '../../components/Logo';
 
 // import {login} from '../../lib/appwrite
-const Signup1 = () => {
+const Signup2 = () => {
   const navigation = useNavigation();
   const [date, setDate] = useState(new Date(1598051730000));
   const [mode, setMode] = useState('date');
@@ -46,7 +46,9 @@ const Signup1 = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submit = () => {};
+  const handleNextClick = () => {
+    router.push('/signup2');
+  };
   return (
     <SafeAreaView className='bg-primary-50 h-full'>
       <ScrollView>
@@ -82,9 +84,11 @@ const Signup1 = () => {
               className='border-2 border-primary-200 w-full h-16 px-4 bg-primary-50 rounded-xl focus:border-primary items-center flex-row mt-4'
               onPress={showDatePicker}
             >
-              <Text className='text-primary font-semibold text-base'>
-                {date.toLocaleDateString()}
-              </Text>
+              {Platform.OS === 'android' && (
+                <Text className='text-primary font-semibold text-base'>
+                  {date.toLocaleDateString()}
+                </Text>
+              )}
               {show && (
                 <DateTimePicker
                   testID='dateTimePicker'
@@ -93,7 +97,7 @@ const Signup1 = () => {
                   is24Hour={true}
                   display='default'
                   onChange={onChange}
-                  style={{ width: '80%' }}
+                  // style={{ width: '%' }}
                 />
               )}
             </TouchableOpacity>
@@ -109,18 +113,18 @@ const Signup1 = () => {
               title='Next'
               containerStyles='w-[100px] mt-3 flex-1'
               isLoading={isSubmitting}
-              handlePress={() => {}}
+              handlePress={handleNextClick}
             />
           </View>
           <View className='justify-center pt-5 flex-row gap-2'>
             <Text className='text-lg text-primary font-regular'>
-              Don't have an account?
+              Have an account already?
             </Text>
             <Link
-              href='/signup1'
+              href='/login'
               className='text-lg font-psemibold text-secondary-100'
             >
-              Sign up
+              Log In
             </Link>
           </View>
         </View>
@@ -129,4 +133,4 @@ const Signup1 = () => {
   );
 };
 
-export default Signup1;
+export default Signup2;
