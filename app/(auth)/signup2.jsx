@@ -1,38 +1,38 @@
 import { useState } from 'react';
-import { useFonts } from 'expo-font';
 import CountryCodeDropdownPicker from 'react-native-dropdown-country-picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   View,
   Text,
-  Alert,
   ScrollView,
-  Button,
-  TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, useNavigation } from 'expo-router';
+import { Link, useNavigation, router } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
 import FormField from '../../components/FormField';
-import Logo from '../../components/Logo';
 
-const Signup1 = () => {
+const Signup2 = () => {
   const navigation = useNavigation();
+
   const [selected, setSelected] = useState('+49');
   const [country, setCountry] = useState('');
   const [phone, setPhone] = useState('');
 
   const [form, setForm] = useState({
+    country: country.name,
     streetAddress: '',
     state: '',
     city: '',
+    password: '',
+    consfirmPassword: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submit = () => {};
+  const submit = () => {
+    router.replace('/send');
+  };
 
   return (
     <SafeAreaView className='bg-primary-50 h-full'>
@@ -56,7 +56,7 @@ const Signup1 = () => {
               phone={phone}
               setPhone={setPhone}
               countryCodeTextStyles={{
-                fontSize: 15,
+                fontSize: 14,
                 fontFamily: 'Poppins-SemiBold',
               }}
               countryCodeContainerStyles={{
@@ -101,36 +101,48 @@ const Signup1 = () => {
               handleChangeText={(e) => setForm({ ...form, city: e })}
               otherStyles='mt-3'
             />
-            <View className='flex flex-row w-full'>
-              <CustomButton
-                title='Back'
-                containerStyles='w-[100px] mt-3 mr-3 bg-transparent border-primary-red flex-2'
-                textStyles='text-primary-red'
-                handlePress={() => navigation.goBack()}
-              />
-              <CustomButton
-                title='SUBMIT'
-                containerStyles='w-[100px] mt-3 flex-1'
-                isLoading={isSubmitting}
-                handlePress={submit}
-              />
-            </View>
-            <View className='justify-center pt-5 flex-row gap-2'>
-              <Text className='text-lg text-primary font-regular'>
-                Don't have an account?
-              </Text>
-              <Link
-                href='/signup1'
-                className='text-lg font-psemibold text-secondary-100'
-              >
-                Sign up
-              </Link>
-            </View>
+            <FormField
+              title='Password'
+              value={form.password}
+              handleChangeText={(e) => setForm({ ...form, password: e })}
+              otherStyles='mt-3'
+            />
+            <FormField
+              title='Confirm Password'
+              value={form.password}
+              handleChangeText={(e) => setForm({ ...form, password: e })}
+              otherStyles='mt-3'
+            />
           </View>
         </ScrollView>
+        <View className='flex flex-row px-4 mt-5'>
+          <CustomButton
+            title='Back'
+            containerStyles='w-[100px] mt-3 mr-3 bg-transparent border-primary-red flex-2'
+            textStyles='text-primary-red'
+            handlePress={() => navigation.goBack()}
+          />
+          <CustomButton
+            title='SUBMIT'
+            containerStyles='w-[100px] mt-3 flex-1'
+            isLoading={isSubmitting}
+            handlePress={submit}
+          />
+        </View>
+        <View className='justify-center pt-5 flex-row gap-2'>
+          <Text className='text-lg text-primary font-regular'>
+            Don't have an account?
+          </Text>
+          <Link
+            href='/signup1'
+            className='text-lg font-psemibold text-secondary-100'
+          >
+            Sign up
+          </Link>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
-export default Signup1;
+export default Signup2;

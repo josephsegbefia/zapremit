@@ -18,16 +18,16 @@ import FormField from '../../components/FormField';
 import Logo from '../../components/Logo';
 
 // import {login} from '../../lib/appwrite
-const Signup2 = () => {
+const Signup1 = () => {
   const navigation = useNavigation();
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    dob: '',
+    // dob: date,
   });
 
   const onChange = (event, selectedDate) => {
@@ -48,8 +48,19 @@ const Signup2 = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleNextClick = () => {
+    // const age = new Date().getFullYear() - date.getFullYear();
+    // if (age < 18) {
+    //   Alert.alert('Error', 'You must be over 18 years to register');
+    //   return;
+    // }
+    // if (!form.firstName || !form.lastName) {
+    //   Alert.alert('Error', 'Check your inputs!');
+    //   return;
+    // }
+
     router.push('/signup2');
   };
+
   return (
     <SafeAreaView className='bg-primary-50 h-full'>
       <KeyboardAvoidingView
@@ -108,36 +119,36 @@ const Signup2 = () => {
                 )}
               </TouchableOpacity>
             </View>
-            <View className='flex flex-row w-full'>
-              <CustomButton
-                title='Back'
-                containerStyles='w-[100px] mt-3 mr-3 bg-transparent border-primary-red flex-2'
-                textStyles='text-primary-red'
-                handlePress={() => navigation.goBack()}
-              />
-              <CustomButton
-                title='Next'
-                containerStyles='w-[100px] mt-3 flex-1'
-                isLoading={isSubmitting}
-                handlePress={handleNextClick}
-              />
-            </View>
-            <View className='justify-center pt-5 flex-row gap-2'>
-              <Text className='text-lg text-primary font-regular'>
-                Have an account already?
-              </Text>
-              <Link
-                href='/login'
-                className='text-lg font-psemibold text-secondary-100'
-              >
-                Log In
-              </Link>
-            </View>
           </View>
         </ScrollView>
+        <View className='flex flex-row w-full px-4 mt-5'>
+          <CustomButton
+            title='Back'
+            containerStyles='w-[100px] mt-3 mr-3 bg-transparent border-primary-red flex-2'
+            textStyles='text-primary-red'
+            handlePress={() => navigation.goBack()}
+          />
+          <CustomButton
+            title='Next'
+            containerStyles='w-[100px] mt-3 flex-1'
+            isLoading={isSubmitting}
+            handlePress={handleNextClick}
+          />
+        </View>
+        <View className='justify-center pt-5 flex-row gap-2'>
+          <Text className='text-lg text-primary font-regular'>
+            Have an account already?
+          </Text>
+          <Link
+            href='/login'
+            className='text-lg font-psemibold text-secondary-100'
+          >
+            Log In
+          </Link>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
-export default Signup2;
+export default Signup1;
