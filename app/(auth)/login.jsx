@@ -12,6 +12,7 @@ import { Link, Router, router, useNavigation } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
 import FormField from '../../components/FormField';
 import Logo from '../../components/Logo';
+import { signIn } from '../../lib/appwrite';
 
 // import {login} from '../../lib/appwrite
 const Login = () => {
@@ -23,7 +24,19 @@ const Login = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submit = () => {};
+  const submit = async () => {
+    if (!form.email || !form.password) {
+      Alert.alert('Error', 'Please fil all fields');
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await signIn(form.email, form.password);
+      router.replace('/home');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  };
   return (
     <SafeAreaView className='bg-primary-50 h-full'>
       <KeyboardAvoidingView
