@@ -21,9 +21,10 @@ const Signup2 = () => {
     confirmPassword: '',
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const submit = () => {
+    if (!form.password || !form.confirmPassword) {
+      return;
+    }
     setSignupData({
       ...signupData,
       password: form.password,
@@ -32,7 +33,6 @@ const Signup2 = () => {
     router.replace('/signup3');
   };
 
-  console.log(signupData);
   return (
     <SafeAreaView className='bg-primary-50 h-full'>
       <KeyboardAvoidingView
@@ -71,7 +71,7 @@ const Signup2 = () => {
           <CustomButton
             title='NEXT'
             containerStyles='w-[100px] mt-3 flex-1'
-            isLoading={isSubmitting}
+            // isLoading={isSubmitting}
             handlePress={submit}
           />
         </View>

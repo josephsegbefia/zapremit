@@ -3,7 +3,7 @@ import CountryCodeDropdownPicker from 'react-native-dropdown-country-picker';
 import {
   View,
   Text,
-  ScrollView,
+  Alert,
   Platform,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
@@ -14,27 +14,61 @@ import { Link, useNavigation, router } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
 import FormField from '../../components/FormField';
 import { SignupContext } from '../../context/signup-context';
+import { createUser } from '../../lib/appwrite';
 
 const Signup3 = () => {
   const { signupData, setSignupData } = useContext(SignupContext);
   const navigation = useNavigation();
 
-  const [selected, setSelected] = useState('+49');
+  const [selected, setSelected] = useState('+233');
   const [country, setCountry] = useState('');
   const [phone, setPhone] = useState('');
 
+  let countryName;
+  if (country) {
+    countryName = country.name;
+  }
+
+  console.log(countryName);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submit = () => {
+  const submit = async () => {
     setSignupData({
       ...signupData,
-      country: country.name,
-      phoneNumber: `${selected}${phone}`,
+      country: countryName,
+      phone: `${selected}${phone}`,
     });
-    router.replace('/confirmOTP');
+    if (!phone || !country) {
+      Alert.alert(
+        'Error',
+        'Please select a country and enter your phone number'
+      );
+      return;
+    }
+    setIsSubmitting(true);
+    const firstName = signupData.firstName.trim();
+    const lastName = signupData.lastName.trim();
+    const email = signupData.email.trim();
+    const password = signupData.password.trim();
+
+    try {
+      const result = await createUser(
+        firstName,
+        lastName,
+        email,
+        password,
+        countryName,
+        phone
+      );
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+    // router.replace('/confirmOTP');
   };
 
-  console.log(signupData);
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView className='bg-primary-50 h-full'>

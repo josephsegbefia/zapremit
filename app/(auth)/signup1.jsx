@@ -31,10 +31,10 @@ const Signup1 = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleNextClick = () => {
-    // if (!form.firstName || !form.lastName || !form.email) {
-    //   Alert.alert('Error', 'Check your inputs!');
-    //   return;
-    // }
+    if (!form.firstName || !form.lastName || !form.email) {
+      Alert.alert('Error', 'Check your inputs!');
+      return;
+    }
     setSignupData({
       ...signupData,
       firstName: form.firstName,
@@ -88,7 +88,7 @@ const Signup1 = () => {
           <CustomButton
             title='Next'
             containerStyles='w-[100px] mt-3 flex-1'
-            isLoading={isSubmitting}
+            // isLoading={isSubmitting}
             handlePress={handleNextClick}
           />
         </View>
