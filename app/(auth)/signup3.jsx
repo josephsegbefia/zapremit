@@ -23,11 +23,6 @@ const Signup3 = () => {
   const [country, setCountry] = useState('');
   const [phone, setPhone] = useState('');
 
-  // const [form, setForm] = useState({
-  //   password: '',
-  //   consfirmPassword: '',
-  // });
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = () => {
