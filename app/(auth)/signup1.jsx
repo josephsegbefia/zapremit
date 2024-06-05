@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
@@ -16,47 +16,31 @@ import { Link, Router, router, useNavigation } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
 import FormField from '../../components/FormField';
 import Logo from '../../components/Logo';
+import { SignupContext } from '../../context/signup-context';
 
 // import {login} from '../../lib/appwrite
 const Signup1 = () => {
   const navigation = useNavigation();
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
+  const { signupData, setSignupData } = useContext(SignupContext);
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    // dob: date,
   });
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    // setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-  };
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-
-  const showDatePicker = () => {
-    showMode('date');
-  };
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleNextClick = () => {
-    // const age = new Date().getFullYear() - date.getFullYear();
-    // if (age < 18) {
-    //   Alert.alert('Error', 'You must be over 18 years to register');
-    //   return;
-    // }
-    // if (!form.firstName || !form.lastName) {
+    // if (!form.firstName || !form.lastName || !form.email) {
     //   Alert.alert('Error', 'Check your inputs!');
     //   return;
     // }
+    setSignupData({
+      ...signupData,
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email,
+    });
 
     router.push('/signup2');
   };
@@ -69,7 +53,7 @@ const Signup1 = () => {
         style={{ flex: 1 }}
       >
         <ScrollView>
-          <View className='w-full justify-center px-4 my-6'>
+          <View className='w-full justify-center px-4'>
             <Text className='text-2xl text-primary text-semibold mt-5 text-center font-semibold'>
               Sign up to zap
             </Text>
@@ -92,36 +76,9 @@ const Signup1 = () => {
               otherStyles='mt-3'
               keyboardType='email-address'
             />
-
-            <View style={{ flex: 1 }}>
-              <Text className='text-base text-black-200 font-pmedium mt-3'>
-                Date of Birth
-              </Text>
-              <TouchableOpacity
-                className='border-2 border-primary-200 w-full h-16 px-4 bg-primary-50 rounded-xl focus:border-primary items-center flex-row mt-4'
-                onPress={showDatePicker}
-              >
-                {Platform.OS === 'android' && (
-                  <Text className='text-primary font-semibold text-base'>
-                    {date.toLocaleDateString()}
-                  </Text>
-                )}
-                {show && (
-                  <DateTimePicker
-                    testID='dateTimePicker'
-                    value={date}
-                    mode={mode}
-                    is24Hour={true}
-                    display='default'
-                    onChange={onChange}
-                    // style={{ width: '%' }}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
           </View>
         </ScrollView>
-        <View className='flex flex-row w-full px-4 mt-5'>
+        <View className='flex flex-row w-full px-4'>
           <CustomButton
             title='Back'
             containerStyles='w-[100px] mt-3 mr-3 bg-transparent border-primary-red flex-2'
@@ -135,7 +92,7 @@ const Signup1 = () => {
             handlePress={handleNextClick}
           />
         </View>
-        <View className='justify-center pt-5 flex-row gap-2'>
+        <View className='justify-center pt-5 flex-row gap-2 mb-3'>
           <Text className='text-lg text-primary font-regular'>
             Have an account already?
           </Text>

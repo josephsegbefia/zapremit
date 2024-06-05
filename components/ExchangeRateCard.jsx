@@ -39,9 +39,9 @@ const ExchangeRateCard = ({ title, hostCountryId, recipientCountryId }) => {
         <TouchableOpacity
           onPress={() => router.replace('/send')}
           activeOpacity={0.3}
-          className='bg-primary-200 border-primary border rounded-full justify-center items-center w-[80%] py-1'
+          className='bg-primary-200 border-primary border rounded-full justify-center items-center w-[90%] py-1'
         >
-          <Text className='text-primary text-xl font-psemibold'>Send Now</Text>
+          <Text className='text-primary text-xl font-pregular'>Send Now</Text>
         </TouchableOpacity>
       </View>
     </View>
