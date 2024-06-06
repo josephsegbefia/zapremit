@@ -6,7 +6,7 @@ import CustomButton from './CustomButton';
 
 const ExchangeRateCard = ({ title, hostCountryId, recipientCountryId }) => {
   return (
-    <View className='border border-primary rounded-xl'>
+    <View className='bg-white rounded-xl'>
       <Text className='text-center text-primary font-psemibold text-sm py-5'>
         {title}
       </Text>
@@ -15,7 +15,7 @@ const ExchangeRateCard = ({ title, hostCountryId, recipientCountryId }) => {
           <CountryFlag
             isoCode={hostCountryId}
             size={50}
-            className='border rounded-full w-[70px] h-[70px]'
+            className='rounded-full w-[50px] h-[50px]'
           />
           <Text className='text-center mt-3 text-primary font-pbold'>
             1.00 EUR
@@ -28,7 +28,7 @@ const ExchangeRateCard = ({ title, hostCountryId, recipientCountryId }) => {
           <CountryFlag
             isoCode={recipientCountryId}
             size={50}
-            className='border rounded-full w-[70px] h-[70px]'
+            className='rounded-full w-[50px] h-[50px]'
           />
           <Text className='text-center mt-3 text-primary font-pbold'>
             17.00 GHS
@@ -39,9 +39,9 @@ const ExchangeRateCard = ({ title, hostCountryId, recipientCountryId }) => {
         <TouchableOpacity
           onPress={() => router.replace('/send')}
           activeOpacity={0.3}
-          className='bg-primary-200 border-primary border rounded-full justify-center items-center w-[90%] py-1'
+          className='bg-primary-200 border-none rounded-full justify-center items-center w-[80%] py-1'
         >
-          <Text className='text-primary text-xl font-pregular'>Send Now</Text>
+          <Text className='text-primary text-xl font-psemibold'>Send</Text>
         </TouchableOpacity>
       </View>
     </View>
