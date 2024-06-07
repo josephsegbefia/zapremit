@@ -13,7 +13,7 @@ const Home = () => {
             Welcome back, Joseph
           </Text>
         </View>
-        <View className='justify-center text-center w-[90%] mt-5'>
+        <View className='justify-center text-center w-[95%] mt-5'>
           <ExchangeRateCard
             title='Current Rate'
             hostCountryId='de'
@@ -25,7 +25,7 @@ const Home = () => {
             Recent Transfers
           </Text>
         </View>
-        <View className='w-[90%] mt-10'>
+        <View className='w-[95%] mt-10'>
           <CustomCard
             firstName='Harry'
             lastName='Potter'
@@ -37,6 +37,14 @@ const Home = () => {
           <CustomCard
             firstName='Severus'
             lastName='Snape'
+            amount='300 GHS'
+            date='May, 27 2024'
+            status='delivered'
+            isTransferHistory
+          />
+          <CustomCard
+            firstName='S'
+            lastName='S'
             amount='300 GHS'
             date='May, 27 2024'
             status='delivered'
