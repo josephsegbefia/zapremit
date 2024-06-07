@@ -7,7 +7,7 @@ import CustomCard from '../../components/CustomCard';
 const Home = () => {
   return (
     <ScrollView className='h-full bg-primary-50'>
-      <SafeAreaView className='items-center'>
+      <SafeAreaView className='items-center mb-10'>
         <View className='mt-8'>
           <Text className='text-primary font-psemibold text-xl'>
             Welcome back, Joseph

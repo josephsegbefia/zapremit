@@ -15,7 +15,9 @@ const CustomCard = ({
 
   return (
     <View>
-      <View className={` border-none bg-white w-full rounded-xl py-3 mt-3`}>
+      <View
+        className={` border-none bg-white w-full rounded-xl py-3 px-3 mt-3`}
+      >
         <View className='flex flex-row justify-evenly gap-3'>
           <View className='w-[50px] h-[50px] items-center justify-center rounded-full border-2 border-primary mx-3'>
             <Text className='text-primary font-psemibold'>{initials}</Text>
@@ -37,9 +39,9 @@ const CustomCard = ({
             {status === 'delivered' ? 'Succesful' : 'Problematic'}
           </Text>
           {isTransferHistory && (
-            <TouchableOpacity className='border rounded-full px-2'>
-              <Text className='text-sm font-semibold text-primary'>
-                Send Again
+            <TouchableOpacity className='border rounded-full px-4'>
+              <Text className='text-sm font-semibold text-primary text-center py-0.5'>
+                View
               </Text>
             </TouchableOpacity>
           )}
