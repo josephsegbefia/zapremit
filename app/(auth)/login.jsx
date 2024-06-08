@@ -10,12 +10,14 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, Router, router, useNavigation } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
+import { useGlobalContext } from '../../context/GlobalProvider';
 import FormField from '../../components/FormField';
 import Logo from '../../components/Logo';
-import { signIn } from '../../lib/appwrite';
+import { getCurrentUser, signIn } from '../../lib/appwrite';
 
 // import {login} from '../../lib/appwrite
 const Login = () => {
+  const { setUser, setIsLoggedIn } = useGlobalContext();
   const navigation = useNavigation();
   const [form, setForm] = useState({
     email: '',
@@ -32,6 +34,9 @@ const Login = () => {
     setIsSubmitting(true);
     try {
       await signIn(form.email, form.password);
+      const result = await getCurrentUser();
+      setUser(result);
+      setIsLoggedIn(true);
       router.replace('/home');
     } catch (error) {
       Alert.alert('Error', error.message);
