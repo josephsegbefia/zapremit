@@ -23,7 +23,9 @@ const CustomCard = ({
               <Text className='text-primary font-psemibold'>{initials}</Text>
             </View>
             <View className='py-3'>
-              <Text className='text-xl font-psemibold'>{fullName}</Text>
+              <Text className='text-xl font-psemibold text-primary'>
+                {fullName}
+              </Text>
             </View>
           </View>
 

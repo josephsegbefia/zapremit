@@ -14,10 +14,12 @@ import { Link, useNavigation, router } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
 import FormField from '../../components/FormField';
 import { SignupContext } from '../../context/signup-context';
+import { useGlobalContext } from '../../context/GlobalProvider';
 import { createUser } from '../../lib/appwrite';
 
 const Signup3 = () => {
   const { signupData, setSignupData } = useContext(SignupContext);
+  const { setUser, setIsLoggedIn } = useGlobalContext();
   const navigation = useNavigation();
 
   const [selected, setSelected] = useState('+233');
@@ -61,6 +63,8 @@ const Signup3 = () => {
         countryName,
         phone
       );
+      setUser(result);
+      setIsLoggedIn(true);
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {

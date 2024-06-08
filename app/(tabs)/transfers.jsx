@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import EmptyState from '../../components/EmptyState';
 import CustomCard from '../../components/CustomCard';
 
@@ -8,38 +8,7 @@ const Transfers = () => {
   return (
     <SafeAreaView className='h-full bg-primary-50 flex-1'>
       <FlatList
-        data={
-          [
-            // {
-            //   firstName: 'Joseph',
-            //   lastName: 'Segbefia',
-            //   date: '20th May, 2024',
-            //   amount: '3020.78 GHS',
-            //   status: 'falied',
-            // },
-            // {
-            //   firstName: 'Joseph',
-            //   lastName: 'Segbefia',
-            //   date: '20th May, 2024',
-            //   amount: '3020.78 GHS',
-            //   status: 'falied',
-            // },
-            // {
-            //   firstName: 'Joseph',
-            //   lastName: 'Segbefia',
-            //   date: '20th May, 2024',
-            //   amount: '3020.78 GHS',
-            //   status: 'falied',
-            // },
-            // {
-            //   firstName: 'Joseph',
-            //   lastName: 'Segbefia',
-            //   date: '20th May, 2024',
-            //   amount: '3020.78 GHS',
-            //   status: 'falied',
-            // },
-          ]
-        }
+        data={[]}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <View className='w-full items-center'>
@@ -55,17 +24,12 @@ const Transfers = () => {
             </View>
           </View>
         )}
+        stickyHeaderIndices={[0]}
+        ListHeaderComponentStyle={styles.header}
         ListHeaderComponent={() => (
           <View className='my-3 px-4 space-y-6'>
             <View className='justify-between items-start flex-row mb-6'>
               <View>
-                {/* <Text className='font-pmedium text-sm text-primary'>
-                  Hello,
-                </Text>
-                <Text className='text-xl font-pbold text-primary'>Joseph</Text>
-                <Text className='text-sm text-primary font-psemibold'>
-                  Have a look at all your transfers
-                </Text> */}
                 <Text className='mt-10 text-primary text-2xl font-pbold'>
                   Transfers
                 </Text>
@@ -86,3 +50,9 @@ const Transfers = () => {
 };
 
 export default Transfers;
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#e0f2f1',
+  },
+});

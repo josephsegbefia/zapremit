@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import useAppwrite from '../../lib/useAppwrite';
 import { getRecipients } from '../../lib/appwrite';
@@ -15,17 +16,17 @@ import CustomCard from '../../components/CustomCard';
 import { Ionicons } from '@expo/vector-icons';
 import CustomButton from '../../components/CustomButton';
 import { useGlobalContext } from '../../context/GlobalProvider';
-import { StatusBar } from 'expo-status-bar';
 
 const Recipients = () => {
-  const { user, setUser } = useGlobalContext();
-
+  const { user, setUser, isLoading } = useGlobalContext();
   const { data: recipients } = useAppwrite(() => getRecipients(user.$id));
 
-  console.log(recipients);
+  if (isLoading) {
+    return <ActivityIndicator size='large' color={'#004d40'} />;
+  }
+
   return (
     <>
-      <StatusBar color='#004d40' />
       <SafeAreaView className='h-full bg-primary-50 flex-1'>
         <FlatList
           data={recipients}
@@ -51,7 +52,7 @@ const Recipients = () => {
                   </Text>
                 </View>
                 <View className='mt-11'>
-                  <Ionicons name='person-add' size={24} color='black' />
+                  <Ionicons name='person-add' size={24} color='#004d40' />
                 </View>
               </View>
             </View>
