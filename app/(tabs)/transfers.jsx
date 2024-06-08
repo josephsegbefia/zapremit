@@ -59,12 +59,15 @@ const Transfers = () => {
           <View className='my-3 px-4 space-y-6'>
             <View className='justify-between items-start flex-row mb-6'>
               <View>
-                <Text className='font-pmedium text-sm text-primary'>
+                {/* <Text className='font-pmedium text-sm text-primary'>
                   Hello,
                 </Text>
                 <Text className='text-xl font-pbold text-primary'>Joseph</Text>
                 <Text className='text-sm text-primary font-psemibold'>
                   Have a look at all your transfers
+                </Text> */}
+                <Text className='mt-10 text-primary text-2xl font-pbold'>
+                  Transfers
                 </Text>
               </View>
             </View>

@@ -36,13 +36,18 @@ const ExchangeRateCard = ({ title, hostCountryId, recipientCountryId }) => {
         </View>
       </View>
       <View className='items-center py-5'>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => router.replace('/send')}
           activeOpacity={0.3}
           className='bg-primary-200 border-none rounded-full justify-center items-center w-[80%] py-1'
         >
           <Text className='text-primary text-xl font-psemibold'>Send</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <CustomButton
+          title='Send Now'
+          containerStyles='w-[80%]'
+          handlePress={() => router.push('/send')}
+        />
       </View>
     </View>
   );
