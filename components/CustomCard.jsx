@@ -33,7 +33,7 @@ const CustomCard = ({
             <Text className='text-xl font-psemibold'>{fullName}</Text>
           </View> */}
           <View>
-            <Text className='py-4 font-psemibold'>{amount}</Text>
+            <Text className='py-4 font-psemibold text-primary'>{amount}</Text>
           </View>
         </View>
         {isTransferHistory && (
