@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as Animatable from 'react-native-animatable';
+import { router } from 'expo-router';
 import {
   View,
   Text,
@@ -34,7 +34,15 @@ const Recipients = () => {
           renderItem={({ item }) => (
             <View className='w-full items-center'>
               <View className='w-[95%]'>
-                <TouchableOpacity onPress={() => {}} activeOpacity={0.3}>
+                <TouchableOpacity
+                  onPress={() => {
+                    router.push({
+                      pathname: '/extrascreens/recipienttransfers',
+                      params: { item: JSON.stringify(item) },
+                    });
+                  }}
+                  activeOpacity={0.3}
+                >
                   <CustomCard
                     firstName={item.firstName}
                     lastName={item.lastName}
