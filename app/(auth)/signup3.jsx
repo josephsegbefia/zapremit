@@ -31,8 +31,6 @@ const Signup3 = () => {
     countryName = country.name;
   }
 
-  console.log(countryName);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = async () => {
@@ -70,7 +68,7 @@ const Signup3 = () => {
     } finally {
       setIsSubmitting(false);
     }
-    // router.replace('/confirmOTP');
+    router.replace('/home');
   };
 
   return (

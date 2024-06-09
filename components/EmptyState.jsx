@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { images } from '../constants';
 import CustomButton from './CustomButton';
 
-const EmptyState = ({ title, subtitle, buttonLabel }) => {
+const EmptyState = ({ title, subtitle, buttonLabel, handlePress }) => {
   return (
     <View className='justify-center items-center px-4'>
       <Image
@@ -20,7 +20,7 @@ const EmptyState = ({ title, subtitle, buttonLabel }) => {
       <CustomButton
         title={buttonLabel}
         containerStyles='w-full my-5'
-        handlePress={() => router.push('/send')}
+        handlePress={handlePress}
       />
     </View>
   );

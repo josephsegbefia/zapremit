@@ -60,7 +60,12 @@ const Recipients = () => {
                   </Text>
                 </View>
                 <View className='mt-11'>
-                  <Ionicons name='person-add' size={24} color='#004d40' />
+                  <Ionicons
+                    name='person-add'
+                    size={24}
+                    color='#004d40'
+                    onPress={() => router.push('/extrascreens/addrecipient')}
+                  />
                 </View>
               </View>
             </View>
@@ -72,6 +77,7 @@ const Recipients = () => {
               title='No recipients found'
               subtitle='Your transfers will appear here'
               buttonLabel='Add recipient'
+              handlePress={() => router.push('/extrascreens/addrecipient')}
             />
           )}
         />

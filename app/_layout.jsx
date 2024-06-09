@@ -41,6 +41,10 @@ const RootLayout = () => {
           name='extrascreens/recipienttransfers'
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name='extrascreens/addrecipient'
+          options={{ headerShown: false }}
+        />
       </Stack>
     </GlobalProvider>
   );
