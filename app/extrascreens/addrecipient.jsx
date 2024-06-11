@@ -1,58 +1,65 @@
 import { useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomCountryPhone from '../../components/CustomCountryPhone';
 import FormField from '../../components/FormField';
 
 const AddRecipient = () => {
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [form, setForm] = useState({
     firstName: '',
-    middleName: '',
     lastName: '',
-    phone: '',
     email: '',
+    callingCode: '',
+    phone: '',
   });
   return (
-    <SafeAreaView className='bg-primary-50 h-full px-6'>
-      <ScrollView>
-        <Text className='mt-10 text-primary text-2xl font-pbold'>
-          Add Recipient
-        </Text>
-        <View className='mt-5'>
-          <FormField
-            title='First Name'
-            value={form.firstName}
-            handleChangeText={(e) => setForm({ ...form, firstName: e })}
-            otherStyles='mt-7'
-          />
-          <FormField
-            title='Middle Name'
-            value={form.middleName}
-            handleChangeText={(e) => setForm({ ...form, middleName: e })}
-            otherStyles='mt-3'
-          />
-          <FormField
-            title='Last Name'
-            value={form.lastName}
-            handleChangeText={(e) => setForm({ ...form, lastName: e })}
-            otherStyles='mt-3'
-          />
-          <FormField
-            title='Email'
-            value={form.email}
-            handleChangeText={(e) => setForm({ ...form, email: e })}
-            otherStyles='mt-3'
-            keyboardType='email-address'
-          />
-          <FormField
-            title='Phone Number'
-            value={form.phone}
-            handleChangeText={(e) => setForm({ ...form, phone: e })}
-            otherStyles='mt-3'
-            keyboardType='phone-pad'
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView className='h-full bg-primary-50'>
+        {/* <CustomCountryPhone /> */}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+          style={{ flex: 1 }}
+        >
+          <View className='w-[90%]'>
+            <Text className='px-4 text-sm text-primary font-psemibold mb-4'>
+              Recipient's contact information
+            </Text>
+          </View>
+
+          <View className='flex-1 items-center'>
+            <View className='w-[90%]'>
+              <FormField title='First Name' otherStyles='mt-4' />
+              <FormField title='Last Name' otherStyles='mt-4' />
+              <FormField title='Email' otherStyles='mt-4' />
+              {/* Replace this section with country selector - waiting for the website to behave well */}
+              <Text className='text-base text-primary font-pmedium mt-4'>
+                Phone Number
+              </Text>
+              <View className='flex flex-row gap-x-2.5'>
+                <View className='w-[25%]'>
+                  <FormField placeholder='+49' keyboardType='number-pad' />
+                </View>
+                <View className='w-[70%]'>
+                  <FormField placeholder='15213111325' />
+                </View>
+              </View>
+              {/* End of replacement */}
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

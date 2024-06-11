@@ -43,7 +43,18 @@ const RootLayout = () => {
         />
         <Stack.Screen
           name='extrascreens/addrecipient'
-          options={{ headerShown: false }}
+          options={{
+            title: 'Add new recipient',
+            headerBackTitle: 'Back',
+            headerStyle: {
+              backgroundColor: '#e0f2f1',
+              fontWeight: 'bold',
+            },
+            headerTintColor: '#004d40',
+            headerBackTitleStyle: {
+              color: 'red',
+            },
+          }}
         />
       </Stack>
     </GlobalProvider>
