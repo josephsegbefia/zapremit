@@ -22,7 +22,9 @@ const CustomCard = ({
 
   return (
     <View className='w-100%'>
-      <View className={` border-none bg-white rounded-xl px-3 py-3 mt-3`}>
+      <View
+        className={`border-none bg-white rounded-xl px-3 py-3 mt-3 ${customStyles}`}
+      >
         <View className='flex flex-row justify-between gap-3'>
           <View className='flex flex-row'>
             <View className='w-[50px] h-[50px] items-center justify-center rounded-full border-2 border-primary mx-3'>

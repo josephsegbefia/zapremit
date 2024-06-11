@@ -22,7 +22,11 @@ const Recipients = () => {
   const { data: recipients } = useAppwrite(() => getRecipients(user.$id));
 
   if (isLoading) {
-    return <ActivityIndicator size='large' color={'#004d40'} />;
+    return (
+      <SafeAreaView className='h-full bg-primary-50 flex-1 justify-center items-center'>
+        <Text className='text-2xl text-primary-red font-pbold'>Loading...</Text>
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -61,12 +65,11 @@ const Recipients = () => {
                   </Text>
                 </View>
                 <View className='mt-11'>
-                  <Ionicons
-                    name='person-add'
-                    size={24}
-                    color='#004d40'
+                  <TouchableOpacity
                     onPress={() => router.push('/extrascreens/addrecipient')}
-                  />
+                  >
+                    <Ionicons name='person-add' size={24} color='#004d40' />
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
