@@ -33,14 +33,7 @@ const AddRecipient = () => {
   const phone = `${code}${number}`;
 
   const submit = async () => {
-    if (
-      !form.firstName ||
-      !form.lastName ||
-      !form.middleName ||
-      !form.email ||
-      !code ||
-      !number
-    ) {
+    if (!form.firstName || !form.lastName || !form.email || !code || !number) {
       return Alert.alert('Error', 'Please fill in all the fields');
     }
     setIsSubmitting(true);
@@ -58,7 +51,7 @@ const AddRecipient = () => {
       });
       setCode('');
       setNumber('');
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 

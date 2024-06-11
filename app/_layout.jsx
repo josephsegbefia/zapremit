@@ -39,7 +39,18 @@ const RootLayout = () => {
         <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
         <Stack.Screen
           name='extrascreens/recipienttransfers'
-          options={{ headerShown: false }}
+          options={{
+            title: 'Recipient Transfers',
+            headerBackTitle: 'Back',
+            headerStyle: {
+              backgroundColor: '#e0f2f1',
+              fontWeight: 'bold',
+            },
+            headerTintColor: '#004d40',
+            headerBackTitleStyle: {
+              color: '#004d40',
+            },
+          }}
         />
         <Stack.Screen
           name='extrascreens/addrecipient'
@@ -52,7 +63,7 @@ const RootLayout = () => {
             },
             headerTintColor: '#004d40',
             headerBackTitleStyle: {
-              color: 'red',
+              // color: 'red',
             },
           }}
         />
