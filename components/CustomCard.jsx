@@ -12,7 +12,13 @@ const CustomCard = ({
   isTransferHistory,
 }) => {
   const initials = firstName.charAt(0) + lastName.charAt(0);
-  const fullName = firstName + ' ' + lastName;
+
+  let fullName;
+  if (middleName) {
+    fullName = firstName + middleName + lastName;
+  } else {
+    fullName = firstName + ' ' + lastName;
+  }
 
   return (
     <View className='w-100%'>

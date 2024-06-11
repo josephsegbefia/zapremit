@@ -45,6 +45,7 @@ const Recipients = () => {
                 >
                   <CustomCard
                     firstName={item.firstName}
+                    middleName={item?.middleName}
                     lastName={item.lastName}
                   />
                 </TouchableOpacity>
