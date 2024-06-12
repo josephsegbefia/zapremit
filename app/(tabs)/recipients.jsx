@@ -16,16 +16,19 @@ import CustomCard from '../../components/CustomCard';
 import { Ionicons } from '@expo/vector-icons';
 import CustomButton from '../../components/CustomButton';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import LoadingOverlay from '../../components/LoadingOverlay';
 
 const Recipients = () => {
-  const { user, setUser, isLoading } = useGlobalContext();
-  const { data: recipients } = useAppwrite(() => getRecipients(user.$id));
+  const { user, setUser } = useGlobalContext();
+  const { data: recipients, isLoading: isLoading } = useAppwrite(() =>
+    getRecipients(user.$id)
+  );
 
   if (isLoading) {
     return (
-      <SafeAreaView className='h-full bg-primary-50 flex-1 justify-center items-center'>
-        <Text className='text-2xl text-primary-red font-pbold'>Loading...</Text>
-      </SafeAreaView>
+      <View className='mt-100'>
+        <LoadingOverlay message='Loading...' />
+      </View>
     );
   }
 

@@ -67,6 +67,21 @@ const RootLayout = () => {
             },
           }}
         />
+        <Stack.Screen
+          name='extrascreens/editrecipient'
+          options={{
+            title: 'Edit recipient data',
+            headerBackTitle: 'Back',
+            headerStyle: {
+              backgroundColor: '#e0f2f1',
+              fontWeight: 'bold',
+            },
+            headerTintColor: '#004d40',
+            headerBackTitleStyle: {
+              // color: 'red',
+            },
+          }}
+        />
       </Stack>
     </GlobalProvider>
   );

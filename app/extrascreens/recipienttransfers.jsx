@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getRecipientTransfers } from '../../lib/appwrite';
 import useAppwrite from '../../lib/useAppwrite';
@@ -32,6 +32,13 @@ const RecipientTransfers = () => {
 
   const initials =
     parsedItem.firstName.charAt(0) + parsedItem.lastName.charAt(0);
+
+  const editPressHandler = () => {
+    router.push({
+      pathname: '/extrascreens/editrecipient',
+      params: { item: item },
+    });
+  };
 
   return (
     <SafeAreaView className='bg-primary-50 h-full'>
@@ -59,9 +66,7 @@ const RecipientTransfers = () => {
               />
             </View>
             <View className='mt-9 px-4'>
-              <TouchableOpacity
-                onPress={() => router.push('/extrascreens/editrecipient')}
-              >
+              <TouchableOpacity onPress={editPressHandler}>
                 <MaterialCommunityIcons
                   name='account-edit'
                   size={25}
