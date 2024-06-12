@@ -26,7 +26,7 @@ const Recipients = () => {
 
   if (isLoading) {
     return (
-      <View className='mt-100'>
+      <View>
         <LoadingOverlay message='Loading...' />
       </View>
     );

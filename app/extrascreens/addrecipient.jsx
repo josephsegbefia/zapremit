@@ -16,29 +16,41 @@ import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { createRecipient } from '../../lib/appwrite';
+import LoadingOverlay from '../../components/LoadingOverlay';
 
 const AddRecipient = () => {
   const { user } = useGlobalContext();
   const navigation = useNavigation();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [code, setCode] = useState('');
-  const [number, setNumber] = useState('');
+  // const [code, setCode] = useState('');
+  // const [number, setNumber] = useState('');
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
     middleName: '',
     email: '',
+    code: '',
+    number: '',
   });
 
-  const phone = `${code}${number}`;
+  // const phone = `${code}${number}`;
 
   const submit = async () => {
-    if (!form.firstName || !form.lastName || !form.email || !code || !number) {
+    if (
+      !form.firstName ||
+      !form.lastName ||
+      !form.email ||
+      !form.code ||
+      !form.number
+    ) {
       return Alert.alert('Error', 'Please fill in all the fields');
     }
     setIsSubmitting(true);
     try {
-      await createRecipient({ ...form, userId: user.$id, phoneNumber: phone });
+      await createRecipient({
+        ...form,
+        userId: user.$id,
+      });
       router.replace(`/recipients`);
     } catch (error) {
       Alert.alert('Error', error.message);
@@ -48,12 +60,21 @@ const AddRecipient = () => {
         lastName: '',
         email: '',
         middleName: '',
+        code: '',
+        phone: '',
       });
-      setCode('');
-      setNumber('');
+
       setIsSubmitting(false);
     }
   };
+
+  if (isSubmitting) {
+    return (
+      <View>
+        <LoadingOverlay message='Creating recipient...' />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView className='h-full bg-primary-50'>
@@ -107,7 +128,7 @@ const AddRecipient = () => {
                       placeholder='+49'
                       keyboardType='number-pad'
                       value={form.callingCode}
-                      handleChangeText={(e) => setCode(e)}
+                      handleChangeText={(e) => setForm({ ...form, code: e })}
                     />
                   </View>
                   <View className='w-[70%]'>
@@ -115,7 +136,7 @@ const AddRecipient = () => {
                       placeholder='15213111325'
                       value={form.phone}
                       keyboardType='number-pad'
-                      handleChangeText={(e) => setNumber(e)}
+                      handleChangeText={(e) => setForm({ ...form, number: e })}
                     />
                   </View>
                 </View>

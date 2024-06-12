@@ -35,6 +35,8 @@ const EditRecipient = () => {
     });
   }, []);
 
+  console.log(parsedItem.$id);
+
   const submit = () => {
     setIsSubmitting(true);
   };
