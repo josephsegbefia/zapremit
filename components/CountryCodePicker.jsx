@@ -9,8 +9,10 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   FlatList,
+  StyleSheet,
 } from 'react-native';
 import FormField from '../components/FormField';
+import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { countriesData } from '../constants/countries';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -22,6 +24,7 @@ const CountryCodePicker = ({ ccode, phone, handleChangeText }) => {
   const [areas, setAreas] = useState([]);
   const [selectedArea, setSelectedArea] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     const data = countriesData.map((country) => {
@@ -73,42 +76,58 @@ const CountryCodePicker = ({ ccode, phone, handleChangeText }) => {
     return (
       <SafeAreaView>
         <Modal animationType='slide' transparent={true} visible={modalVisible}>
-          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          {/* <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> */}
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             <View
               style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
+                height: '100%',
+                width: '100%',
+                backgroundColor: '#e0f2f1',
+                // borderRadius: 10,
+                // borderColor: '#004d40',
+                // borderWidth: 2,
+                marginTop: 200,
+                paddingBottom: 100,
               }}
             >
-              <View
-                style={{
-                  height: '100%',
-                  width: '100%',
-                  backgroundColor: '#e0f2f1',
-                  // borderRadius: 10,
-                  // borderColor: '#004d40',
-                  // borderWidth: 2,
-                  marginTop: 200,
-                  paddingBottom: 100,
-                }}
-              >
-                <FlatList
-                  data={areas}
-                  renderItem={renderItem}
-                  keyExtractor={keyExtractor}
-                  showsVerticalScrollIndicator={false}
-                  ListHeaderComponent={() => (
+              <FlatList
+                data={areas}
+                renderItem={renderItem}
+                keyExtractor={keyExtractor}
+                showsVerticalScrollIndicator={false}
+                ListHeaderComponent={() => (
+                  <>
+                    <TouchableOpacity
+                      className='items-end mx-5 my-2'
+                      onPress={() => setModalVisible(false)}
+                    >
+                      <Ionicons name='close' size={24} color='#004d40' />
+                    </TouchableOpacity>
                     <View className='items-center'>
-                      <View className='border-2 border-primary-200 w-[90%] h-8 px-4 bg-primary-50 rounded-sm focus:border-primary my-10 items-center flex-row'>
-                        <TextInput />
+                      <View className='border-2 border-primary-200 w-[95%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary my-3 items-center flex-row'>
+                        <TextInput
+                          value={searchValue}
+                          onChangeText={(e) => setSearchValue(e)}
+                          className='flex-1 text-primary font-semibold text-base'
+                          placeholder='Search for a country'
+                          placeholderTextColor='#7b7b8b'
+                        />
                       </View>
                     </View>
-                  )}
-                />
-              </View>
+                  </>
+                )}
+                stickyHeaderIndices={[0]}
+                ListHeaderComponentStyle={styles.header}
+              />
             </View>
-          </TouchableWithoutFeedback>
+          </View>
+          {/* </TouchableWithoutFeedback> */}
         </Modal>
       </SafeAreaView>
     );
@@ -183,3 +202,9 @@ const CountryCodePicker = ({ ccode, phone, handleChangeText }) => {
 };
 
 export default memo(CountryCodePicker);
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#e0f2f1',
+  },
+});

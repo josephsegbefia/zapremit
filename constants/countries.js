@@ -47,12 +47,12 @@ export const countriesData = [
     callingCode: '+1264',
     flag: 'https://flagcdn.com/w320/ai.png',
   },
-  {
-    name: 'Antarctica',
-    alpha2Code: 'AQ',
-    callingCode: '',
-    flag: 'https://flagcdn.com/w320/aq.png',
-  },
+  // {
+  //   name: 'Antarctica',
+  //   alpha2Code: 'AQ',
+  //   callingCode: '',
+  //   flag: 'https://flagcdn.com/w320/aq.png',
+  // },
   {
     name: 'Antigua and Barbuda',
     alpha2Code: 'AG',
