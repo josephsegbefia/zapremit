@@ -1,19 +1,25 @@
 import { useState, useEffect } from 'react';
 import {
+  Alert,
   View,
   Text,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import { useLocalSearchParams, router, useNavigation } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FormField from '../../components/FormField';
+import { useGlobalContext } from '../../context/GlobalProvider';
 import CustomButton from '../../components/CustomButton';
 import LoadingOverlay from '../../components/LoadingOverlay';
 
+import { updateRecipient } from '../../lib/appwrite';
+
 const EditRecipient = () => {
+  const { user } = useGlobalContext();
   const navigation = useNavigation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { item } = useLocalSearchParams();
@@ -23,28 +29,58 @@ const EditRecipient = () => {
     lastName: '',
     middleName: '',
     email: '',
+    code: '',
+    phone: '',
   });
 
   useEffect(() => {
     setForm({
-      ...form,
       firstName: parsedItem.firstName,
       lastName: parsedItem.lastName,
       middleName: parsedItem.middleName,
       email: parsedItem.email,
+      code: parsedItem.callingCode,
+      phone: parsedItem.phone,
     });
   }, []);
 
-  console.log(parsedItem.$id);
-
-  const submit = () => {
+  const submit = async () => {
+    if (
+      !form.firstName ||
+      !form.lastName ||
+      !form.email ||
+      !form.code ||
+      !form.phone
+    ) {
+      return Alert.alert('Error', 'Please fill in all the fields');
+    }
     setIsSubmitting(true);
+    try {
+      await updateRecipient({
+        ...form,
+        documentId: parsedItem.$id,
+      });
+      router.replace(`/recipients`);
+    } catch (error) {
+      Alert.alert('Error', error.message);
+      console.log(error);
+    } finally {
+      setForm({
+        firstName: '',
+        lastName: '',
+        email: '',
+        middleName: '',
+        code: '',
+        phone: '',
+      });
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitting) {
     return (
       <View>
-        <LoadingOverlay message='Saving...' />
+        <LoadingOverlay message='Updating...' />
       </View>
     );
   }
@@ -60,7 +96,7 @@ const EditRecipient = () => {
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View className='w-[90%]'>
               <Text className='px-4 text-sm text-primary font-psemibold mb-4'>
-                Recipient's contact information
+                Edit recipient's contact information
               </Text>
             </View>
 
@@ -100,8 +136,8 @@ const EditRecipient = () => {
                     <FormField
                       placeholder='+49'
                       keyboardType='number-pad'
-                      value={form.callingCode}
-                      handleChangeText={(e) => setCode(e)}
+                      value={form.code}
+                      handleChangeText={(e) => setForm({ ...form, code: e })}
                     />
                   </View>
                   <View className='w-[70%]'>
@@ -109,11 +145,16 @@ const EditRecipient = () => {
                       placeholder='15213111325'
                       value={form.phone}
                       keyboardType='number-pad'
-                      handleChangeText={(e) => setNumber(e)}
+                      handleChangeText={(e) => setForm({ ...form, phone: e })}
                     />
                   </View>
                 </View>
               </View>
+            </View>
+            <View>
+              <TouchableOpacity>
+                <Text>Delete</Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>
@@ -126,7 +167,7 @@ const EditRecipient = () => {
           handlePress={() => navigation.goBack()}
         />
         <CustomButton
-          title='SUBMIT'
+          title='UPDATE'
           containerStyles='w-[100px] mt-3 flex-1'
           isLoading={isSubmitting}
           handlePress={submit}

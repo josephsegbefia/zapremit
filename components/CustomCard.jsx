@@ -15,9 +15,10 @@ const CustomCard = ({
 
   let fullName;
   if (middleName) {
-    fullName = firstName + middleName + lastName;
+    fullName =
+      firstName.trim() + ' ' + middleName.trim() + ' ' + lastName.trim();
   } else {
-    fullName = firstName + ' ' + lastName;
+    fullName = firstName.trim() + ' ' + lastName.trim();
   }
 
   return (

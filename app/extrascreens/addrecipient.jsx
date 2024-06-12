@@ -30,7 +30,7 @@ const AddRecipient = () => {
     middleName: '',
     email: '',
     code: '',
-    number: '',
+    phone: '',
   });
 
   // const phone = `${code}${number}`;
@@ -41,7 +41,7 @@ const AddRecipient = () => {
       !form.lastName ||
       !form.email ||
       !form.code ||
-      !form.number
+      !form.phone
     ) {
       return Alert.alert('Error', 'Please fill in all the fields');
     }
@@ -63,7 +63,6 @@ const AddRecipient = () => {
         code: '',
         phone: '',
       });
-
       setIsSubmitting(false);
     }
   };
@@ -136,7 +135,7 @@ const AddRecipient = () => {
                       placeholder='15213111325'
                       value={form.phone}
                       keyboardType='number-pad'
-                      handleChangeText={(e) => setForm({ ...form, number: e })}
+                      handleChangeText={(e) => setForm({ ...form, phone: e })}
                     />
                   </View>
                 </View>
