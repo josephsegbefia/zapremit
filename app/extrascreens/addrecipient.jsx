@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomCountryPhone from '../../components/CustomCountryPhone';
+import CountryCodePicker from '../../components/CountryCodePicker';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import { useGlobalContext } from '../../context/GlobalProvider';
@@ -118,10 +118,15 @@ const AddRecipient = () => {
                   keyboardType='email-address'
                   handleChangeText={(e) => setForm({ ...form, email: e })}
                 />
-                <Text className='text-base text-primary font-pmedium mt-4'>
+
+                <View className='mt-3'>
+                  <CountryCodePicker />
+                </View>
+
+                {/* <Text className='text-base text-primary font-pmedium mt-4'>
                   Phone Number
-                </Text>
-                <View className='flex flex-row gap-x-2.5'>
+                </Text> */}
+                {/* <View className='flex flex-row gap-x-2.5'>
                   <View className='w-[25%]'>
                     <FormField
                       placeholder='+49'
@@ -138,7 +143,7 @@ const AddRecipient = () => {
                       handleChangeText={(e) => setForm({ ...form, phone: e })}
                     />
                   </View>
-                </View>
+                </View> */}
               </View>
             </View>
           </ScrollView>
