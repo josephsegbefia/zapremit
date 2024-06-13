@@ -5,6 +5,7 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,6 +15,7 @@ import CustomCard from '../../components/CustomCard';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import EmptyState from '../../components/EmptyState';
 
+const { width } = Dimensions.get('window');
 const RecipientTransfers = () => {
   const { item } = useLocalSearchParams();
   const parsedItem = JSON.parse(item);
@@ -21,6 +23,14 @@ const RecipientTransfers = () => {
   const { data: transfers } = useAppwrite(() =>
     getRecipientTransfers(parsedItem.$id)
   );
+
+  let smallScreen = 360;
+  let isSmallScreen = width <= smallScreen;
+  let pageWidth;
+
+  if (isSmallScreen) {
+    pageWidth = width * 0.5;
+  }
 
   let fullName;
   if (parsedItem.middleName) {
@@ -41,7 +51,7 @@ const RecipientTransfers = () => {
   };
 
   return (
-    <SafeAreaView className='bg-primary-50 h-full'>
+    <SafeAreaView className='bg-primary-50 h-full w-full'>
       <FlatList
         data={transfers}
         keyExtractor={(item) => item.$id}
@@ -56,7 +66,7 @@ const RecipientTransfers = () => {
           />
         )}
         ListHeaderComponent={() => (
-          <View className='flex flex-row justify-between'>
+          <View className='flex-row justify-around pr-4'>
             <View>
               <CustomCard
                 firstName={parsedItem.firstName}
@@ -65,7 +75,7 @@ const RecipientTransfers = () => {
                 customStyles='bg-primary-50'
               />
             </View>
-            <View className='mt-9 px-4'>
+            <View className='mt-9'>
               <TouchableOpacity onPress={editPressHandler}>
                 <MaterialCommunityIcons
                   name='account-edit'
