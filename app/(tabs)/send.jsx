@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CountryFlag from 'react-native-country-flag';
 import { AntDesign } from '@expo/vector-icons';
@@ -30,12 +31,16 @@ const Send = () => {
     setAmtReceivable(finalAmt.toString());
   };
 
+  const openDeliveryMethods = () => {
+    router.push('/extrascreens/deliveryoptions');
+  };
+
   useEffect(() => {
     conversionHandler();
   }, [transferAmt]);
   return (
     <ScrollView className='h-full bg-primary-50'>
-      <SafeAreaView className='justify-center'>
+      <SafeAreaView className=''>
         <Text className='text-xl text-primary font-psemibold px-4 mt-10'>
           Send
         </Text>
@@ -97,7 +102,7 @@ const Send = () => {
                       GHS
                     </Text>
                     <View className='justify-center'>
-                      <AntDesign name='caretdown' size={14} color='black' />
+                      <AntDesign name='caretdown' size={14} color='#004d40' />
                     </View>
                   </View>
                 </View>
@@ -121,8 +126,29 @@ const Send = () => {
             {/* End of amount receivable  */}
           </View>
         </View>
-        <View className='w-[95%] px-5 mt-6'>
-          <Text className='text-primary font-psemibold'>Delivery Options</Text>
+
+        <Text className='text-primary font-psemibold mt-6 text-sm pl-3'>
+          DELIVERY OPTIONS
+        </Text>
+        <View className='items-center'>
+          <TouchableOpacity
+            className='bg-white rounded-xl w-[95%]  mt-6 flex-row py-5 justify-between'
+            onPress={openDeliveryMethods}
+          >
+            <View className='flex-row px-4 gap-3'>
+              <View className='border border-primary rounded-full w-10 h-10 justify-center items-center'>
+                <FontAwesome name='bolt' size={20} color='#004d40' />
+              </View>
+              <View className='justify-center'>
+                <Text className='text-primary font-psemibold text-base'>
+                  Select delivery option
+                </Text>
+              </View>
+            </View>
+            <View className='justify-center px-5'>
+              <AntDesign name='caretdown' size={14} color='#004d40' />
+            </View>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </ScrollView>

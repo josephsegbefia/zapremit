@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Stack, SplashScreen } from 'expo-router';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Stack, SplashScreen, router } from 'expo-router';
 import { useFonts } from 'expo-font';
 import GlobalProvider from '../context/GlobalProvider';
+import { Ionicons } from '@expo/vector-icons';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -80,6 +81,23 @@ const RootLayout = () => {
             headerBackTitleStyle: {
               // color: 'red',
             },
+          }}
+        />
+        <Stack.Screen
+          name='extrascreens/deliveryoptions'
+          options={{
+            presentation: 'modal',
+            title: 'Select Delivery Option',
+            headerTintColor: '#004d40',
+            headerStyle: {
+              backgroundColor: '#e0f2f1',
+              fontWeight: 'bold',
+            },
+            headerRight: ({ tintColor }) => (
+              <TouchableOpacity onPress={() => router.back()}>
+                <Ionicons name='close' size={24} color={tintColor} />
+              </TouchableOpacity>
+            ),
           }}
         />
       </Stack>
