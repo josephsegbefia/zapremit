@@ -45,14 +45,14 @@ const Home = () => {
             status='delivered'
             isTransferHistory
           />
-          <CustomCard
+          {/* <CustomCard
             firstName='S'
             lastName='S'
             amount='300 GHS'
             date='May, 27 2024'
             status='delivered'
             isTransferHistory
-          />
+          /> */}
         </View>
       </SafeAreaView>
     </ScrollView>
