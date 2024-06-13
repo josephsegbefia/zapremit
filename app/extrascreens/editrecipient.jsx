@@ -18,6 +18,7 @@ import LoadingOverlay from '../../components/LoadingOverlay';
 import CountryCodePicker from '../../components/CountryCodePicker';
 
 import { updateRecipient } from '../../lib/appwrite';
+import { deleteRecipient } from '../../lib/appwrite';
 
 const EditRecipient = () => {
   const navigation = useNavigation();
@@ -78,6 +79,22 @@ const EditRecipient = () => {
     }
   };
 
+  const deleteHandler = async () => {
+    setIsSubmitting(true);
+    try {
+      await deleteRecipient(parsedItem.$id);
+      router.replace('/recipients');
+    } catch (error) {
+      console.log(error);
+      Alert.alert(
+        'Error',
+        'Recipient could not be deleted. It is our fault. Retry again later'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   if (isSubmitting) {
     return (
       <View>
@@ -85,8 +102,6 @@ const EditRecipient = () => {
       </View>
     );
   }
-
-  const deleteHandler = () => {};
 
   return (
     <SafeAreaView className='h-full bg-primary-50'>
