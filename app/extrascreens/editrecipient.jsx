@@ -15,6 +15,7 @@ import FormField from '../../components/FormField';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import CustomButton from '../../components/CustomButton';
 import LoadingOverlay from '../../components/LoadingOverlay';
+import CountryCodePicker from '../../components/CountryCodePicker';
 
 import { updateRecipient } from '../../lib/appwrite';
 
@@ -24,14 +25,19 @@ const EditRecipient = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { item } = useLocalSearchParams();
   const parsedItem = JSON.parse(item);
+  const [code, setCode] = useState('');
+  const [phone, setPhone] = useState('');
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
     middleName: '',
     email: '',
-    code: '',
-    phone: '',
   });
+
+  const setPhoneNumber = (phone, code) => {
+    setPhone(phone);
+    setCode(code);
+  };
 
   useEffect(() => {
     setForm({
@@ -39,19 +45,14 @@ const EditRecipient = () => {
       lastName: parsedItem.lastName,
       middleName: parsedItem.middleName,
       email: parsedItem.email,
-      code: parsedItem.callingCode,
-      phone: parsedItem.phone,
     });
+    setCode(parsedItem.callingCode);
+    setPhone(parsedItem.phone);
   }, []);
 
+  console.log(parsedItem.callingCode);
   const submit = async () => {
-    if (
-      !form.firstName ||
-      !form.lastName ||
-      !form.email ||
-      !form.code ||
-      !form.phone
-    ) {
+    if (!form.firstName || !form.lastName || !form.email || !code || !phone) {
       return Alert.alert('Error', 'Please fill in all the fields');
     }
     setIsSubmitting(true);
@@ -59,6 +60,8 @@ const EditRecipient = () => {
       await updateRecipient({
         ...form,
         documentId: parsedItem.$id,
+        code: code,
+        phone: phone,
       });
       router.replace(`/recipients`);
     } catch (error) {
@@ -70,9 +73,9 @@ const EditRecipient = () => {
         lastName: '',
         email: '',
         middleName: '',
-        code: '',
-        phone: '',
       });
+      setPhone: '';
+      setCode: '';
       setIsSubmitting(false);
     }
   };
@@ -128,26 +131,12 @@ const EditRecipient = () => {
                   keyboardType='email-address'
                   handleChangeText={(e) => setForm({ ...form, email: e })}
                 />
-                <Text className='text-base text-primary font-pmedium mt-4'>
-                  Phone Number
-                </Text>
-                <View className='flex flex-row gap-x-2.5'>
-                  <View className='w-[25%]'>
-                    <FormField
-                      placeholder='+49'
-                      keyboardType='number-pad'
-                      value={form.code}
-                      handleChangeText={(e) => setForm({ ...form, code: e })}
-                    />
-                  </View>
-                  <View className='w-[70%]'>
-                    <FormField
-                      placeholder='15213111325'
-                      value={form.phone}
-                      keyboardType='number-pad'
-                      handleChangeText={(e) => setForm({ ...form, phone: e })}
-                    />
-                  </View>
+                <View className='mt-3'>
+                  <CountryCodePicker
+                    phone={phone}
+                    code={code}
+                    setPhone={setPhoneNumber}
+                  />
                 </View>
               </View>
             </View>

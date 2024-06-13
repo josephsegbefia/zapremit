@@ -3,28 +3,23 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   TextInput,
   Modal,
-  TouchableWithoutFeedback,
   Dimensions,
   FlatList,
   StyleSheet,
 } from 'react-native';
-import FormField from '../components/FormField';
 import { Ionicons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
 import { countriesData } from '../constants/countries';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { memo } from 'react';
 
 const { width, height } = Dimensions.get('window');
 
-const CountryCodePicker = ({ ccode, phone, handleChangeText }) => {
+const CountryCodePicker = ({ phone, code, setPhone }) => {
   const [areas, setAreas] = useState([]);
   const [selectedArea, setSelectedArea] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     const data = countriesData.map((country) => {
@@ -41,6 +36,7 @@ const CountryCodePicker = ({ ccode, phone, handleChangeText }) => {
       let defaultData = data.filter((a) => a.code === 'GH');
       if (defaultData.length > 0) {
         setSelectedArea(defaultData[0]);
+        setPhone(phone, defaultData[0].callingCode);
       }
     }
   }, []);
@@ -56,27 +52,25 @@ const CountryCodePicker = ({ ccode, phone, handleChangeText }) => {
         onPress={() => {
           setSelectedArea(item);
           setModalVisible(false);
+          setPhone(phone, item.callingCode);
         }}
       >
-        {/* <Image
-          source={{ uri: item.flag }}
-          style={{ height: 20, width: 20, marginRight: 5 }}
-        /> */}
         <Text style={{ color: '#004d40', fontSize: 14, fontWeight: '600' }}>
           {item.name} ({item.callingCode})
         </Text>
       </TouchableOpacity>
     ),
-    []
+    [phone]
   );
 
   const keyExtractor = useCallback((item) => item.code, []);
+
+  // console.log(phone);
 
   const renderCountryCodesModal = useMemo(() => {
     return (
       <SafeAreaView>
         <Modal animationType='slide' transparent={true} visible={modalVisible}>
-          {/* <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> */}
           <View
             style={{
               flex: 1,
@@ -89,9 +83,6 @@ const CountryCodePicker = ({ ccode, phone, handleChangeText }) => {
                 height: '100%',
                 width: '100%',
                 backgroundColor: '#e0f2f1',
-                // borderRadius: 10,
-                // borderColor: '#004d40',
-                // borderWidth: 2,
                 marginTop: 200,
                 paddingBottom: 100,
               }}
@@ -109,17 +100,6 @@ const CountryCodePicker = ({ ccode, phone, handleChangeText }) => {
                     >
                       <Ionicons name='close' size={24} color='#004d40' />
                     </TouchableOpacity>
-                    <View className='items-center'>
-                      <View className='border-2 border-primary-200 w-[95%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary my-3 items-center flex-row'>
-                        <TextInput
-                          value={searchValue}
-                          onChangeText={(e) => setSearchValue(e)}
-                          className='flex-1 text-primary font-semibold text-base'
-                          placeholder='Search for a country'
-                          placeholderTextColor='#7b7b8b'
-                        />
-                      </View>
-                    </View>
                   </>
                 )}
                 stickyHeaderIndices={[0]}
@@ -127,71 +107,42 @@ const CountryCodePicker = ({ ccode, phone, handleChangeText }) => {
               />
             </View>
           </View>
-          {/* </TouchableWithoutFeedback> */}
         </Modal>
       </SafeAreaView>
     );
   }, [modalVisible, areas, renderItem, keyExtractor]);
 
+  const handlePhoneChange = (phoneNumber) => {
+    setPhone(phoneNumber, selectedArea?.callingCode);
+  };
+
   return (
     <View style={{ width: '100%' }}>
-      <Text style={{ fontSize: 16, color: '#004d40', marginBottom: 8 }}>
-        Phone
-      </Text>
+      <Text className='text-base text-primary font-pmedium mb-3'>Phone</Text>
       <View style={{ flexDirection: 'row', gap: 10 }}>
-        <View
-          style={{
-            borderWidth: 2,
-            borderColor: '#004d40',
-            width: '30%',
-            height: 48,
-            paddingHorizontal: 10,
-            backgroundColor: '#e0f2f1',
-            borderRadius: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          <TouchableOpacity
-          // onPress={() => setModalVisible(true)}
-          >
-            {/* <AntDesign name='caretdown' size={12} color='#004d40' /> */}
-
+        <View className='border-2 border-primary-200 w-[27%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary items-center'>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
             <TextInput
               className='flex-1 text-primary font-semibold text-base'
-              value={`${selectedArea?.code} ${selectedArea?.callingCode}`}
+              value={
+                !code
+                  ? `${selectedArea?.code} ${selectedArea?.callingCode}`
+                  : code
+              }
               placeholder='+233'
               placeholderTextColor='#CDCDE0'
-              onChangeText={handleChangeText}
+              editable={false}
               onPressIn={() => setModalVisible(true)}
             />
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            borderWidth: 2,
-            borderColor: '#004d40',
-            width: '65%',
-            height: 48,
-            paddingHorizontal: 10,
-            backgroundColor: '#e0f2f1',
-            borderRadius: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
+        <View className='border-2 border-primary-200 w-[71%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary'>
           <TextInput
-            style={{
-              flex: 1,
-              marginTop: 2,
-              color: '#ffffff',
-              fontWeight: '400',
-              fontSize: 16,
-            }}
+            className='flex-1 text-primary font-semibold text-base'
             value={phone}
             placeholder='207849440'
             placeholderTextColor='#CDCDE0'
-            onChangeText={handleChangeText}
+            onChangeText={handlePhoneChange}
             keyboardType='number-pad'
           />
         </View>

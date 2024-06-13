@@ -22,27 +22,19 @@ const AddRecipient = () => {
   const { user } = useGlobalContext();
   const navigation = useNavigation();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const [code, setCode] = useState('');
-  // const [number, setNumber] = useState('');
+  const [code, setCode] = useState('');
+  const [phone, setPhone] = useState('');
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
     middleName: '',
     email: '',
-    code: '',
-    phone: '',
+    // code: '',
+    // phone: '',
   });
 
-  // const phone = `${code}${number}`;
-
   const submit = async () => {
-    if (
-      !form.firstName ||
-      !form.lastName ||
-      !form.email ||
-      !form.code ||
-      !form.phone
-    ) {
+    if (!form.firstName || !form.lastName || !form.email || !code || !phone) {
       return Alert.alert('Error', 'Please fill in all the fields');
     }
     setIsSubmitting(true);
@@ -50,6 +42,8 @@ const AddRecipient = () => {
       await createRecipient({
         ...form,
         userId: user.$id,
+        phone: phone,
+        code: code,
       });
       router.replace(`/recipients`);
     } catch (error) {
@@ -60,9 +54,9 @@ const AddRecipient = () => {
         lastName: '',
         email: '',
         middleName: '',
-        code: '',
-        phone: '',
       });
+      setPhone: '';
+      setCode: '';
       setIsSubmitting(false);
     }
   };
@@ -74,6 +68,11 @@ const AddRecipient = () => {
       </View>
     );
   }
+
+  const setPhoneNumber = (phone, code) => {
+    setPhone(phone);
+    setCode(code);
+  };
 
   return (
     <SafeAreaView className='h-full bg-primary-50'>
@@ -120,30 +119,12 @@ const AddRecipient = () => {
                 />
 
                 <View className='mt-3'>
-                  <CountryCodePicker />
+                  <CountryCodePicker
+                    phone={phone}
+                    code={code}
+                    setPhone={setPhoneNumber}
+                  />
                 </View>
-
-                {/* <Text className='text-base text-primary font-pmedium mt-4'>
-                  Phone Number
-                </Text> */}
-                {/* <View className='flex flex-row gap-x-2.5'>
-                  <View className='w-[25%]'>
-                    <FormField
-                      placeholder='+49'
-                      keyboardType='number-pad'
-                      value={form.callingCode}
-                      handleChangeText={(e) => setForm({ ...form, code: e })}
-                    />
-                  </View>
-                  <View className='w-[70%]'>
-                    <FormField
-                      placeholder='15213111325'
-                      value={form.phone}
-                      keyboardType='number-pad'
-                      handleChangeText={(e) => setForm({ ...form, phone: e })}
-                    />
-                  </View>
-                </View> */}
               </View>
             </View>
           </ScrollView>
