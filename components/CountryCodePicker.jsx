@@ -69,46 +69,44 @@ const CountryCodePicker = ({ phone, code, setPhone }) => {
 
   const renderCountryCodesModal = useMemo(() => {
     return (
-      <SafeAreaView>
-        <Modal animationType='slide' transparent={true} visible={modalVisible}>
+      <Modal animationType='slide' transparent={true} visible={modalVisible}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           <View
             style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
+              height: '100%',
+              width: '100%',
+              backgroundColor: '#e0f2f1',
+              marginTop: 200,
+              paddingBottom: 100,
             }}
           >
-            <View
-              style={{
-                height: '100%',
-                width: '100%',
-                backgroundColor: '#e0f2f1',
-                marginTop: 200,
-                paddingBottom: 100,
-              }}
-            >
-              <FlatList
-                data={areas}
-                renderItem={renderItem}
-                keyExtractor={keyExtractor}
-                showsVerticalScrollIndicator={false}
-                ListHeaderComponent={() => (
-                  <>
-                    <TouchableOpacity
-                      className='items-end mx-5 my-2'
-                      onPress={() => setModalVisible(false)}
-                    >
-                      <Ionicons name='close' size={24} color='#004d40' />
-                    </TouchableOpacity>
-                  </>
-                )}
-                stickyHeaderIndices={[0]}
-                ListHeaderComponentStyle={styles.header}
-              />
-            </View>
+            <FlatList
+              data={areas}
+              renderItem={renderItem}
+              keyExtractor={keyExtractor}
+              showsVerticalScrollIndicator={false}
+              ListHeaderComponent={() => (
+                <>
+                  <TouchableOpacity
+                    className='items-end mx-5 my-2'
+                    onPress={() => setModalVisible(false)}
+                  >
+                    <Ionicons name='close' size={24} color='#004d40' />
+                  </TouchableOpacity>
+                </>
+              )}
+              stickyHeaderIndices={[0]}
+              ListHeaderComponentStyle={styles.header}
+            />
           </View>
-        </Modal>
-      </SafeAreaView>
+        </View>
+      </Modal>
     );
   }, [modalVisible, areas, renderItem, keyExtractor]);
 
@@ -118,7 +116,7 @@ const CountryCodePicker = ({ phone, code, setPhone }) => {
 
   return (
     <View style={{ width: '100%' }}>
-      <Text className='text-base text-primary font-pmedium mb-3'>Phone</Text>
+      <Text className='text-base text-primary font-pmedium mb-2'>Phone</Text>
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <View className='border-2 border-primary-200 w-[27%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary items-center'>
           <TouchableOpacity onPress={() => setModalVisible(true)}>

@@ -20,7 +20,6 @@ import CountryCodePicker from '../../components/CountryCodePicker';
 import { updateRecipient } from '../../lib/appwrite';
 
 const EditRecipient = () => {
-  const { user } = useGlobalContext();
   const navigation = useNavigation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { item } = useLocalSearchParams();
@@ -50,7 +49,6 @@ const EditRecipient = () => {
     setPhone(parsedItem.phone);
   }, []);
 
-  console.log(parsedItem.callingCode);
   const submit = async () => {
     if (!form.firstName || !form.lastName || !form.email || !code || !phone) {
       return Alert.alert('Error', 'Please fill in all the fields');
@@ -87,6 +85,8 @@ const EditRecipient = () => {
       </View>
     );
   }
+
+  const deleteHandler = () => {};
 
   return (
     <SafeAreaView className='h-full bg-primary-50'>
@@ -138,12 +138,12 @@ const EditRecipient = () => {
                     setPhone={setPhoneNumber}
                   />
                 </View>
+                <TouchableOpacity className='mt-5' onPress={deleteHandler}>
+                  <Text className='text-primary-red font-psemibold'>
+                    Delete this recipient
+                  </Text>
+                </TouchableOpacity>
               </View>
-            </View>
-            <View>
-              <TouchableOpacity>
-                <Text>Delete</Text>
-              </TouchableOpacity>
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>
