@@ -26,6 +26,10 @@ const Send = () => {
   const rate = 16.12;
 
   const conversionHandler = () => {
+    if (transferAmt === undefined) {
+      setAmtReceivable(parseFloat(0));
+      return;
+    }
     let conAmt = parseFloat(transferAmt) * rate;
     let finalAmt = conAmt.toFixed(2);
     setAmtReceivable(finalAmt.toString());

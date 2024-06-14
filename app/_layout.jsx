@@ -100,6 +100,57 @@ const RootLayout = () => {
             ),
           }}
         />
+        <Stack.Screen
+          name='extrascreens/mobilemoney'
+          options={{
+            presentation: 'modal',
+            title: 'Select a mobile money provider',
+            headerTintColor: '#004d40',
+            headerStyle: {
+              backgroundColor: '#e0f2f1',
+              fontWeight: 'bold',
+            },
+            headerRight: ({ tintColor }) => (
+              <TouchableOpacity onPress={() => router.back()}>
+                <Ionicons name='close' size={24} color={tintColor} />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name='extrascreens/cashpickup'
+          options={{
+            presentation: 'modal',
+            title: 'Select pickup option',
+            headerTintColor: '#004d40',
+            headerStyle: {
+              backgroundColor: '#e0f2f1',
+              fontWeight: 'bold',
+            },
+            headerRight: ({ tintColor }) => (
+              <TouchableOpacity onPress={() => router.back()}>
+                <Ionicons name='close' size={24} color={tintColor} />
+              </TouchableOpacity>
+            ),
+          }}
+        />
+        <Stack.Screen
+          name='extrascreens/banktransfer'
+          options={{
+            presentation: 'modal',
+            title: 'Select a transfer option',
+            headerTintColor: '#004d40',
+            headerStyle: {
+              backgroundColor: '#e0f2f1',
+              fontWeight: 'bold',
+            },
+            headerRight: ({ tintColor }) => (
+              <TouchableOpacity onPress={() => router.back()}>
+                <Ionicons name='close' size={24} color={tintColor} />
+              </TouchableOpacity>
+            ),
+          }}
+        />
       </Stack>
     </GlobalProvider>
   );
