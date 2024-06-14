@@ -6,14 +6,17 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CountryFlag from 'react-native-country-flag';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 
 const Send = () => {
+  const { data } = useLocalSearchParams();
+
   const [transferAmt, setTransferAmt] = useState('100');
+  // const [deliveryOption, setDeliveryOption] = useState('');
 
   // Would be worked on later
   const [sendingCurrency, setSendingCurrency] = useState('');
@@ -145,7 +148,7 @@ const Send = () => {
               </View>
               <View className='justify-center'>
                 <Text className='text-primary font-psemibold text-base'>
-                  Select delivery option
+                  {!data ? 'Select delivery option' : `${data}`}
                 </Text>
               </View>
             </View>
