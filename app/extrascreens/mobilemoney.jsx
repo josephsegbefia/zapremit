@@ -14,16 +14,19 @@ const MobileMoney = () => {
       company: 'Vodafone GH',
       service: 'Vodafone Cash',
       limit: '15K GHS',
+      fee: 0.99,
     },
     {
       company: 'AirtelTigo',
       service: 'AirtelTigo Cash Cash',
       limit: '15K GHS',
+      fee: 0.99,
     },
     {
       company: 'MTN',
       service: 'MTN MoMo',
       limit: '15K GHS',
+      fee: 0.99,
     },
   ];
 
@@ -55,7 +58,8 @@ const MobileMoney = () => {
               className='w-[95%] bg-white rounded-xl mt-5 py-10 px-4'
               onPress={() =>
                 navigation.navigate('send', {
-                  data: provider.service,
+                  service: provider.service,
+                  fee: provider.fee,
                 })
               }
             >

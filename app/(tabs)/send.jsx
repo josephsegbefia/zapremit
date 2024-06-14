@@ -6,14 +6,18 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CountryFlag from 'react-native-country-flag';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { useGlobalContext } from '../../context/GlobalProvider';
+import CustomButton from '../../components/CustomButton';
 
 const Send = () => {
-  const { data } = useLocalSearchParams();
+  const navigation = useNavigation();
+  const { user } = useGlobalContext();
+  const { service, fee } = useLocalSearchParams();
 
   const [transferAmt, setTransferAmt] = useState('100');
   // const [deliveryOption, setDeliveryOption] = useState('');
@@ -27,6 +31,8 @@ const Send = () => {
 
   // remember to make this dynamic
   const rate = 16.12;
+
+  const total = parseFloat(amtReceivable) + parseFloat(fee);
 
   const conversionHandler = () => {
     if (transferAmt === undefined) {
@@ -45,11 +51,15 @@ const Send = () => {
   useEffect(() => {
     conversionHandler();
   }, [transferAmt]);
+
+  const handleNext = () => {
+    navigation.navigate('extrascreens/sendto');
+  };
   return (
     <ScrollView className='h-full bg-primary-50'>
-      <SafeAreaView className=''>
+      <SafeAreaView className='py-10'>
         <Text className='text-xl text-primary font-psemibold px-4 mt-10'>
-          Send
+          Start sending some money, {user.firstName}
         </Text>
 
         <View className='items-center'>
@@ -148,7 +158,7 @@ const Send = () => {
               </View>
               <View className='justify-center'>
                 <Text className='text-primary font-psemibold text-base'>
-                  {!data ? 'Select delivery option' : `${data}`}
+                  {!service ? 'Select delivery option' : `${service}`}
                 </Text>
               </View>
             </View>
@@ -157,6 +167,42 @@ const Send = () => {
             </View>
           </TouchableOpacity>
         </View>
+        {service ? (
+          <View className='items-center mt-2'>
+            <View className='w-[95%] bg-white px-4 mt-10 rounded-xl'>
+              <View className='flex-row justify-between py-2'>
+                <View className='justify-center'>
+                  <Text className='text-primary font-psemibold'>
+                    Transfer fee
+                  </Text>
+                </View>
+                <View className='justify-center'>
+                  <Text className='text-primary font-psemibold'>GHS {fee}</Text>
+                </View>
+              </View>
+
+              <View className='flex-row justify-between my-2'>
+                <View className='justify-center'>
+                  <Text className='text-primary font-psemibold'>Total</Text>
+                </View>
+                <View className='justify-center'>
+                  <Text className='text-primary font-psemibold'>{total}</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        ) : (
+          ''
+        )}
+        {service ? (
+          <View className='justify-center items-center'>
+            <View className='w-[95%] mt-10'>
+              <CustomButton title='NEXT' handlePress={handleNext} />
+            </View>
+          </View>
+        ) : (
+          ''
+        )}
       </SafeAreaView>
     </ScrollView>
   );
