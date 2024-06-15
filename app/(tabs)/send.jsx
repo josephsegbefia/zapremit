@@ -63,7 +63,6 @@ const Send = () => {
     navigation.navigate('extrascreens/sendto');
   };
 
-  console.log(transferData);
   return (
     <ScrollView className='h-full bg-primary-50'>
       <SafeAreaView className='py-10'>

@@ -15,7 +15,7 @@ const GlobalProvider = ({ children }) => {
     totalToPay: '',
     recipientPhone: '',
     recipientFirstName: '',
-    repicientMiddleName: '',
+    recipientMiddleName: '',
     recipientLastName: '',
     deliveryMethod: '',
     identifier: '', // for page or screen identification

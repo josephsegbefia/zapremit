@@ -12,7 +12,7 @@ import TransferOverView from '../../components/TransferOverView';
 const SendTo = () => {
   const { transferData, setTransferData } = useGlobalContext();
   const { recipientFirstName } = transferData;
-  console.log(transferData);
+
   const navigation = useNavigation();
 
   const selectExistingRecipient = () => {
@@ -26,7 +26,9 @@ const SendTo = () => {
     <ScrollView className='h-full bg-primary-50'>
       <SafeAreaView className='pb-10'>
         {recipientFirstName ? (
-          <TransferOverView />
+          <View className='items-center'>
+            <TransferOverView />
+          </View>
         ) : (
           <>
             <View className='w-[90%]'>
