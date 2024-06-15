@@ -16,7 +16,7 @@ import CustomButton from '../../components/CustomButton';
 
 const Send = () => {
   const navigation = useNavigation();
-  const { user, transferData, setTransferData } = useGlobalContext();
+  const { user, transferData, setTransferData, rate } = useGlobalContext();
   const { deliveryMethod, transferFee } = transferData;
 
   const [transferAmt, setTransferAmt] = useState('100');
@@ -30,9 +30,9 @@ const Send = () => {
   const [amtReceivable, setAmtReceivable] = useState(null);
 
   // remember to make this dynamic
-  const rate = 16.12;
+  // const rate = ;
 
-  const total = parseFloat(amtReceivable) + parseFloat(transferFee);
+  const total = parseFloat(transferAmt) + parseFloat(transferFee);
 
   const conversionHandler = () => {
     if (transferAmt === undefined) {
@@ -57,6 +57,7 @@ const Send = () => {
       ...transferData,
       transferAmount: transferAmt,
       receivableAmount: amtReceivable,
+      totalToPay: total,
       identifier: 'from-send-screen',
     });
     navigation.navigate('extrascreens/sendto');
@@ -198,7 +199,9 @@ const Send = () => {
                   <Text className='text-primary font-psemibold'>Total</Text>
                 </View>
                 <View className='justify-center'>
-                  <Text className='text-primary font-psemibold'>{total}</Text>
+                  <Text className='text-primary font-psemibold'>
+                    {transferData.total}
+                  </Text>
                 </View>
               </View>
             </View>

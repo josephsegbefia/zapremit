@@ -21,6 +21,8 @@ const GlobalProvider = ({ children }) => {
     identifier: '', // for page or screen identification
   });
 
+  const [rate, setRate] = useState(16.12);
+
   useEffect(() => {
     getCurrentUser()
       .then((res) => {
@@ -49,6 +51,8 @@ const GlobalProvider = ({ children }) => {
         isLoading,
         transferData,
         setTransferData,
+        rate,
+        setRate,
       }}
     >
       {children}

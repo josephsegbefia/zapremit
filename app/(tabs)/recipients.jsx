@@ -22,7 +22,7 @@ import LoadingOverlay from '../../components/LoadingOverlay';
 const Recipients = () => {
   const navigation = useNavigation();
 
-  const { user, transferData, setTransferData } = useGlobalContext();
+  const { user, transferData, setTransferData, rate } = useGlobalContext();
   const { data: recipients, isLoading: isLoading } = useAppwrite(() =>
     getRecipients(user.$id)
   );
@@ -35,6 +35,26 @@ const Recipients = () => {
     );
   }
 
+  const handleRecipientPress = (item) => {
+    if (transferData.identifier === 'from-send-screen') {
+      setTransferData({
+        ...transferData,
+        recipientFirstName: item.firstName,
+        recipientLastName: item.lastName,
+        recipientMiddleName: item.middleName,
+        recipientPhone: item.phone,
+        identifier: '',
+      });
+      navigation.navigate('extrascreens/sendto');
+    }
+    router.push({
+      pathname: '/extrascreens/recipienttransfers',
+      params: { item: JSON.stringify(item) },
+    });
+  };
+
+  console.log(transferData);
+
   return (
     <>
       <SafeAreaView className='h-full bg-primary-50 flex-1'>
@@ -45,23 +65,7 @@ const Recipients = () => {
             <View className='w-full items-center'>
               <View className='w-[95%]'>
                 <TouchableOpacity
-                  onPress={() => {
-                    if (transferData.identifier === 'from-send-screen') {
-                      setTransferData({
-                        ...transferData,
-                        recipientFirstName: item.firstName,
-                        recipientLastName: item.lastName,
-                        recipientMiddleName: item.middleName,
-                        recipientPhone: item.phone,
-                        identifier: '',
-                      });
-                      navigation.navigate('extrascreens/sendto');
-                    }
-                    router.push({
-                      pathname: '/extrascreens/recipienttransfers',
-                      params: { item: JSON.stringify(item) },
-                    });
-                  }}
+                  onPress={() => handleRecipientPress(item)}
                   activeOpacity={0.3}
                 >
                   <CustomCard

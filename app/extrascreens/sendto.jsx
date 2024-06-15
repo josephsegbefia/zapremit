@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from 'expo-router';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import RecipientSelectOption from '../../components/RecipientSelectOption';
 import React from 'react';
 
 const SendTo = () => {
@@ -15,48 +16,23 @@ const SendTo = () => {
       <SafeAreaView className='pb-10'>
         <View>
           <View className='items-center'>
-            <TouchableOpacity
-              className='bg-white rounded-xl w-[95%] py-3 flex-row px-4 mb-4'
-              activeOpacity={0.5}
-            >
-              <View className='bg-primary-200 justify-center items-center h-[50px] w-[50px] rounded-lg'>
-                <Ionicons name='person-add' size={30} color='white' />
-              </View>
-              <View className='justify-center items-center px-8'>
-                <Text className='text-primary font-psemibold text-base'>
-                  Add new recipient
-                </Text>
-              </View>
-            </TouchableOpacity>
+            <RecipientSelectOption
+              icon={<Ionicons name='person-add' size={30} color='white' />}
+              title='Add New Recipient'
+              handlePress={() => {}}
+            />
 
-            <TouchableOpacity
-              className='bg-white rounded-xl w-[95%] py-3 flex-row px-4 mb-4'
-              activeOpacity={0.5}
-            >
-              <View className='bg-primary-200 justify-center items-center h-[50px] w-[50px] rounded-lg'>
-                <AntDesign name='contacts' size={30} color='white' />
-              </View>
-              <View className='justify-center items-center px-8'>
-                <Text className='text-primary font-psemibold text-base'>
-                  Import contacts
-                </Text>
-              </View>
-            </TouchableOpacity>
+            <RecipientSelectOption
+              icon={<AntDesign name='contacts' size={30} color='white' />}
+              title='Import Contacts'
+              handlePress={() => {}}
+            />
 
-            <TouchableOpacity
-              className='bg-white rounded-xl w-[95%] py-3 flex-row px-4 '
-              activeOpacity={0.5}
-              onPress={() => navigation.navigate('recipients')}
-            >
-              <View className='bg-primary-200 justify-center items-center h-[50px] w-[50px] rounded-lg'>
-                <AntDesign name='contacts' size={30} color='white' />
-              </View>
-              <View className='justify-center items-center px-8'>
-                <Text className='text-primary font-psemibold text-base'>
-                  Select from exisiting recipients
-                </Text>
-              </View>
-            </TouchableOpacity>
+            <RecipientSelectOption
+              icon={<AntDesign name='contacts' size={30} color='white' />}
+              title='Select Existing Recipient'
+              handlePress={() => navigation.navigate('recipients')}
+            />
           </View>
         </View>
       </SafeAreaView>
