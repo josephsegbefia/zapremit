@@ -16,8 +16,8 @@ import CustomButton from '../../components/CustomButton';
 
 const Send = () => {
   const navigation = useNavigation();
-  const { user } = useGlobalContext();
-  const { service, fee } = useLocalSearchParams();
+  const { user, transferData, setTransferData } = useGlobalContext();
+  const { deliveryMethod, transferFee } = transferData;
 
   const [transferAmt, setTransferAmt] = useState('100');
   // const [deliveryOption, setDeliveryOption] = useState('');
@@ -32,7 +32,7 @@ const Send = () => {
   // remember to make this dynamic
   const rate = 16.12;
 
-  const total = parseFloat(amtReceivable) + parseFloat(fee);
+  const total = parseFloat(amtReceivable) + parseFloat(transferFee);
 
   const conversionHandler = () => {
     if (transferAmt === undefined) {
@@ -53,13 +53,21 @@ const Send = () => {
   }, [transferAmt]);
 
   const handleNext = () => {
+    setTransferData({
+      ...transferData,
+      transferAmount: transferAmt,
+      receivableAmount: amtReceivable,
+      identifier: 'from-send-screen',
+    });
     navigation.navigate('extrascreens/sendto');
   };
+
+  console.log(transferData);
   return (
     <ScrollView className='h-full bg-primary-50'>
       <SafeAreaView className='py-10'>
         <Text className='text-xl text-primary font-psemibold px-4 mt-10'>
-          Start sending some money, {user.firstName}
+          Start sending some money, {user?.firstName}
         </Text>
 
         <View className='items-center'>
@@ -158,7 +166,9 @@ const Send = () => {
               </View>
               <View className='justify-center'>
                 <Text className='text-primary font-psemibold text-base'>
-                  {!service ? 'Select delivery option' : `${service}`}
+                  {!deliveryMethod
+                    ? 'Select delivery option'
+                    : `${deliveryMethod}`}
                 </Text>
               </View>
             </View>
@@ -167,7 +177,7 @@ const Send = () => {
             </View>
           </TouchableOpacity>
         </View>
-        {service ? (
+        {deliveryMethod ? (
           <View className='items-center mt-2'>
             <View className='w-[95%] bg-white px-4 mt-10 rounded-xl'>
               <View className='flex-row justify-between py-2'>
@@ -177,7 +187,9 @@ const Send = () => {
                   </Text>
                 </View>
                 <View className='justify-center'>
-                  <Text className='text-primary font-psemibold'>GHS {fee}</Text>
+                  <Text className='text-primary font-psemibold'>
+                    GHS {transferFee}
+                  </Text>
                 </View>
               </View>
 
@@ -194,7 +206,7 @@ const Send = () => {
         ) : (
           ''
         )}
-        {service ? (
+        {deliveryMethod ? (
           <View className='justify-center items-center'>
             <View className='w-[95%] mt-10'>
               <CustomButton title='NEXT' handlePress={handleNext} />

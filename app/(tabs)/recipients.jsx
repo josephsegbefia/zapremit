@@ -18,11 +18,11 @@ import { Ionicons } from '@expo/vector-icons';
 import CustomButton from '../../components/CustomButton';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import LoadingOverlay from '../../components/LoadingOverlay';
+
 const Recipients = () => {
   const navigation = useNavigation();
-  const { identifier } = useLocalSearchParams();
-  console.log(identifier);
-  const { user, setUser } = useGlobalContext();
+
+  const { user, transferData, setTransferData } = useGlobalContext();
   const { data: recipients, isLoading: isLoading } = useAppwrite(() =>
     getRecipients(user.$id)
   );
@@ -35,8 +35,6 @@ const Recipients = () => {
     );
   }
 
-  console.log(recipients);
-
   return (
     <>
       <SafeAreaView className='h-full bg-primary-50 flex-1'>
@@ -48,13 +46,16 @@ const Recipients = () => {
               <View className='w-[95%]'>
                 <TouchableOpacity
                   onPress={() => {
-                    if (identifier) {
-                      navigation.navigate('extrascreens/sendto', {
+                    if (transferData.identifier === 'from-send-screen') {
+                      setTransferData({
+                        ...transferData,
                         recipientFirstName: item.firstName,
                         recipientLastName: item.lastName,
+                        recipientMiddleName: item.middleName,
                         recipientPhone: item.phone,
+                        identifier: '',
                       });
-                      return;
+                      navigation.navigate('extrascreens/sendto');
                     }
                     router.push({
                       pathname: '/extrascreens/recipienttransfers',

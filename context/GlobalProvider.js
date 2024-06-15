@@ -8,6 +8,18 @@ const GlobalProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [transferData, setTransferData] = useState({
+    transferAmount: '',
+    receivableAmount: '',
+    transferFee: '',
+    totalToPay: '',
+    recipientPhone: '',
+    recipientFirstName: '',
+    repicientMiddleName: '',
+    recipientLastName: '',
+    deliveryMethod: '',
+    identifier: '', // for page or screen identification
+  });
 
   useEffect(() => {
     getCurrentUser()
@@ -29,7 +41,15 @@ const GlobalProvider = ({ children }) => {
   }, []);
   return (
     <GlobalContext.Provider
-      value={{ isLoggedIn, setIsLoggedIn, user, setUser, isLoading }}
+      value={{
+        isLoggedIn,
+        setIsLoggedIn,
+        user,
+        setUser,
+        isLoading,
+        transferData,
+        setTransferData,
+      }}
     >
       {children}
     </GlobalContext.Provider>

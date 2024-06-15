@@ -2,14 +2,13 @@ import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import { useNavigation, useLocalSearchParams } from 'expo-router';
+import { useNavigation } from 'expo-router';
+import { useGlobalContext } from '../../context/GlobalProvider';
 import React from 'react';
 
 const SendTo = () => {
-  const { recipientFirstName, recipientLastName, recipientPhone } =
-    useLocalSearchParams();
-
-  console.log(recipientFirstName, recipientLastName, recipientPhone);
+  const { transferData, setTransferData } = useGlobalContext();
+  console.log(transferData);
   const navigation = useNavigation();
   return (
     <ScrollView className='bg-full bg-primary-50'>
@@ -47,11 +46,7 @@ const SendTo = () => {
             <TouchableOpacity
               className='bg-white rounded-xl w-[95%] py-3 flex-row px-4 '
               activeOpacity={0.5}
-              onPress={() =>
-                navigation.navigate('recipients', {
-                  identifier: 'select-recipient',
-                })
-              }
+              onPress={() => navigation.navigate('recipients')}
             >
               <View className='bg-primary-200 justify-center items-center h-[50px] w-[50px] rounded-lg'>
                 <AntDesign name='contacts' size={30} color='white' />

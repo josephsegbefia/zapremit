@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { useGlobalContext } from '../../context/GlobalProvider';
 import { router, useNavigation } from 'expo-router';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 
 const MobileMoney = () => {
+  const { transferData, setTransferData } = useGlobalContext();
   const navigation = useNavigation();
   const mobileMoneyProviders = [
     {
@@ -56,12 +57,14 @@ const MobileMoney = () => {
             <TouchableOpacity
               key={provider.company}
               className='w-[95%] bg-white rounded-xl mt-5 py-10 px-4'
-              onPress={() =>
-                navigation.navigate('send', {
-                  service: provider.service,
-                  fee: provider.fee,
-                })
-              }
+              onPress={() => {
+                setTransferData({
+                  ...transferData,
+                  transferFee: provider.fee,
+                  deliveryMethod: provider.service,
+                });
+                navigation.navigate('send');
+              }}
             >
               <View className='flex-row justify-between'>
                 <View className='flex-row'>
