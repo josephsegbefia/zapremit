@@ -155,7 +155,7 @@ const RootLayout = () => {
           name='extrascreens/sendto'
           options={{
             presentation: 'fullScreenModal',
-            title: 'Select recipient',
+            title: 'Send Money',
             headerTintColor: '#004d40',
             headerStyle: {
               backgroundColor: '#e0f2f1',

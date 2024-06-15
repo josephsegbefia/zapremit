@@ -58,7 +58,7 @@ const Send = () => {
       transferAmount: transferAmt,
       receivableAmount: amtReceivable,
       totalToPay: total,
-      identifier: 'from-send-screen',
+      // identifier: 'from-send-screen',
     });
     navigation.navigate('extrascreens/sendto');
   };
