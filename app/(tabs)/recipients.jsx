@@ -107,6 +107,18 @@ const Recipients = () => {
             />
           )}
         />
+        {transferData.identifier === 'select-exisiting-recipient' ? (
+          <View className='items-center'>
+            <View className='w-[95%]'>
+              <CustomButton
+                title='BACK'
+                handlePress={() => navigation.navigate('extrascreens/sendto')}
+              />
+            </View>
+          </View>
+        ) : (
+          ''
+        )}
       </SafeAreaView>
     </>
   );

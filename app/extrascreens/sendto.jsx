@@ -22,6 +22,15 @@ const SendTo = () => {
     });
     navigation.navigate('recipients');
   };
+
+  const handleAddNewRecipientPress = () => {
+    setTransferData({
+      ...transferData,
+      identifier: 'add-new-recipient',
+    });
+    navigation.navigate('extrascreens/addrecipient');
+  };
+
   return (
     <ScrollView className='h-full bg-primary-50'>
       <SafeAreaView className='pb-10'>
@@ -44,7 +53,7 @@ const SendTo = () => {
                 <RecipientSelectOption
                   icon={<Ionicons name='person-add' size={30} color='white' />}
                   title='Add New Recipient'
-                  handlePress={() => {}}
+                  handlePress={handleAddNewRecipientPress}
                 />
 
                 <RecipientSelectOption
@@ -68,13 +77,3 @@ const SendTo = () => {
 };
 
 export default SendTo;
-
-{
-  /* <View className='w-[95%] items-center'>
-  <View className='flex-row w-full'>
-    <View className='border border-primary w-[50px] h-[50px] justify-center items-center '>
-      <Ionicons name='person-add' size={24} color='#004d40' />
-    </View>
-  </View>
-</View>; */
-}

@@ -12,7 +12,7 @@ const InfoCard = ({ title, info }) => {
       />
       <View className='justify-center mb-4'>
         <View className='w-full'>
-          <Text className='px-2 font-psemibold'>{title}</Text>
+          <Text className='px-2 font-psemibold text-primary'>{title}</Text>
           <Text className='text-xs mt-3 text-justify'>
             {/* Please make sure the recipient has a registered mobile money account
             number with the provider. A wrong number may lead to a delay in your

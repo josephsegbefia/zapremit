@@ -7,6 +7,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
+import InfoCard from '../../components/InfoCard';
 
 const DeliveryOptions = () => {
   const deliveryOptions = [
@@ -38,6 +39,13 @@ const DeliveryOptions = () => {
   return (
     <ScrollView className='h-full bg-primary-50'>
       <SafeAreaView>
+        <View className='w-[90%]'>
+          <InfoCard
+            title='Important Information'
+            info='You can choose your preferred delivery option. Under each option there are other suboptions to pick'
+          />
+        </View>
+
         <View className='items-center'>
           {deliveryOptions.map((option) => (
             <TouchableOpacity
