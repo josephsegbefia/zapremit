@@ -54,7 +54,7 @@ const RootLayout = () => {
           }}
         />
         <Stack.Screen
-          name='extrascreens/addrecipient'
+          name='extrascreens/addnewrecipient'
           options={{
             title: 'Add new recipient',
             headerBackTitle: 'Back',

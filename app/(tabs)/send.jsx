@@ -157,7 +157,7 @@ const Send = () => {
         </Text>
         <View className='items-center'>
           <TouchableOpacity
-            className='bg-white rounded-xl w-[95%]  mt-6 flex-row py-5 justify-between'
+            className='bg-white rounded-xl w-[95%]  mt-6 flex-row py-3 justify-between'
             onPress={openDeliveryMethods}
           >
             <View className='flex-row px-4 gap-3'>
@@ -178,8 +178,8 @@ const Send = () => {
           </TouchableOpacity>
         </View>
         {deliveryMethod ? (
-          <View className='items-center mt-2'>
-            <View className='w-[95%] bg-white px-4 mt-10 rounded-xl'>
+          <View className='items-center'>
+            <View className='w-[95%] bg-white px-4 mt-6 rounded-xl'>
               <View className='flex-row justify-between py-2'>
                 <View className='justify-center'>
                   <Text className='text-primary font-psemibold'>

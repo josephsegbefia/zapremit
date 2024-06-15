@@ -88,7 +88,7 @@ const Recipients = () => {
                 </View>
                 <View className='mt-11'>
                   <TouchableOpacity
-                    onPress={() => router.push('/extrascreens/addrecipient')}
+                    onPress={() => router.push('/extrascreens/addnewrecipient')}
                   >
                     <Ionicons name='person-add' size={24} color='#004d40' />
                   </TouchableOpacity>
@@ -103,7 +103,7 @@ const Recipients = () => {
               title='No recipients found'
               subtitle='Your transfers will appear here'
               buttonLabel='Add recipient'
-              handlePress={() => router.push('/extrascreens/addrecipient')}
+              handlePress={() => router.push('/extrascreens/addnewrecipient')}
             />
           )}
         />
@@ -112,7 +112,13 @@ const Recipients = () => {
             <View className='w-[95%]'>
               <CustomButton
                 title='BACK'
-                handlePress={() => navigation.navigate('extrascreens/sendto')}
+                handlePress={() => {
+                  setTransferData({
+                    ...transferData,
+                    identifier: '',
+                  });
+                  navigation.navigate('extrascreens/sendto');
+                }}
               />
             </View>
           </View>

@@ -47,6 +47,7 @@ const ExchangeRateCard = ({ title, hostCountryId, recipientCountryId }) => {
           title='Send Now'
           containerStyles='w-[80%]'
           handlePress={() => router.push('/send')}
+          // handlePress={() => router.push('extrascreens/addrecipient')}
         />
       </View>
     </View>

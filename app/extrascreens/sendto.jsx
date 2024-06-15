@@ -2,17 +2,26 @@ import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import { useNavigation } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import RecipientSelectOption from '../../components/RecipientSelectOption';
 import React from 'react';
 import InfoCard from '../../components/InfoCard';
+import useAppwrite from '../../lib/useAppwrite';
+import { getRecipients } from '../../lib/appwrite';
 import TransferOverView from '../../components/TransferOverView';
+import LoadingOverlay from '../../components/LoadingOverlay';
 
 const SendTo = () => {
-  const { transferData, setTransferData } = useGlobalContext();
+  const { user, transferData, setTransferData } = useGlobalContext();
+
+  const { data: recipients, isLoading: isLoading } = useAppwrite(() =>
+    getRecipients(user.$id)
+  );
+
   const { recipientFirstName } = transferData;
 
+  // console.log(transferData);
   const navigation = useNavigation();
 
   const selectExistingRecipient = () => {
@@ -23,13 +32,17 @@ const SendTo = () => {
     navigation.navigate('recipients');
   };
 
-  const handleAddNewRecipientPress = () => {
+  const addNewRecipient = () => {
     setTransferData({
       ...transferData,
       identifier: 'add-new-recipient',
     });
-    navigation.navigate('extrascreens/addrecipient');
+    router.replace('/extrascreens/addnewrecipient');
   };
+
+  if (isLoading) {
+    <LoadingOverlay message='Loading...' />;
+  }
 
   return (
     <ScrollView className='h-full bg-primary-50'>
@@ -53,7 +66,7 @@ const SendTo = () => {
                 <RecipientSelectOption
                   icon={<Ionicons name='person-add' size={30} color='white' />}
                   title='Add New Recipient'
-                  handlePress={handleAddNewRecipientPress}
+                  handlePress={addNewRecipient}
                 />
 
                 <RecipientSelectOption
@@ -61,12 +74,13 @@ const SendTo = () => {
                   title='Import Contacts'
                   handlePress={() => {}}
                 />
-
-                <RecipientSelectOption
-                  icon={<AntDesign name='contacts' size={30} color='white' />}
-                  title='Select Existing Recipient'
-                  handlePress={selectExistingRecipient}
-                />
+                {recipients.length > 0 && (
+                  <RecipientSelectOption
+                    icon={<AntDesign name='contacts' size={30} color='white' />}
+                    title='Select Existing Recipient'
+                    handlePress={selectExistingRecipient}
+                  />
+                )}
               </View>
             </View>
           </>

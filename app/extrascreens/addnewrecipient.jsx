@@ -9,7 +9,7 @@ import {
   Alert,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { useNavigation, router } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CountryCodePicker from '../../components/CountryCodePicker';
 import FormField from '../../components/FormField';
@@ -18,9 +18,9 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 import { createRecipient } from '../../lib/appwrite';
 import LoadingOverlay from '../../components/LoadingOverlay';
 
-const AddRecipient = () => {
-  const { user } = useGlobalContext();
+const AddNewRecipient = () => {
   const navigation = useNavigation();
+  const { user, transferData, setTransferData } = useGlobalContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [code, setCode] = useState('');
   const [phone, setPhone] = useState('');
@@ -29,8 +29,6 @@ const AddRecipient = () => {
     lastName: '',
     middleName: '',
     email: '',
-    // code: '',
-    // phone: '',
   });
 
   const submit = async () => {
@@ -39,13 +37,35 @@ const AddRecipient = () => {
     }
     setIsSubmitting(true);
     try {
-      await createRecipient({
+      const newRecipient = await createRecipient({
         ...form,
         userId: user.$id,
-        phone: phone,
-        code: code,
+        phone,
+        code,
       });
-      router.replace(`/recipients`);
+
+      console.log('New Recipient:', newRecipient);
+
+      setTransferData((prev) => ({
+        ...prev,
+        recipientFirstName: newRecipient.firstName,
+        recipientMiddleName: newRecipient?.middleName,
+        recipientLastName: newRecipient.lastName,
+        recipientPhone: newRecipient.phone,
+      }));
+
+      console.log('Updated Transfer Data:', transferData);
+
+      if (transferData.identifier === 'add-new-recipient') {
+        setTransferData((prev) => ({
+          ...prev,
+          identifier: '',
+        }));
+        navigation.replace('extrascreens/sendto');
+        return;
+      }
+
+      navigation.replace('recipients');
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {
@@ -55,8 +75,8 @@ const AddRecipient = () => {
         email: '',
         middleName: '',
       });
-      setPhone: '';
-      setCode: '';
+      setPhone('');
+      setCode('');
       setIsSubmitting(false);
     }
   };
@@ -82,7 +102,7 @@ const AddRecipient = () => {
         style={{ flex: 1 }}
       >
         <TouchableWithoutFeedback>
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <ScrollView className=''>
             <View className='w-[90%]'>
               <Text className='px-4 text-sm text-primary font-psemibold mb-4'>
                 Recipient's contact information
@@ -148,4 +168,4 @@ const AddRecipient = () => {
   );
 };
 
-export default AddRecipient;
+export default AddNewRecipient;
