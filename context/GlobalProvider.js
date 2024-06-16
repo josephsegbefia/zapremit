@@ -18,6 +18,7 @@ const GlobalProvider = ({ children }) => {
     recipientMiddleName: '',
     recipientLastName: '',
     deliveryMethod: '',
+    reason: '',
     identifier: '', // for page or screen identification
   });
 

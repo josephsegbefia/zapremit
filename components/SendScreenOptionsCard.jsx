@@ -2,15 +2,19 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 
 const SendScreenOptionsCard = ({
+  isDeliveryMethodSelect,
   handlePress,
   icon,
   opacity,
   dropdownIcon,
   deliveryMethod,
+  // title,
+  reason,
+  styles,
 }) => {
   return (
     <TouchableOpacity
-      className='bg-white rounded-xl w-[95%]  mt-6 flex-row py-3 justify-between'
+      className={`bg-white rounded-xl w-[95%] flex-row py-3 justify-between ${styles}`}
       onPress={handlePress}
       activeOpacity={opacity}
     >
@@ -19,9 +23,15 @@ const SendScreenOptionsCard = ({
           {icon}
         </View>
         <View className='justify-center'>
-          <Text className='text-primary font-psemibold text-base'>
-            {!deliveryMethod ? 'Select delivery option' : `${deliveryMethod}`}
-          </Text>
+          {isDeliveryMethodSelect ? (
+            <Text className='text-primary font-psemibold text-base'>
+              {!deliveryMethod ? 'Select delivery option' : `${deliveryMethod}`}
+            </Text>
+          ) : (
+            <Text className='text-primary font-psemibold text-base'>
+              {!reason ? 'Reason for sending' : `${reason}`}
+            </Text>
+          )}
         </View>
       </View>
       <View className='justify-center px-5'>{dropdownIcon}</View>

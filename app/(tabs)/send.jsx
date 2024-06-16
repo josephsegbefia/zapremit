@@ -16,16 +16,31 @@ import CustomButton from '../../components/CustomButton';
 import CustomDropDown from '../../components/CustomDropDown';
 import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
 import MiniTransferSummary from '../../components/MiniTransferSummary';
+import ReasonsModal from '../extrascreens/reasonsModal';
 
 const Send = () => {
   const navigation = useNavigation();
   const { user, transferData, setTransferData, rate } = useGlobalContext();
-  const { deliveryMethod, transferFee, totalToPay } = transferData;
+  const { deliveryMethod, transferFee, totalToPay, reason } = transferData;
 
   const [transferAmt, setTransferAmt] = useState('100');
   const [sendingCurrency, setSendingCurrency] = useState('');
   const [receivingCurrency, setReceivingCurrency] = useState('');
   const [amtReceivable, setAmtReceivable] = useState(null);
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeReasons = () => {
+    setModalVisible(false);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
   // const total = parseFloat(transferAmt) + parseFloat(transferFee);
 
@@ -41,6 +56,18 @@ const Send = () => {
 
   const openDeliveryMethods = () => {
     router.push('/extrascreens/deliveryoptions');
+  };
+
+  const openReasons = () => {
+    openModal();
+  };
+
+  const selectReason = (selectedReason) => {
+    setTransferData((prev) => ({
+      ...prev,
+      reason: selectReason,
+    }));
+    closeModal();
   };
 
   useEffect(() => {
@@ -143,6 +170,8 @@ const Send = () => {
           </Text>
           <View className='items-center'>
             <SendScreenOptionsCard
+              isDeliveryMethodSelect={true}
+              styles='mt-4'
               deliveryMethod={deliveryMethod}
               handlePress={openDeliveryMethods}
               icon={<FontAwesome name='bolt' size={20} color='#004d40' />}
@@ -151,8 +180,18 @@ const Send = () => {
                 <AntDesign name='caretdown' size={14} color='#004d40' />
               }
             />
+            {deliveryMethod && (
+              <SendScreenOptionsCard
+                styles='mt-3'
+                handlePress={openReasons}
+                dropdownIcon={
+                  <AntDesign name='caretdown' size={14} color='#004d40' />
+                }
+                icon={<FontAwesome name='bolt' size={20} color='#004d40' />}
+              />
+            )}
           </View>
-          {deliveryMethod ? (
+          {reason ? (
             <MiniTransferSummary
               transferFee={transferFee}
               totalToPay={totalToPay}
@@ -160,11 +199,19 @@ const Send = () => {
           ) : null}
         </View>
       </ScrollView>
-      {deliveryMethod ? (
+      {reason ? (
         <View className='absolute bottom-5 w-full px-4 pb-4'>
           <CustomButton title='NEXT' handlePress={handleNext} />
         </View>
       ) : null}
+
+      {modalVisible && (
+        <ReasonsModal
+          modalVisible={modalVisible}
+          closeModal={closeReasons}
+          selectReason={selectReason}
+        />
+      )}
     </SafeAreaView>
   );
 };

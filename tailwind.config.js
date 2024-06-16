@@ -10,6 +10,7 @@ module.exports = {
           200: '#80cbc4',
           500: '#009688',
           red: '#ED2939',
+          seethrough: 'rgba(0, 0, 0, 0.5)',
         },
         secondary: {
           DEFAULT: '#FF9C01',
