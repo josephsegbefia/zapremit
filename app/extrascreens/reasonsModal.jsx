@@ -6,12 +6,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
 const { height: screenHeight } = Dimensions.get('window');
-const modalHeight = screenHeight / 3;
+const modalHeight = screenHeight / 2;
 
 const reasons = [
   {
@@ -34,46 +35,51 @@ const reasons = [
 
 const ReasonsModal = ({ modalVisible, closeModal, selectReason }) => {
   return (
-    <View style={styles.container}>
-      {/* <TouchableOpacity style={styles.button} onPress={openModal}>
+    <ScrollView>
+      <View style={styles.container}>
+        {/* <TouchableOpacity style={styles.button} onPress={openModal}>
         <Text style={styles.buttonText}>Open Modal</Text>
       </TouchableOpacity> */}
 
-      <Modal
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeModal}
-        animationType='slide'
-      >
-        <View className='flex-1 justify-end bg-primary-seethrough'>
-          <View style={[styles.modalContainer, { height: modalHeight }]}>
-            <View className='flex-row justify-between'>
-              <View className='justify-center'>
-                <Text className='text-xl font-pbold text-primary'>
-                  Select reason for sending
-                </Text>
-              </View>
-              <View>
-                <TouchableOpacity onPress={closeModal}>
-                  <Ionicons name='close' size={24} color='#004d40' />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View className='w-[100%] items-center'>
-              {reasons.map((reason) => (
-                <View key={reason.id} className='w-[95%]'>
-                  <TouchableOpacity onPress={() => selectReason(reason.reason)}>
-                    <Text className='my-5 text-sm font-psemibold'>
-                      {reason.reason}
-                    </Text>
+        <Modal
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={closeModal}
+          animationType='slide'
+        >
+          <View className='flex-1 justify-end bg-primary-seethrough'>
+            <View style={[styles.modalContainer, { height: modalHeight }]}>
+              <View className='flex-row justify-between'>
+                <View className='justify-center'>
+                  <Text className='text-xl font-pbold text-primary'>
+                    Select reason for sending
+                  </Text>
+                </View>
+                <View>
+                  <TouchableOpacity onPress={closeModal}>
+                    <Ionicons name='close' size={24} color='#004d40' />
                   </TouchableOpacity>
                 </View>
-              ))}
+              </View>
+              <View className='w-[100%] items-center'>
+                {reasons.map((reason) => (
+                  <View key={reason.id} className='w-[95%]'>
+                    <TouchableOpacity
+                      onPress={() => selectReason(reason.reason)}
+                      className='my-4 py-2 px-4  bg-primary-50 rounded-lg'
+                    >
+                      <Text className='text-sm font-psemibold'>
+                        {reason.reason}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
-    </View>
+        </Modal>
+      </View>
+    </ScrollView>
   );
 };
 

@@ -65,7 +65,7 @@ const Send = () => {
   const selectReason = (selectedReason) => {
     setTransferData((prev) => ({
       ...prev,
-      reason: selectReason,
+      reason: selectedReason,
     }));
     closeModal();
   };
@@ -79,7 +79,7 @@ const Send = () => {
       ...transferData,
       transferAmount: transferAmt,
       receivableAmount: amtReceivable,
-      totalToPay: total,
+      totalToPay: totalToPay,
     });
     navigation.navigate('extrascreens/sendto');
   };
@@ -182,6 +182,7 @@ const Send = () => {
             />
             {deliveryMethod && (
               <SendScreenOptionsCard
+                reason={reason}
                 styles='mt-3'
                 handlePress={openReasons}
                 dropdownIcon={
