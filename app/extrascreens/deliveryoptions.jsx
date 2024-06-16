@@ -37,7 +37,7 @@ const DeliveryOptions = () => {
     },
   ];
   return (
-    <ScrollView className='h-full bg-primary-50'>
+    <ScrollView className='h-full bg-primary-50 pb-10'>
       <SafeAreaView>
         <View className='w-[90%]'>
           <InfoCard

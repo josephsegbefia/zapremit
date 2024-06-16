@@ -13,26 +13,21 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import CustomButton from '../../components/CustomButton';
+import CustomDropDown from '../../components/CustomDropDown';
+import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
+import MiniTransferSummary from '../../components/MiniTransferSummary';
 
 const Send = () => {
   const navigation = useNavigation();
   const { user, transferData, setTransferData, rate } = useGlobalContext();
-  const { deliveryMethod, transferFee } = transferData;
+  const { deliveryMethod, transferFee, totalToPay } = transferData;
 
   const [transferAmt, setTransferAmt] = useState('100');
-  // const [deliveryOption, setDeliveryOption] = useState('');
-
-  // Would be worked on later
   const [sendingCurrency, setSendingCurrency] = useState('');
   const [receivingCurrency, setReceivingCurrency] = useState('');
-  //End of would be worked on later
-
   const [amtReceivable, setAmtReceivable] = useState(null);
 
-  // remember to make this dynamic
-  // const rate = ;
-
-  const total = parseFloat(transferAmt) + parseFloat(transferFee);
+  // const total = parseFloat(transferAmt) + parseFloat(transferFee);
 
   const conversionHandler = () => {
     if (transferAmt === undefined) {
@@ -58,167 +53,119 @@ const Send = () => {
       transferAmount: transferAmt,
       receivableAmount: amtReceivable,
       totalToPay: total,
-      // identifier: 'from-send-screen',
     });
     navigation.navigate('extrascreens/sendto');
   };
 
   return (
-    <ScrollView className='h-full bg-primary-50'>
-      <SafeAreaView className='py-10'>
-        <Text className='text-xl text-primary font-psemibold px-4 mt-10'>
-          Start sending some money, {user?.firstName}
-        </Text>
+    <SafeAreaView className='flex-1 bg-primary-50'>
+      <ScrollView className='flex-1'>
+        <View className='py-10'>
+          <Text className='text-xl text-primary font-psemibold px-4 mt-10'>
+            Start sending some money, {user?.firstName}
+          </Text>
 
-        <View className='items-center'>
-          <View className='bg-white rounded-xl mt-8 w-[95%] px-5 py-7'>
-            {/* Transfer amount card */}
-            <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mb-5'>
-              <View className='bg-primary-50 px-7 py-5 rounded-lg flex-row'>
-                <CountryFlag
-                  isoCode='de'
-                  size={40}
-                  className='w-[40px] h-[25px]'
-                />
-                <View className='justify-center'>
-                  <Text className='text-primary font-psemibold px-4'>EUR</Text>
-                </View>
-              </View>
-              <View className='px-5'>
-                <View className='justify-center pt-1'>
-                  <Text className='text-primary text-xs font-pregular'>
-                    You send
-                  </Text>
-                </View>
-                <TextInput
-                  // keyboardType={keyboardType}
-                  className='flex-1 text-primary font-semibold text-2xl text-center'
-                  value={transferAmt}
-                  // placeholder={placeholder}
-                  placeholderTextColor='#7b7b8b'
-                  onChangeText={(e) => setTransferAmt(e)}
-                />
-              </View>
-            </View>
-            {/* End of transfer amount card */}
-
-            {/* Rate Bar in the middle */}
-            <View className='items-center justify-center'>
-              <View className='flex flex-row w-[70%] p-1 justify-between rounded-lg'>
-                <Text className='text-sm font-psemibold'>1 EUR </Text>
-                <FontAwesome name='bolt' size={20} color='#004d40' />
-                <Text className='text-sm font-psemibold'>16.12 GHS </Text>
-              </View>
-            </View>
-            {/* End of rate bar in the middle */}
-
-            {/* Amount receivable card */}
-
-            <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mt-5'>
-              <TouchableOpacity className='bg-primary-50 px-5 py-5 rounded-lg flex-row'>
-                <CountryFlag
-                  isoCode='gh'
-                  size={40}
-                  className='w-[40px] h-[25px]'
-                />
-                <View className='justify-center'>
-                  <View className='flex flex-row justify-between'>
+          <View className='items-center'>
+            <View className='bg-white rounded-xl mt-8 w-[95%] px-5 py-7'>
+              <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mb-5'>
+                <View className='bg-primary-50 px-7 py-5 rounded-lg flex-row'>
+                  <CountryFlag
+                    isoCode='de'
+                    size={40}
+                    className='w-[40px] h-[25px]'
+                  />
+                  <View className='justify-center'>
                     <Text className='text-primary font-psemibold px-4'>
-                      GHS
+                      EUR
                     </Text>
-                    <View className='justify-center'>
-                      <AntDesign name='caretdown' size={14} color='#004d40' />
-                    </View>
                   </View>
                 </View>
-              </TouchableOpacity>
-              <View className='px-5'>
-                <View className='justify-center pt-1'>
-                  <Text className='text-primary text-xs font-pregular'>
-                    They receive
-                  </Text>
+                <View className='px-5'>
+                  <View className='justify-center pt-1'>
+                    <Text className='text-primary text-xs font-pregular'>
+                      You send
+                    </Text>
+                  </View>
+                  <TextInput
+                    className='flex-1 text-primary font-semibold text-2xl text-center'
+                    value={transferAmt}
+                    placeholderTextColor='#7b7b8b'
+                    onChangeText={(e) => setTransferAmt(e)}
+                  />
                 </View>
-                <TextInput
-                  // keyboardType={keyboardType}
-                  className='flex-1 text-primary font-semibold text-2xl text-center'
-                  value={amtReceivable}
-                  // placeholder={placeholder}
-                  placeholderTextColor='#7b7b8b'
-                  onChangeText={(e) => setTransferAmt(e)}
-                />
               </View>
-            </View>
-            {/* End of amount receivable  */}
-          </View>
-        </View>
 
-        <Text className='text-primary font-psemibold mt-6 text-sm pl-3'>
-          DELIVERY OPTIONS
-        </Text>
-        <View className='items-center'>
-          <TouchableOpacity
-            className='bg-white rounded-xl w-[95%]  mt-6 flex-row py-3 justify-between'
-            onPress={openDeliveryMethods}
-          >
-            <View className='flex-row px-4 gap-3'>
-              <View className='border border-primary rounded-full w-10 h-10 justify-center items-center'>
-                <FontAwesome name='bolt' size={20} color='#004d40' />
+              <View className='items-center justify-center'>
+                <View className='flex flex-row w-[70%] p-1 justify-between rounded-lg'>
+                  <Text className='text-sm font-psemibold'>1 EUR </Text>
+                  <FontAwesome name='bolt' size={20} color='#004d40' />
+                  <Text className='text-sm font-psemibold'>16.12 GHS </Text>
+                </View>
               </View>
-              <View className='justify-center'>
-                <Text className='text-primary font-psemibold text-base'>
-                  {!deliveryMethod
-                    ? 'Select delivery option'
-                    : `${deliveryMethod}`}
-                </Text>
+
+              <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mt-5'>
+                <TouchableOpacity className='bg-primary-50 px-5 py-5 rounded-lg flex-row'>
+                  <CountryFlag
+                    isoCode='gh'
+                    size={40}
+                    className='w-[40px] h-[25px]'
+                  />
+                  <View className='justify-center'>
+                    <View className='flex flex-row justify-between'>
+                      <Text className='text-primary font-psemibold px-4'>
+                        GHS
+                      </Text>
+                      <View className='justify-center'>
+                        <AntDesign name='caretdown' size={14} color='#004d40' />
+                      </View>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                <View className='px-5'>
+                  <View className='justify-center pt-1'>
+                    <Text className='text-primary text-xs font-pregular'>
+                      They receive
+                    </Text>
+                  </View>
+                  <TextInput
+                    className='flex-1 text-primary font-semibold text-2xl text-center'
+                    value={amtReceivable}
+                    placeholderTextColor='#7b7b8b'
+                    onChangeText={(e) => setTransferAmt(e)}
+                  />
+                </View>
               </View>
             </View>
-            <View className='justify-center px-5'>
-              <AntDesign name='caretdown' size={14} color='#004d40' />
-            </View>
-          </TouchableOpacity>
-        </View>
-        {deliveryMethod ? (
+          </View>
+
+          <Text className='text-primary font-psemibold mt-6 text-sm pl-3'>
+            DELIVERY OPTIONS
+          </Text>
           <View className='items-center'>
-            <View className='w-[95%] bg-white px-4 mt-6 rounded-xl'>
-              <View className='flex-row justify-between py-2'>
-                <View className='justify-center'>
-                  <Text className='text-primary font-psemibold'>
-                    Transfer fee
-                  </Text>
-                </View>
-                <View className='justify-center'>
-                  <Text className='text-primary font-psemibold'>
-                    GHS {transferFee}
-                  </Text>
-                </View>
-              </View>
-
-              <View className='flex-row justify-between my-2'>
-                <View className='justify-center'>
-                  <Text className='text-primary font-psemibold'>Total</Text>
-                </View>
-                <View className='justify-center'>
-                  <Text className='text-primary font-psemibold'>
-                    {transferData.total}
-                  </Text>
-                </View>
-              </View>
-            </View>
+            <SendScreenOptionsCard
+              deliveryMethod={deliveryMethod}
+              handlePress={openDeliveryMethods}
+              icon={<FontAwesome name='bolt' size={20} color='#004d40' />}
+              opacity={0.5}
+              dropdownIcon={
+                <AntDesign name='caretdown' size={14} color='#004d40' />
+              }
+            />
           </View>
-        ) : (
-          ''
-        )}
-        {deliveryMethod ? (
-          <View className='justify-center items-center'>
-            <View className='w-[95%] mt-10'>
-              <CustomButton title='NEXT' handlePress={handleNext} />
-            </View>
-          </View>
-        ) : (
-          ''
-        )}
-      </SafeAreaView>
-    </ScrollView>
+          {deliveryMethod ? (
+            <MiniTransferSummary
+              transferFee={transferFee}
+              totalToPay={totalToPay}
+            />
+          ) : null}
+        </View>
+      </ScrollView>
+      {deliveryMethod ? (
+        <View className='absolute bottom-5 w-full px-4 pb-4'>
+          <CustomButton title='NEXT' handlePress={handleNext} />
+        </View>
+      ) : null}
+    </SafeAreaView>
   );
 };
 

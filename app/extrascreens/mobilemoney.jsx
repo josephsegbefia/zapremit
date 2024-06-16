@@ -37,7 +37,7 @@ const MobileMoney = () => {
 
   return (
     <ScrollView className='h-full bg-primary-50'>
-      <SafeAreaView>
+      <SafeAreaView className='pb-10'>
         <View className='w-[90%]'>
           <InfoCard
             title='Important Information'
