@@ -163,29 +163,29 @@ const RootLayout = () => {
             },
 
             headerRight: ({ tintColor }) => (
-              <TouchableOpacity onPress={() => router.back()}>
+              <TouchableOpacity onPress={() => router.replace('/send')}>
                 <Ionicons name='close' size={24} color={tintColor} />
               </TouchableOpacity>
             ),
           }}
         />
-        {/* <Stack.Screen
-          name='extrascreens/reasonsModal'
+        <Stack.Screen
+          name='extrascreens/verification'
           options={{
-            // presentation: 'modal',
-            title: 'Reason for sending',
+            presentation: 'fullScreenModal',
+            title: 'Verify',
             headerTintColor: '#004d40',
             headerStyle: {
               backgroundColor: '#e0f2f1',
               fontWeight: 'bold',
             },
-            headerRight: ({ tintColor }) => (
-              <TouchableOpacity onPress={() => router.back()}>
-                <Ionicons name='close' size={24} color={tintColor} />
-              </TouchableOpacity>
-            ),
+            // headerRight: ({ tintColor }) => (
+            //   <TouchableOpacity onPress={() => router.back()}>
+            //     <Ionicons name='close' size={24} color={tintColor} />
+            //   </TouchableOpacity>
+            // ),
           }}
-        /> */}
+        />
       </Stack>
     </GlobalProvider>
   );

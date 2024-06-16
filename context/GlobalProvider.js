@@ -24,6 +24,10 @@ const GlobalProvider = ({ children }) => {
 
   const [rate, setRate] = useState(16.12);
 
+  const [userIsVerified, setUserIsVerified] = useState(false); // This will later come from the backend on the user object.
+  // Will be true if the user has provided his address information and ID document has been checked.
+  // It will be a isVerified attribute on the user object
+
   useEffect(() => {
     getCurrentUser()
       .then((res) => {
@@ -54,6 +58,8 @@ const GlobalProvider = ({ children }) => {
         setTransferData,
         rate,
         setRate,
+        userIsVerified,
+        setUserIsVerified,
       }}
     >
       {children}

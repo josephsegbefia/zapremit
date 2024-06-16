@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 import { useGlobalContext } from '../context/GlobalProvider';
 import InfoCard from './InfoCard';
 import CustomButton from './CustomButton';
 
 const TransferOverView = () => {
-  const { user, transferData, setTransferData } = useGlobalContext();
+  // const [isVerified, setIsVerified] = useState(false);
+
+  const { user, userIsVerified, transferData, setTransferData } =
+    useGlobalContext();
   const {
     recipientFirstName,
     recipientMiddleName,
@@ -107,7 +111,8 @@ const TransferOverView = () => {
       </View>
       <View className='mt-5'>
         <CustomButton
-          title={user.isVerified ? 'SEND MONEY' : 'VERIFY YOUR IDENTITY'}
+          title={userIsVerified ? 'SEND MONEY' : 'VERIFY YOUR IDENTITY'}
+          handlePress={() => router.replace('/extrascreens/verification')}
         />
       </View>
     </View>
