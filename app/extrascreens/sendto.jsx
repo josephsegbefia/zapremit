@@ -15,7 +15,7 @@ import LoadingOverlay from '../../components/LoadingOverlay';
 const SendTo = () => {
   const { user, transferData, setTransferData } = useGlobalContext();
 
-  const { data: recipients, isLoading: isLoading } = useAppwrite(() =>
+  const { data: recipients, isLoading } = useAppwrite(() =>
     getRecipients(user.$id)
   );
 
@@ -39,10 +39,6 @@ const SendTo = () => {
     router.replace('/extrascreens/addnewrecipient');
   };
 
-  if (isLoading) {
-    <LoadingOverlay message='Loading...' />;
-  }
-
   return (
     <ScrollView className='h-full bg-primary-50'>
       <SafeAreaView className='pb-10'>
@@ -62,6 +58,7 @@ const SendTo = () => {
 
             <View>
               <View className='items-center'>
+                {isLoading && <LoadingOverlay />}
                 <RecipientSelectOption
                   icon={<Ionicons name='person-add' size={30} color='white' />}
                   title='Add New Recipient'

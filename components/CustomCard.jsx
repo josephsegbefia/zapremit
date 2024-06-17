@@ -10,6 +10,7 @@ const CustomCard = ({
   status,
   customStyles,
   isTransferHistory,
+  empty,
 }) => {
   const initials = firstName.charAt(0) + lastName.charAt(0);
 
@@ -24,12 +25,16 @@ const CustomCard = ({
   return (
     <View className='w-100%'>
       <View
-        className={`border-none bg-white rounded-xl px-3 py-3 mt-3 ${customStyles}`}
+        className={`border-none bg-white rounded-xl px-3 py-3 mt-2 ${customStyles}`}
       >
         <View className='flex flex-row justify-between gap-3'>
           <View className='flex flex-row'>
             <View className='w-[50px] h-[50px] items-center justify-center rounded-full border-2 border-primary mx-3'>
-              <Text className='text-primary font-psemibold'>{initials}</Text>
+              {empty ? (
+                <Text className='text-primary font-psemibold'>NT</Text>
+              ) : (
+                <Text className='text-primary font-psemibold'>{initials}</Text>
+              )}
             </View>
             <View className='py-3'>
               <Text className='text-xl font-psemibold text-primary'>

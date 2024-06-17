@@ -17,6 +17,7 @@ import CustomButton from '../../components/CustomButton';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { createRecipient } from '../../lib/appwrite';
 import LoadingOverlay from '../../components/LoadingOverlay';
+import { router } from 'expo-router';
 
 const AddNewRecipient = () => {
   const navigation = useNavigation();
@@ -48,24 +49,22 @@ const AddNewRecipient = () => {
 
       setTransferData((prev) => ({
         ...prev,
+        recipientId: newRecipient.$id,
         recipientFirstName: newRecipient.firstName,
         recipientMiddleName: newRecipient?.middleName,
         recipientLastName: newRecipient.lastName,
         recipientPhone: newRecipient.phone,
       }));
 
-      console.log('Updated Transfer Data:', transferData);
-
       if (transferData.identifier === 'add-new-recipient') {
         setTransferData((prev) => ({
           ...prev,
           identifier: '',
         }));
-        navigation.replace('extrascreens/sendto');
+        router.replace('/extrascreens/sendto');
         return;
       }
-
-      navigation.replace('recipients');
+      router.replace('/recipients');
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {
