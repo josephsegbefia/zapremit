@@ -53,6 +53,7 @@ const Recipients = () => {
                     ) {
                       setTransferData({
                         ...transferData,
+                        recipientId: item.$id,
                         recipientFirstName: item.firstName,
                         recipientLastName: item.lastName,
                         recipientMiddleName: item.middleName,

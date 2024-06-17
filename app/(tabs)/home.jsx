@@ -29,7 +29,7 @@ const Home = () => {
           </Text>
         </View>
         <View className='w-[95%] mt-10'>
-          <CustomCard
+          {/* <CustomCard
             firstName='Harry'
             lastName='Potter'
             amount='1,276 GHS'
@@ -44,7 +44,7 @@ const Home = () => {
             date='May, 27 2024'
             status='delivered'
             isTransferHistory
-          />
+          /> */}
           {/* <CustomCard
             firstName='S'
             lastName='S'

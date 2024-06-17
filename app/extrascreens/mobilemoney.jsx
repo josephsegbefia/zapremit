@@ -19,19 +19,19 @@ const MobileMoney = () => {
       company: 'Vodafone GH',
       service: 'Vodafone Cash',
       limit: '15K GHS',
-      fee: 0.99,
+      fee: '0.99',
     },
     {
       company: 'AirtelTigo',
       service: 'AirtelTigo Cash Cash',
       limit: '15K GHS',
-      fee: 0.99,
+      fee: '0.99',
     },
     {
       company: 'MTN',
       service: 'MTN MoMo',
       limit: '15K GHS',
-      fee: 0.99,
+      fee: '0.99',
     },
   ];
 

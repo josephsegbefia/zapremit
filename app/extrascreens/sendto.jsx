@@ -21,7 +21,6 @@ const SendTo = () => {
 
   const { recipientFirstName } = transferData;
 
-  // console.log(transferData);
   const navigation = useNavigation();
 
   const selectExistingRecipient = () => {

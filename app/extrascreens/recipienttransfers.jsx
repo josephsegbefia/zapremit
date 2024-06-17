@@ -56,17 +56,21 @@ const RecipientTransfers = () => {
         data={transfers}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <CustomCard
-            firstName={parsedItem.firstName}
-            lastName={parsedItem.lastName}
-            amount={item.amount}
-            status={item.status}
-            date={item.date}
-            isTransferHistory
-          />
+          <View className='items-center'>
+            <View className='w-[90%]'>
+              <CustomCard
+                firstName={parsedItem.firstName}
+                lastName={parsedItem.lastName}
+                amount={item.amount}
+                status={item.status}
+                date={item.date}
+                isTransferHistory
+              />
+            </View>
+          </View>
         )}
         ListHeaderComponent={() => (
-          <View className='flex-row justify-around pr-4'>
+          <View className='flex-row justify-between'>
             <View>
               <CustomCard
                 firstName={parsedItem.firstName}
@@ -75,7 +79,7 @@ const RecipientTransfers = () => {
                 customStyles='bg-primary-50'
               />
             </View>
-            <View className='mt-9'>
+            <View className='mt-9 px-5'>
               <TouchableOpacity onPress={editPressHandler}>
                 <MaterialCommunityIcons
                   name='account-edit'

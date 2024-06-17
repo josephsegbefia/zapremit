@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useGlobalContext } from '../context/GlobalProvider';
 import InfoCard from './InfoCard';
+import { createTransfer } from '../lib/appwrite';
 import CustomButton from './CustomButton';
 
 const TransferOverView = () => {
   // const [isVerified, setIsVerified] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { user, userIsVerified, transferData, setTransferData } =
     useGlobalContext();
@@ -22,7 +24,23 @@ const TransferOverView = () => {
     transferFee,
     transferAmount,
   } = transferData;
+
   // console.log(transferData);
+
+  const sendMoney = async () => {
+    setIsSubmitting(true);
+    try {
+      const newTransfer = await createTransfer({
+        ...transferData,
+        user: user.$id,
+      });
+      console.log(newTransfer);
+    } catch (error) {
+      Alert.alert('Error', 'Funds could not be sent.');
+      console.log(error);
+    }
+  };
+
   return (
     <View className='w-[90%]'>
       <View className=''>
@@ -110,10 +128,16 @@ const TransferOverView = () => {
         </View>
       </View>
       <View className='mt-5'>
-        <CustomButton
-          title={userIsVerified ? 'SEND MONEY' : 'VERIFY YOUR IDENTITY'}
-          handlePress={() => router.replace('/extrascreens/verification')}
-        />
+        {userIsVerified && (
+          <CustomButton title='SEND MONEY' handlePress={sendMoney} />
+        )}
+
+        {!userIsVerified && (
+          <CustomButton
+            title='VERIFY YOUR IDENTITY'
+            handlePress={() => router.replace('/extrascreens/verification')}
+          />
+        )}
       </View>
     </View>
   );
