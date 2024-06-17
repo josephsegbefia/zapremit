@@ -14,13 +14,16 @@ import useAppwrite from '../../lib/useAppwrite';
 import CustomCard from '../../components/CustomCard';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import EmptyState from '../../components/EmptyState';
+import formatDate from '../../lib/formatDate';
+import CustomButton from '../../components/CustomButton';
+import LoadingOverlay from '../../components/LoadingOverlay';
 
 const { width } = Dimensions.get('window');
 const RecipientTransfers = () => {
   const { item } = useLocalSearchParams();
   const parsedItem = JSON.parse(item);
 
-  const { data: transfers } = useAppwrite(() =>
+  const { data: transfers, isLoading: isLoading } = useAppwrite(() =>
     getRecipientTransfers(parsedItem.$id)
   );
 
@@ -50,6 +53,10 @@ const RecipientTransfers = () => {
     });
   };
 
+  if (isLoading) {
+    return <LoadingOverlay message='Loading...' />;
+  }
+
   return (
     <SafeAreaView className='bg-primary-50 h-full w-full'>
       <FlatList
@@ -57,20 +64,20 @@ const RecipientTransfers = () => {
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <View className='items-center'>
-            <View className='w-[90%]'>
+            <View className='w-[95%]'>
               <CustomCard
                 firstName={parsedItem.firstName}
                 lastName={parsedItem.lastName}
-                amount={item.amount}
+                amount={item.receivableAmount}
                 status={item.status}
-                date={item.date}
+                date={formatDate(item.$createdAt)}
                 isTransferHistory
               />
             </View>
           </View>
         )}
         ListHeaderComponent={() => (
-          <View className='flex-row justify-between'>
+          <View className='flex-row justify-between mb-5'>
             <View>
               <CustomCard
                 firstName={parsedItem.firstName}
@@ -92,6 +99,17 @@ const RecipientTransfers = () => {
         )}
         stickyHeaderIndices={[0]}
         ListHeaderComponentStyle={styles.header}
+        // ListFooterComponent={() => (
+        //   <View className='items-center'>
+        //     {transfers.length !== 0 && (
+        //       <View className='w-[95%] absolute bottom-[-500px]'>
+        //         <CustomButton
+        //           title={`Send ${parsedItem.firstName} money again!`}
+        //         />
+        //       </View>
+        //     )}
+        //   </View>
+        // )}
         ListEmptyComponent={() => (
           <EmptyState
             title={`No transfers made to ${parsedItem.firstName} yet!`}
@@ -100,6 +118,13 @@ const RecipientTransfers = () => {
           />
         )}
       />
+      {transfers.length !== 0 && (
+        <View className='items-center'>
+          <View className='w-[95%] mb-4'>
+            <CustomButton title={`Send ${parsedItem.firstName} money again!`} />
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
