@@ -51,7 +51,7 @@ const MobileMoney = () => {
           {mobileMoneyProviders.map((provider) => (
             <TouchableOpacity
               key={provider.company}
-              className='w-[95%] bg-white rounded-xl mt-5 py-10 px-4'
+              className='w-[95%] bg-white rounded-xl mt-5 py-4 px-4'
               onPress={() => {
                 setTransferData({
                   ...transferData,

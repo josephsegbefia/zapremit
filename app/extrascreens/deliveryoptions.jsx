@@ -37,8 +37,8 @@ const DeliveryOptions = () => {
     },
   ];
   return (
-    <ScrollView className='h-full bg-primary-50 pb-10'>
-      <SafeAreaView>
+    <ScrollView className='h-full bg-primary-50'>
+      <SafeAreaView className='pb-10'>
         <View className='w-[90%]'>
           <InfoCard
             title='Important Information'
@@ -50,7 +50,7 @@ const DeliveryOptions = () => {
           {deliveryOptions.map((option) => (
             <TouchableOpacity
               key={option.title}
-              className='w-[95%] bg-white rounded-xl mt-5 py-10 px-4'
+              className='w-[95%] bg-white rounded-xl mt-5 py-4 px-4'
               onPress={() => router.push(`/extrascreens/${option.screen}`)}
             >
               <View className='flex-row justify-between'>

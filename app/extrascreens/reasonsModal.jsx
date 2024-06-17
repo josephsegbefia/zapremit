@@ -52,7 +52,7 @@ const ReasonsModal = ({ modalVisible, closeModal, selectReason }) => {
               <View className='flex-row justify-between'>
                 <View className='justify-center'>
                   <Text className='text-xl font-pbold text-primary'>
-                    Select reason for sending
+                    Sending reason
                   </Text>
                 </View>
                 <View>
@@ -66,9 +66,9 @@ const ReasonsModal = ({ modalVisible, closeModal, selectReason }) => {
                   <View key={reason.id} className='w-[95%]'>
                     <TouchableOpacity
                       onPress={() => selectReason(reason.reason)}
-                      className='my-4 py-2 px-4  bg-primary-50 rounded-lg'
+                      className='my-4 py-2 px-2'
                     >
-                      <Text className='text-sm font-psemibold'>
+                      <Text className='text-primary font-psemibold'>
                         {reason.reason}
                       </Text>
                     </TouchableOpacity>
