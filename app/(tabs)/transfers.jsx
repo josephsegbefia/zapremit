@@ -3,22 +3,36 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import EmptyState from '../../components/EmptyState';
 import CustomCard from '../../components/CustomCard';
+import { useGlobalContext } from '../../context/GlobalProvider';
+import useAppwrite from '../../lib/useAppwrite';
+import { getTransfers } from '../../lib/appwrite';
+import LoadingOverlay from '../../components/LoadingOverlay';
+import formatDate from '../../lib/formatDate';
 
 const Transfers = () => {
+  const { user } = useGlobalContext();
+  const { data: transfers, isLoading: isLoading } = useAppwrite(() =>
+    getTransfers(user.$id)
+  );
+
+  if (isLoading) {
+    return <LoadingOverlay message='Loading...' />;
+  }
+
   return (
     <SafeAreaView className='h-full bg-primary-50 flex-1'>
       <FlatList
-        data={[]}
+        data={transfers}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <View className='w-full items-center'>
             <View className='mt-2 w-[95%]'>
               <CustomCard
-                firstName={item.firstName}
-                lastName={item.lastName}
-                date={item.date}
+                firstName={item.recipient.firstName}
+                lastName={item.recipient.lastName}
+                date={formatDate(item.$createdAt)}
                 status={item.status}
-                amount={item.amount}
+                amount={item.receivableAmount}
                 isTransferHistory
               />
             </View>
