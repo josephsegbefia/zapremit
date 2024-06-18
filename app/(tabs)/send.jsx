@@ -186,6 +186,7 @@ const Send = () => {
           <View className='items-center'>
             <SendScreenOptionsCard
               title='Select recipient'
+              subtitle='Sendning to'
               selectedOption={fullName}
               icon={<FontAwesome name='bolt' size={20} color='#004d40' />}
               styles='mt-4'
@@ -200,6 +201,7 @@ const Send = () => {
                 // isDeliveryMethodSelect={true}
                 styles='mt-4'
                 title='Select delivery option'
+                subtitle='Delivery method'
                 selectedOption={deliveryMethod}
                 handlePress={openDeliveryMethods}
                 icon={<FontAwesome name='bolt' size={20} color='#004d40' />}
@@ -212,7 +214,9 @@ const Send = () => {
 
             {deliveryMethod && (
               <SendScreenOptionsCard
-                reason={reason}
+                title='Sending reason'
+                subtitle='Reason'
+                selectedOption={reason}
                 styles='mt-3'
                 handlePress={openReasons}
                 dropdownIcon={
@@ -222,12 +226,12 @@ const Send = () => {
               />
             )}
           </View>
-          {reason ? (
+          {/* {reason ? (
             <MiniTransferSummary
               transferFee={transferFee}
               totalToPay={totalToPay}
             />
-          ) : null}
+          ) : null} */}
         </View>
       </ScrollView>
       {reason ? (

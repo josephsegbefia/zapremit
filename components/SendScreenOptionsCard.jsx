@@ -2,7 +2,6 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 
 const SendScreenOptionsCard = ({
-  isDeliveryMethodSelect,
   handlePress,
   icon,
   opacity,
@@ -10,6 +9,7 @@ const SendScreenOptionsCard = ({
   selectedOption,
   title,
   styles,
+  subtitle,
 }) => {
   return (
     <TouchableOpacity
@@ -22,6 +22,11 @@ const SendScreenOptionsCard = ({
           {icon}
         </View>
         <View className='justify-center'>
+          {selectedOption && (
+            <Text className='text-xs text-primary-500 font-pregular'>
+              {subtitle}
+            </Text>
+          )}
           <Text className='text-primary font-psemibold text-base'>
             {selectedOption ? `${selectedOption}` : `${title}`}
           </Text>
