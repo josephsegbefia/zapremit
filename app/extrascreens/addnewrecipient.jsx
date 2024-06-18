@@ -61,7 +61,7 @@ const AddNewRecipient = () => {
           ...prev,
           identifier: '',
         }));
-        router.replace('/extrascreens/sendto');
+        router.replace('/send');
         return;
       }
       router.replace('/recipients');

@@ -10,7 +10,7 @@ const Verification = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setUserIsVerified(true);
-      router.replace('/extrascreens/sendto');
+      router.replace('/extrascreens/transferoverview');
     }, 3000);
 
     return () => clearTimeout(timer); // Cleanup the timer on unmount
