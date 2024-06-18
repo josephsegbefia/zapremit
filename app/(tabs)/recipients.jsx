@@ -60,7 +60,7 @@ const Recipients = () => {
                         recipientPhone: item.phone,
                         identifier: '',
                       });
-                      navigation.navigate('extrascreens/sendto');
+                      navigation.navigate('send');
                       return;
                     }
                     router.push({

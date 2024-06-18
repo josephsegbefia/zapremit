@@ -21,7 +21,18 @@ import ReasonsModal from '../extrascreens/reasonsModal';
 const Send = () => {
   const navigation = useNavigation();
   const { user, transferData, setTransferData, rate } = useGlobalContext();
-  const { deliveryMethod, transferFee, totalToPay, reason } = transferData;
+  const {
+    deliveryMethod,
+    transferFee,
+    recipientFirstName,
+    recipientLastName,
+    totalToPay,
+    reason,
+  } = transferData;
+
+  const fullName = !recipientFirstName
+    ? null
+    : `${recipientFirstName.trim()} ${recipientLastName.trim()}`;
 
   const [transferAmt, setTransferAmt] = useState('100');
   const [sendingCurrency, setSendingCurrency] = useState('');
@@ -73,6 +84,10 @@ const Send = () => {
   useEffect(() => {
     conversionHandler();
   }, [transferAmt]);
+
+  const handleRecipientSelectPress = () => {
+    navigation.navigate('extrascreens/sendto');
+  };
 
   const handleNext = () => {
     setTransferData({
@@ -166,22 +181,35 @@ const Send = () => {
           </View>
 
           <Text className='text-primary font-psemibold mt-6 text-sm pl-3'>
-            DELIVERY OPTIONS
+            TRANSFER DETAILS
           </Text>
           <View className='items-center'>
-            {/* <SendScreenOptionsCard /> */}
             <SendScreenOptionsCard
-              // isDeliveryMethodSelect={true}
-              styles='mt-4'
-              title='Select delivery option'
-              selectedOption={deliveryMethod}
-              handlePress={openDeliveryMethods}
+              title='Select recipient'
+              selectedOption={fullName}
               icon={<FontAwesome name='bolt' size={20} color='#004d40' />}
+              styles='mt-4'
               opacity={0.5}
+              handlePress={handleRecipientSelectPress}
               dropdownIcon={
                 <AntDesign name='caretdown' size={14} color='#004d40' />
               }
             />
+            {fullName && (
+              <SendScreenOptionsCard
+                // isDeliveryMethodSelect={true}
+                styles='mt-4'
+                title='Select delivery option'
+                selectedOption={deliveryMethod}
+                handlePress={openDeliveryMethods}
+                icon={<FontAwesome name='bolt' size={20} color='#004d40' />}
+                opacity={0.5}
+                dropdownIcon={
+                  <AntDesign name='caretdown' size={14} color='#004d40' />
+                }
+              />
+            )}
+
             {deliveryMethod && (
               <SendScreenOptionsCard
                 reason={reason}
