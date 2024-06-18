@@ -9,7 +9,7 @@ import React from 'react';
 import InfoCard from '../../components/InfoCard';
 import useAppwrite from '../../lib/useAppwrite';
 import { getRecipients } from '../../lib/appwrite';
-import TransferOverView from '../../components/TransferOverView';
+// import TransferOverView from './transferoverview';
 import LoadingOverlay from '../../components/LoadingOverlay';
 
 const SelectRecipient = () => {
@@ -51,8 +51,8 @@ const SelectRecipient = () => {
             <View className='w-[90%]'>
               <InfoCard
                 title='Select an option below'
-                info='Add a new recipient and send money to them, choose to import your contacts,
-          this means allowing us to have access to your contact information, we promise your data is safe with us, or you can select from an exisiting recipient'
+                info='Add a new recipient and send money to them, choose to import your contacts,this means allowing us to have access
+                 to your contact information, we promise your data is safe with us, or you can select from an exisiting recipient'
               />
             </View>
 

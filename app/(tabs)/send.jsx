@@ -96,7 +96,7 @@ const Send = () => {
       receivableAmount: amtReceivable,
       totalToPay: totalToPay,
     });
-    navigation.navigate('extrascreens/sendto');
+    navigation.navigate('extrascreens/transferoverview');
   };
 
   return (
@@ -180,13 +180,13 @@ const Send = () => {
             </View>
           </View>
 
-          <Text className='text-primary font-psemibold mt-6 text-sm pl-3'>
+          <Text className='text-primary font-psemibold mt-4 text-sm pl-3'>
             TRANSFER DETAILS
           </Text>
           <View className='items-center'>
             <SendScreenOptionsCard
               title='Select recipient'
-              subtitle='Sendning to'
+              subtitle='Sending to'
               selectedOption={fullName}
               icon={<FontAwesome name='bolt' size={20} color='#004d40' />}
               styles='mt-2'
@@ -198,7 +198,6 @@ const Send = () => {
             />
             {fullName && (
               <SendScreenOptionsCard
-                // isDeliveryMethodSelect={true}
                 styles='mt-2'
                 title='Select delivery option'
                 subtitle='Delivery method'
