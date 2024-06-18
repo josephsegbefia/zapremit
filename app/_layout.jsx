@@ -152,10 +152,10 @@ const RootLayout = () => {
           }}
         />
         <Stack.Screen
-          name='extrascreens/sendto'
+          name='extrascreens/selectrecipient'
           options={{
-            presentation: 'fullScreenModal',
-            title: 'Send Money',
+            presentation: 'modal',
+            title: 'Select Recipient',
             headerTintColor: '#004d40',
             headerStyle: {
               backgroundColor: '#e0f2f1',

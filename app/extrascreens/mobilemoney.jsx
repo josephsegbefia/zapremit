@@ -23,7 +23,7 @@ const MobileMoney = () => {
     },
     {
       company: 'AirtelTigo',
-      service: 'AirtelTigo Cash Cash',
+      service: 'AirtelTigo Cash',
       limit: '15K GHS',
       fee: '0.99',
     },

@@ -12,7 +12,7 @@ import { getRecipients } from '../../lib/appwrite';
 import TransferOverView from '../../components/TransferOverView';
 import LoadingOverlay from '../../components/LoadingOverlay';
 
-const SendTo = () => {
+const SelectRecipient = () => {
   const { user, transferData, setTransferData } = useGlobalContext();
 
   const { data: recipients, isLoading } = useAppwrite(() =>
@@ -86,4 +86,4 @@ const SendTo = () => {
   );
 };
 
-export default SendTo;
+export default SelectRecipient;

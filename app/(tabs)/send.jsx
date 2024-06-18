@@ -86,7 +86,7 @@ const Send = () => {
   }, [transferAmt]);
 
   const handleRecipientSelectPress = () => {
-    navigation.navigate('extrascreens/sendto');
+    navigation.navigate('extrascreens/selectrecipient');
   };
 
   const handleNext = () => {
@@ -189,7 +189,7 @@ const Send = () => {
               subtitle='Sendning to'
               selectedOption={fullName}
               icon={<FontAwesome name='bolt' size={20} color='#004d40' />}
-              styles='mt-4'
+              styles='mt-2'
               opacity={0.5}
               handlePress={handleRecipientSelectPress}
               dropdownIcon={
@@ -199,7 +199,7 @@ const Send = () => {
             {fullName && (
               <SendScreenOptionsCard
                 // isDeliveryMethodSelect={true}
-                styles='mt-4'
+                styles='mt-2'
                 title='Select delivery option'
                 subtitle='Delivery method'
                 selectedOption={deliveryMethod}
@@ -217,7 +217,7 @@ const Send = () => {
                 title='Sending reason'
                 subtitle='Reason'
                 selectedOption={reason}
-                styles='mt-3'
+                styles='mt-2'
                 handlePress={openReasons}
                 dropdownIcon={
                   <AntDesign name='caretdown' size={14} color='#004d40' />

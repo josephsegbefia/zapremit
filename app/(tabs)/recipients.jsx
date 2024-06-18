@@ -118,7 +118,7 @@ const Recipients = () => {
                     ...transferData,
                     identifier: '',
                   });
-                  navigation.navigate('extrascreens/sendto');
+                  navigation.navigate('extrascreens/selectrecipient');
                 }}
               />
             </View>
