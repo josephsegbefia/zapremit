@@ -169,10 +169,12 @@ const Send = () => {
             DELIVERY OPTIONS
           </Text>
           <View className='items-center'>
+            {/* <SendScreenOptionsCard /> */}
             <SendScreenOptionsCard
-              isDeliveryMethodSelect={true}
+              // isDeliveryMethodSelect={true}
               styles='mt-4'
-              deliveryMethod={deliveryMethod}
+              title='Select delivery option'
+              selectedOption={deliveryMethod}
               handlePress={openDeliveryMethods}
               icon={<FontAwesome name='bolt' size={20} color='#004d40' />}
               opacity={0.5}

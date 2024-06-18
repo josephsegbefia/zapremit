@@ -7,9 +7,8 @@ const SendScreenOptionsCard = ({
   icon,
   opacity,
   dropdownIcon,
-  deliveryMethod,
-  // title,
-  reason,
+  selectedOption,
+  title,
   styles,
 }) => {
   return (
@@ -23,6 +22,11 @@ const SendScreenOptionsCard = ({
           {icon}
         </View>
         <View className='justify-center'>
+          <Text className='text-primary font-psemibold text-base'>
+            {selectedOption ? `${selectedOption}` : `${title}`}
+          </Text>
+        </View>
+        {/* <View className='justify-center'>
           {isDeliveryMethodSelect ? (
             <Text className='text-primary font-psemibold text-base'>
               {!deliveryMethod ? 'Select delivery option' : `${deliveryMethod}`}
@@ -32,7 +36,7 @@ const SendScreenOptionsCard = ({
               {!reason ? 'Reason for sending' : `${reason}`}
             </Text>
           )}
-        </View>
+        </View> */}
       </View>
       <View className='justify-center px-5'>{dropdownIcon}</View>
     </TouchableOpacity>
