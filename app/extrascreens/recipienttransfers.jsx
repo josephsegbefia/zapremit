@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams, router, useNavigation } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getRecipientTransfers } from '../../lib/appwrite';
 import useAppwrite from '../../lib/useAppwrite';
@@ -17,12 +17,16 @@ import EmptyState from '../../components/EmptyState';
 import formatDate from '../../lib/formatDate';
 import CustomButton from '../../components/CustomButton';
 import LoadingOverlay from '../../components/LoadingOverlay';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 const { width } = Dimensions.get('window');
+
 const RecipientTransfers = () => {
+  const navigation = useNavigation();
   const { item } = useLocalSearchParams();
   const parsedItem = JSON.parse(item);
 
+  const { transferData, setTransferData } = useGlobalContext();
   const { data: transfers, isLoading: isLoading } = useAppwrite(() =>
     getRecipientTransfers(parsedItem.$id)
   );
@@ -51,6 +55,20 @@ const RecipientTransfers = () => {
       pathname: '/extrascreens/editrecipient',
       params: { item: item },
     });
+  };
+
+  console.log('ITEM====>', parsedItem.$id);
+
+  const sendMoneyToRecipient = (item) => {
+    setTransferData((prev) => ({
+      ...prev,
+      recipientId: parsedItem.$id,
+      recipientFirstName: item.firstName,
+      recipientLastName: item.lastName,
+      recipientPhone: item.phone,
+      identifier: 'from-recipient-transfer-screen',
+    }));
+    navigation.navigate('send');
   };
 
   if (isLoading) {
@@ -99,22 +117,12 @@ const RecipientTransfers = () => {
         )}
         stickyHeaderIndices={[0]}
         ListHeaderComponentStyle={styles.header}
-        // ListFooterComponent={() => (
-        //   <View className='items-center'>
-        //     {transfers.length !== 0 && (
-        //       <View className='w-[95%] absolute bottom-[-500px]'>
-        //         <CustomButton
-        //           title={`Send ${parsedItem.firstName} money again!`}
-        //         />
-        //       </View>
-        //     )}
-        //   </View>
-        // )}
         ListEmptyComponent={() => (
           <EmptyState
             title={`No transfers made to ${parsedItem.firstName} yet!`}
             subtitle={`Transfers to ${parsedItem.firstName} would appear here`}
             buttonLabel={`Send money to ${parsedItem.firstName}`}
+            handlePress={() => sendMoneyToRecipient(parsedItem)}
           />
         )}
       />

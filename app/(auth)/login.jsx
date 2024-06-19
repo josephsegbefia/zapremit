@@ -28,7 +28,7 @@ const Login = () => {
 
   const submit = async () => {
     if (!form.email || !form.password) {
-      Alert.alert('Error', 'Please fil all fields');
+      Alert.alert('Error', 'Please fill all fields');
       return;
     }
     setIsSubmitting(true);

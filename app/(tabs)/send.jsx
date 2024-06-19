@@ -99,6 +99,8 @@ const Send = () => {
     navigation.navigate('extrascreens/transferoverview');
   };
 
+  console.log('Transfer data====>', transferData);
+
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>
@@ -188,6 +190,7 @@ const Send = () => {
               title='Select recipient'
               subtitle='Sending to'
               selectedOption={fullName}
+              // selectedOption={transferData.identifier === 'from-recipient-transfer-screen' ? }
               icon={<FontAwesome name='bolt' size={20} color='#004d40' />}
               styles='mt-2'
               opacity={0.5}
