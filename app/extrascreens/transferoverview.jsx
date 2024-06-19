@@ -52,7 +52,7 @@ const TransferOverView = () => {
       <View className='items-center'>
         <View className='w-[90%]'>
           <View className=''>
-            <View className='bg-white rounded-xl mt-5 px-4 py-5'>
+            <View className='bg-white rounded-xl mt-5 px-4 py-4'>
               <InfoCard
                 title={`Transfer to ${recipientFirstName}`}
                 info={`${recipientFirstName.trim()} will receive GHS ${receivableAmount} in less than a minute`}
@@ -132,7 +132,7 @@ const TransferOverView = () => {
               </View>
               <View className='flex-row justify-between mb-3'>
                 <Text className='text-primary font-psemibold'>
-                  Mobile Money Account Number
+                  Account Number
                 </Text>
                 <Text className='text-primary font-pregular'>
                   {recipientPhone}

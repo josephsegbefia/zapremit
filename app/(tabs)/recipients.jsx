@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-
+import FormField from '../../components/FormField';
 import {
   View,
   Text,
@@ -80,7 +80,7 @@ const Recipients = () => {
             </View>
           )}
           ListHeaderComponent={() => (
-            <View className='my-3 px-4 space-y-6'>
+            <View className='my-3 px-4'>
               <View className='justify-between items-start flex-row mb-1'>
                 <View>
                   <Text className='mt-10 text-primary text-2xl font-pbold'>
@@ -94,6 +94,9 @@ const Recipients = () => {
                     <Ionicons name='person-add' size={24} color='#004d40' />
                   </TouchableOpacity>
                 </View>
+              </View>
+              <View>
+                <FormField placeholder='Search recipients by first name' />
               </View>
             </View>
           )}

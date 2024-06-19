@@ -118,7 +118,7 @@ const CountryCodePicker = ({ phone, code, setPhone }) => {
     <View style={{ width: '100%' }}>
       <Text className='text-base text-primary font-pmedium mb-2'>Phone</Text>
       <View style={{ flexDirection: 'row', gap: 10 }}>
-        <View className='border-2 border-primary-200 w-[27%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary items-center'>
+        <View className='border border-primary-200 w-[27%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary items-center'>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <TextInput
               className='flex-1 text-primary font-semibold text-base'
@@ -134,7 +134,7 @@ const CountryCodePicker = ({ phone, code, setPhone }) => {
             />
           </TouchableOpacity>
         </View>
-        <View className='border-2 border-primary-200 w-[71%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary'>
+        <View className='border border-primary-200 w-[71%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary'>
           <TextInput
             className='flex-1 text-primary font-semibold text-base'
             value={phone}
