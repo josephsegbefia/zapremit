@@ -115,12 +115,18 @@ const AddNewRecipient = () => {
                   otherStyles='mt-4'
                   value={form.firstName}
                   handleChangeText={(e) => setForm({ ...form, firstName: e })}
+                  autoComplete={false}
+                  autoCapitalize={false}
+                  autoCorrect={false}
                 />
                 <FormField
                   title='Middle Name'
                   otherStyles='mt-4'
                   value={form.middleName}
                   handleChangeText={(e) => setForm({ ...form, middleName: e })}
+                  autoComplete={false}
+                  autoCapitalize={false}
+                  autoCorrect={false}
                 />
 
                 <FormField
@@ -128,6 +134,9 @@ const AddNewRecipient = () => {
                   otherStyles='mt-4'
                   value={form.lastName}
                   handleChangeText={(e) => setForm({ ...form, lastName: e })}
+                  autoComplete={false}
+                  autoCapitalize={false}
+                  autoCorrect={false}
                 />
                 <FormField
                   title='Email'
@@ -135,6 +144,9 @@ const AddNewRecipient = () => {
                   value={form.email}
                   keyboardType='email-address'
                   handleChangeText={(e) => setForm({ ...form, email: e })}
+                  autoComplete={false}
+                  autoCapitalize={false}
+                  autoCorrect={false}
                 />
 
                 <View className='mt-3'>

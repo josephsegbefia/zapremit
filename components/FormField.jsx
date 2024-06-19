@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { icons } from '../constants';
 
 const FormField = ({
   title,
   value,
   placeholder,
+  autoCapitalize,
+  autoComplete,
+  autoCorrect,
   handleChangeText,
   otherStyles,
   keyboardType,
@@ -23,6 +27,9 @@ const FormField = ({
           placeholder={placeholder}
           placeholderTextColor='#7b7b8b'
           onChangeText={handleChangeText}
+          autoComplete={autoComplete}
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
           secureTextEntry={
             (title === 'Password' || title === 'Confirm Password') &&
             !showPassword
@@ -36,6 +43,9 @@ const FormField = ({
               resizeMode='contain'
             />
           </TouchableOpacity>
+        )}
+        {placeholder?.includes('Search') && (
+          <Ionicons name='search' size={24} color='#004d40' />
         )}
       </View>
     </View>
