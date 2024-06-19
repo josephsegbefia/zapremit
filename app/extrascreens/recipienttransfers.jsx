@@ -57,8 +57,6 @@ const RecipientTransfers = () => {
     });
   };
 
-  console.log('ITEM====>', parsedItem.$id);
-
   const sendMoneyToRecipient = (item) => {
     setTransferData((prev) => ({
       ...prev,
@@ -129,7 +127,10 @@ const RecipientTransfers = () => {
       {transfers.length !== 0 && (
         <View className='items-center'>
           <View className='w-[95%] mb-4'>
-            <CustomButton title={`Send ${parsedItem.firstName} money again!`} />
+            <CustomButton
+              title={`Send ${parsedItem.firstName} money again!`}
+              handlePress={() => sendMoneyToRecipient(parsedItem)}
+            />
           </View>
         </View>
       )}

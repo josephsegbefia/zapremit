@@ -99,8 +99,6 @@ const Send = () => {
     navigation.navigate('extrascreens/transferoverview');
   };
 
-  console.log('Transfer data====>', transferData);
-
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>
