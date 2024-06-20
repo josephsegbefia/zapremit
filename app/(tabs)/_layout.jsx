@@ -162,14 +162,14 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name='settings'
+          name='account'
           options={{
-            title: 'Settings',
+            title: 'Account',
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <AntDButton
-                icon='setting'
-                name='Settings'
+                icon='user'
+                name='Account'
                 focused={focused}
                 color={color}
               />

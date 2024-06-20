@@ -60,19 +60,21 @@ const Signup1 = () => {
             <FormField
               title='First Name'
               value={form.firstName}
-              handleChangeText={(e) => setForm({ ...form, firstName: e })}
+              handleChangeText={(e) =>
+                setForm({ ...form, firstName: e.trim() })
+              }
               otherStyles='mt-3'
             />
             <FormField
               title='Last Name'
               value={form.lastName}
-              handleChangeText={(e) => setForm({ ...form, lastName: e })}
+              handleChangeText={(e) => setForm({ ...form, lastName: e.trim() })}
               otherStyles='mt-3'
             />
             <FormField
               title='Email'
               value={form.email}
-              handleChangeText={(e) => setForm({ ...form, email: e })}
+              handleChangeText={(e) => setForm({ ...form, email: e.trim() })}
               otherStyles='mt-3'
               keyboardType='email-address'
             />

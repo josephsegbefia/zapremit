@@ -12,7 +12,8 @@ const CustomCard = ({
   isTransferHistory,
   empty,
 }) => {
-  const initials = firstName.charAt(0) + lastName.charAt(0);
+  const initials =
+    firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
 
   let fullName;
   if (middleName) {

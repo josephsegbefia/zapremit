@@ -50,13 +50,15 @@ const Signup2 = () => {
             <FormField
               title='Password'
               value={form.password}
-              handleChangeText={(e) => setForm({ ...form, password: e })}
+              handleChangeText={(e) => setForm({ ...form, password: e.trim() })}
               otherStyles='mt-3'
             />
             <FormField
               title='Confirm Password'
               value={form.confirmPassword}
-              handleChangeText={(e) => setForm({ ...form, confirmPassword: e })}
+              handleChangeText={(e) =>
+                setForm({ ...form, confirmPassword: e.trim() })
+              }
               otherStyles='mt-3'
             />
           </View>
