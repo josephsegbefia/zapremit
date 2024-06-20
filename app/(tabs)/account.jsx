@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -28,7 +29,9 @@ const Account = () => {
     {
       title: 'Profile',
       icon: <AntDesign name='user' size={24} color='#004d40' />,
-      onClick: () => {},
+      onClick: () => {
+        router.push('account/profile');
+      },
     },
     {
       title: 'Settings',
@@ -65,9 +68,13 @@ const Account = () => {
           <Text className='text-primary text-pregular mt-1'>{user.email}</Text>
         </View>
         <View className='items-center'>
-          <View className='mt-6 w-[90%]'>
+          <View className='mt-6 w-[95%]'>
             {accountItems.map((item) => (
-              <TouchableOpacity className='flex-row justify-between bg-white py-4 my-2 rounded-xl px-2'>
+              <TouchableOpacity
+                key={item.title}
+                className='flex-row justify-between bg-white py-4 my-2 rounded-xl px-2'
+                onPress={item.onClick}
+              >
                 <View className='flex-row'>
                   <View className='mr-4'>{item.icon}</View>
                   <View className='justify-center'>
