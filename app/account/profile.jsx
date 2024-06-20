@@ -1,12 +1,15 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router, useNavigation } from 'expo-router';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { Feather } from '@expo/vector-icons';
+import { signOut } from '../../lib/appwrite';
 import formatDate from '../../lib/formatDate';
 
 const Profile = () => {
-  const { user } = useGlobalContext();
+  const navigation = useNavigation();
+  const { user, setUser, setIsLoggedIn } = useGlobalContext();
 
   let fullName;
   if (user.middleName) {
@@ -19,6 +22,13 @@ const Profile = () => {
   } else {
     fullName = user.firstName.trim() + ' ' + user.lastName.trim();
   }
+
+  const signout = async () => {
+    await signOut();
+    // setUser(null);
+    setIsLoggedIn(false);
+    navigation.navigate('index');
+  };
 
   return (
     <SafeAreaView className='h-full bg-primary-50'>
@@ -66,7 +76,7 @@ const Profile = () => {
               {formatDate(user.$createdAt)}
             </Text>
           </View>
-          <TouchableOpacity activeOpacity={0.3}>
+          <TouchableOpacity activeOpacity={0.3} onPress={signout}>
             <View className='w-[95%] rounded-lg bg-white px-3 py-3 mt-10 flex-row justify-between'>
               <View className='justify-center'>
                 <Text className='font-psemibold text-primary-red'>

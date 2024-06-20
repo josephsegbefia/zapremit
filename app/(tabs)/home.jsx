@@ -28,7 +28,7 @@ const Home = () => {
       <SafeAreaView className='items-center mb-10'>
         <View className='mt-8'>
           <Text className='text-primary font-psemibold text-xl'>
-            Welcome back, {user.firstName}
+            Welcome back, {user?.firstName}
           </Text>
         </View>
         <View className='justify-center text-center w-[95%] mt-5'>

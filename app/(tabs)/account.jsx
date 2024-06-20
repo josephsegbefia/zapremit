@@ -65,7 +65,7 @@ const Account = () => {
           <Text className='mt-6 font-psemibold text-xl text-primary'>
             {fullName}
           </Text>
-          <Text className='text-primary text-pregular mt-1'>{user.email}</Text>
+          <Text className='text-primary text-pregular mt-1'>{user?.email}</Text>
         </View>
         <View className='items-center'>
           <View className='mt-6 w-[95%]'>
