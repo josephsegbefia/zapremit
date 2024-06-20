@@ -30,7 +30,7 @@ const Account = () => {
       title: 'Profile',
       icon: <AntDesign name='user' size={30} color='#004d40' />,
       onClick: () => {
-        router.push('account/profile');
+        router.push('/account/profile');
       },
     },
     {
@@ -51,7 +51,9 @@ const Account = () => {
     {
       title: 'About',
       icon: <AntDesign name='infocirlceo' size={30} color='black' />,
-      onClick: () => {},
+      onClick: () => {
+        router.push('/account/about');
+      },
     },
   ];
 
