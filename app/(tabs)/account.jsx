@@ -28,29 +28,29 @@ const Account = () => {
   const accountItems = [
     {
       title: 'Profile',
-      icon: <AntDesign name='user' size={24} color='#004d40' />,
+      icon: <AntDesign name='user' size={30} color='#004d40' />,
       onClick: () => {
         router.push('account/profile');
       },
     },
     {
       title: 'Settings',
-      icon: <AntDesign name='setting' size={24} color='#004d40' />,
+      icon: <AntDesign name='setting' size={30} color='#004d40' />,
       onClick: () => {},
     },
     {
       title: 'Payment Methods',
-      icon: <AntDesign name='creditcard' size={24} color='#004d40' />,
+      icon: <AntDesign name='creditcard' size={30} color='#004d40' />,
       onClick: () => {},
     },
     {
       title: 'Support',
-      icon: <MaterialIcons name='support-agent' size={24} color='#004d40' />,
+      icon: <MaterialIcons name='support-agent' size={30} color='#004d40' />,
       onClick: () => {},
     },
     {
       title: 'About',
-      icon: <AntDesign name='infocirlceo' size={24} color='black' />,
+      icon: <AntDesign name='infocirlceo' size={30} color='black' />,
       onClick: () => {},
     },
   ];
