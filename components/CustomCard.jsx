@@ -56,10 +56,10 @@ const CustomCard = ({
             <Text className='py-1 text-primary'>Sent {date}</Text>
             <Text
               className={`py-1 ${
-                status === 'delivered' ? 'text-primary' : 'text-primary-red'
+                status === 'Success' ? 'text-primary' : 'text-primary-red'
               }`}
             >
-              {status === 'delivered' ? 'Succesful' : 'Problematic'}
+              {status === 'Success' ? 'Succesful' : 'Problematic'}
             </Text>
 
             <TouchableOpacity className='border rounded-full px-4'>

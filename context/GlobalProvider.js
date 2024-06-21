@@ -22,7 +22,7 @@ const GlobalProvider = ({ children }) => {
     reason: '',
     transferInitiated: false,
     inProgress: false,
-    status: 'pending',
+    status: '',
 
     identifier: '', // for page or screen identification
   });

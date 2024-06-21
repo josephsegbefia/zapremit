@@ -19,7 +19,7 @@ const TransferProgress = () => {
   const { user, transferData, setTransferData } = useGlobalContext();
   const [transferInitiated, setTransferInitiated] = useState(false);
   const [inProgress, setInProgress] = useState(false);
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState('');
   const [completedTransfer, setCompletedTransfer] = useState({});
 
   const sendMoney = async () => {
@@ -46,12 +46,14 @@ const TransferProgress = () => {
     }
   };
 
+  console.log(completedTransfer);
+
   useEffect(() => {
     setTransferInitiated(true);
 
     setTransferData((prev) => ({
       ...prev,
-      transferInitiated: transferInitiated,
+      transferInitiated: true,
     }));
   }, []);
 
