@@ -85,6 +85,7 @@ const Transfers = () => {
         data={filteredTransfers}
         keyExtractor={(item) => item.$id}
         renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
           <EmptyState
             title='No transfers found'

@@ -118,6 +118,7 @@ const Recipients = () => {
           keyExtractor={(item) => item.$id}
           renderItem={renderItem}
           ListHeaderComponentStyle={styles.header}
+          showsVerticalScrollIndicator={false}
           ListEmptyComponent={() => (
             <EmptyState
               title='No recipients found'
