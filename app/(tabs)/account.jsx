@@ -46,7 +46,9 @@ const Account = () => {
     {
       title: 'Support',
       icon: <MaterialIcons name='support-agent' size={30} color='#004d40' />,
-      onClick: () => {},
+      onClick: () => {
+        // router.push('/extrascreens/transferprogress');
+      },
     },
     {
       title: 'About',

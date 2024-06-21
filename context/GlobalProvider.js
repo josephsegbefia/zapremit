@@ -20,6 +20,9 @@ const GlobalProvider = ({ children }) => {
     recipientId: '',
     deliveryMethod: '',
     reason: '',
+    transferInitiated: false,
+    inProgress: false,
+    status: 'pending',
 
     identifier: '', // for page or screen identification
   });

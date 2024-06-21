@@ -26,20 +26,10 @@ const TransferOverView = () => {
     transferAmount,
   } = transferData;
 
-  console.log(transferData);
+  // console.log(transferData);
 
   const sendMoney = async () => {
-    setIsSubmitting(true);
-    try {
-      await createTransfer({
-        ...transferData,
-        user: user.$id,
-      });
-      // console.log(newTransfer);
-    } catch (error) {
-      Alert.alert('Error', 'Funds could not be sent.');
-      console.log(error);
-    }
+    router.push('/extrascreens/transferprogress');
   };
 
   return (
