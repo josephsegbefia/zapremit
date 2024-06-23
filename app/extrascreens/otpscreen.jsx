@@ -10,6 +10,7 @@ import React from 'react';
 import Logo from '../../components/Logo';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import CustomButton from '../../components/CustomButton';
+import { sendOTP } from '../../lib/appwrite';
 
 const OTPScreen = () => {
   return (
@@ -34,8 +35,8 @@ const OTPScreen = () => {
 
           <View className='w-[100%] px-[22px]'>
             <OTPInputView
-              style={{ width: '100%', height: 150, paddingHorizontal: 32 }}
-              pinCount={4}
+              style={{ width: '100%', height: 100, paddingHorizontal: 32 }}
+              pinCount={6}
               autoFocusOnLoad
               codeInputFieldStyle={{
                 width: 30,
@@ -53,7 +54,10 @@ const OTPScreen = () => {
                 console.log(`Code is ${code}`);
               }}
             />
-            <CustomButton title='VERIFY' handlePress={() => {}} />
+            <CustomButton
+              title='VERIFY'
+              handlePress={() => sendOTP('+4915213111325')}
+            />
             <View
               style={{
                 width: '100%',
