@@ -255,6 +255,23 @@ const RootLayout = () => {
             // ),
           }}
         />
+        <Stack.Screen
+          name='extrascreens/otpscreen'
+          options={{
+            presentation: 'fullScreenModal',
+            title: 'Verify your number',
+            headerTintColor: '#004d40',
+            headerStyle: {
+              backgroundColor: '#e0f2f1',
+              fontWeight: 'bold',
+            },
+            // headerRight: ({ tintColor }) => (
+            //   <TouchableOpacity onPress={() => router.back()}>
+            //     <Ionicons name='close' size={24} color={tintColor} />
+            //   </TouchableOpacity>
+            // ),
+          }}
+        />
       </Stack>
     </GlobalProvider>
   );
