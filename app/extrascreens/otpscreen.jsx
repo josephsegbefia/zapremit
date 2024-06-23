@@ -1,8 +1,15 @@
-import { View, Text, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import Logo from '../../components/Logo';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import CustomButton from '../../components/CustomButton';
 
 const OTPScreen = () => {
   return (
@@ -27,7 +34,7 @@ const OTPScreen = () => {
 
           <View className='w-[100%] px-[22px]'>
             <OTPInputView
-              style={{ width: '100%', height: 200, paddingHorizontal: 32 }}
+              style={{ width: '100%', height: 150, paddingHorizontal: 32 }}
               pinCount={4}
               autoFocusOnLoad
               codeInputFieldStyle={{
@@ -36,7 +43,7 @@ const OTPScreen = () => {
                 color: '#004d40',
                 borderWidth: 0,
                 fontSize: 25,
-                borderBottomWidth: 3,
+                borderBottomWidth: 2,
                 borderBottomColor: '#004d40',
               }}
               codeInputHighlightStyle={{
@@ -46,6 +53,18 @@ const OTPScreen = () => {
                 console.log(`Code is ${code}`);
               }}
             />
+            <CustomButton title='VERIFY' handlePress={() => {}} />
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                paddingTop: 10,
+              }}
+            >
+              <Text>Wrong Phone Number ?</Text>
+              <TouchableOpacity onPress={() => {}}></TouchableOpacity>
+            </View>
           </View>
         </View>
       </KeyboardAvoidingView>
