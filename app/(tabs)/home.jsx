@@ -53,7 +53,7 @@ const Home = () => {
                 lastName={transfer.recipient.lastName}
                 isTransferHistory
                 amount={transfer.receivableAmount}
-                status='delivered'
+                status={transfer.status}
                 date={formatDate(transfer.$createdAt)}
               />
             ))

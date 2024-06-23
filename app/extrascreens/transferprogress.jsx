@@ -12,8 +12,10 @@ import { createTransfer } from '../../lib/appwrite';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import formatDate from '../../lib/formatDate';
+import getCurrentDateTime from '../../lib/getCurrentDateTime';
 
 import TransferProgressTabs from '../../components/TransferProgressTabs';
+import CustomButton from '../../components/CustomButton';
 
 const TransferProgress = () => {
   const { user, transferData, setTransferData } = useGlobalContext();
@@ -21,6 +23,7 @@ const TransferProgress = () => {
   const [inProgress, setInProgress] = useState(false);
   const [status, setStatus] = useState('');
   const [completedTransfer, setCompletedTransfer] = useState({});
+  const [dateTime, setDateTime] = useState('');
 
   const sendMoney = async () => {
     // setInProgress(false);
@@ -30,6 +33,7 @@ const TransferProgress = () => {
         inProgress: false,
         status: 'Success',
         transferInitiated: true,
+        initiationDateTime: dateTime,
         user: user.$id,
       });
       setStatus('Success');
@@ -50,7 +54,7 @@ const TransferProgress = () => {
 
   useEffect(() => {
     setTransferInitiated(true);
-
+    setDateTime(getCurrentDateTime());
     setTransferData((prev) => ({
       ...prev,
       transferInitiated: true,
@@ -72,10 +76,7 @@ const TransferProgress = () => {
         <Text className='text-primary text-lg font-psemibold'>
           Transfer Progress
         </Text>
-        <TransferProgressTabs
-          title='Transfer Initiated'
-          date='28th October, 2021'
-        />
+        <TransferProgressTabs title='Transfer Initiated' date={dateTime} />
         {transferInitiated && inProgress && (
           <TransferProgressTabs title='Processing' loading={inProgress} />
         )}

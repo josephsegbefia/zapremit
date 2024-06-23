@@ -20,6 +20,7 @@ const GlobalProvider = ({ children }) => {
     recipientId: '',
     deliveryMethod: '',
     reason: '',
+    initiationDateTime: '',
     transferInitiated: false,
     inProgress: false,
     status: '',
