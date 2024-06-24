@@ -68,17 +68,16 @@ const Signup3 = () => {
       completePhone,
       phone,
     };
-    // try {
-    //   const result = await createUser(signupData);
-    //   setUser(result);
-    //   setIsLoggedIn(true);
-    // } catch (error) {
-    //   Alert.alert('Error', error.message);
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
+    try {
+      const result = await createUser(data);
+      setUser(result);
+      setIsLoggedIn(true);
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
     // router.replace('/extrascreens/otpscreen');
-    console.log(data);
   };
 
   return (
