@@ -4,6 +4,7 @@ import {
   Text,
   ScrollView,
   Platform,
+  Alert,
   KeyboardAvoidingView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,6 +24,10 @@ const Signup2 = () => {
 
   const submit = () => {
     if (!form.password || !form.confirmPassword) {
+      return;
+    }
+    if (form.password !== form.confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
       return;
     }
     setSignupData({
