@@ -14,11 +14,13 @@ import CustomButton from '../../components/CustomButton';
 import InfoCard from '../../components/InfoCard';
 import CountryCodePicker from '../../components/CountryCodePicker';
 import { SignupContext } from '../../context/signup-context';
+import { useCountryPickerContext } from '../../context/country-picker-context';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { createUser } from '../../lib/appwrite';
 
 const Signup3 = () => {
   const { signupData, setSignupData } = useContext(SignupContext);
+  const { countryData, setCountryData } = useCountryPickerContext();
   const { setUser, setIsLoggedIn } = useGlobalContext();
   const navigation = useNavigation();
 
@@ -29,14 +31,15 @@ const Signup3 = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = async () => {
-    setSignupData({
-      ...signupData,
+    setSignupData((prev) => ({
+      ...prev,
       country: country,
-      code: code,
-      phone: phone,
-      completePhone: completePhone,
-    });
-    if (!phone || !country) {
+      code: countryData.code,
+      phone: countryData.phone,
+      completePhone: countryData.completePhone,
+    }));
+
+    if (!countryData.phone || !countryData.name) {
       Alert.alert(
         'Error',
         'Please select a country and enter your phone number'
@@ -48,7 +51,23 @@ const Signup3 = () => {
     const lastName = signupData.lastName.trim();
     const email = signupData.email.trim();
     const password = signupData.password.trim();
+    const callingCode = countryData.callingCode.trim();
+    const code = countryData.code.trim();
+    const completePhone = countryData.completePhone.trim();
+    const phone = countryData.phone.trim();
+    const country = countryData.name.trim();
 
+    const data = {
+      firstName,
+      lastName,
+      email,
+      password,
+      country,
+      callingCode,
+      code,
+      completePhone,
+      phone,
+    };
     // try {
     //   const result = await createUser(signupData);
     //   setUser(result);
@@ -59,17 +78,8 @@ const Signup3 = () => {
     //   setIsSubmitting(false);
     // }
     // router.replace('/extrascreens/otpscreen');
-    console.log(signupData);
+    console.log(data);
   };
-
-  const setPhoneNumber = (phone, code) => {
-    setPhone(phone);
-    setCode(code);
-    setCompletePhone(code + phone);
-  };
-
-  console.log(completePhone);
-  console.log(country);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -98,7 +108,7 @@ const Signup3 = () => {
               <CountryCodePicker setCountry={setCountry} />
             </View>
             {country && (
-              <Text className='text-base text-black-200 font-pmedium mt-3'>
+              <Text className='text-base text-primary font-pmedium mt-3'>
                 You will be sending money from {country}
               </Text>
             )}

@@ -9,10 +9,6 @@ export const SignupProvider = ({ children }) => {
     email: '',
     password: '',
     confirmPassword: '',
-    // country: '',
-    // phone: '',
-    // code: '',
-    // completePhone: '',
   });
 
   return (

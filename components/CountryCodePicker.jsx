@@ -25,6 +25,7 @@ const CountryCodePicker = ({ setCountry }) => {
   const [callingCode, setCallingCode] = useState('');
   const [name, setName] = useState('');
   const [flag, setFlag] = useState('');
+  const [completePhone, setCompletePhone] = useState('');
 
   useEffect(() => {
     const data = countriesData.map((country) => ({
@@ -41,7 +42,7 @@ const CountryCodePicker = ({ setCountry }) => {
       if (defaultData) {
         setSelectedArea(defaultData);
         // setCode(defaultData.code);
-        setPhone(phone, defaultData.callingCode);
+        // setPhone(phone, defaultData.callingCode);
       }
     }
   }, []);
@@ -54,6 +55,7 @@ const CountryCodePicker = ({ setCountry }) => {
       name: name,
       flag: flag,
       phone: phone,
+      completePhone: `${callingCode}${phone}`,
     }));
   }, [name, code, callingCode, flag, phone]);
 
@@ -121,7 +123,6 @@ const CountryCodePicker = ({ setCountry }) => {
     setPhone(e);
   };
 
-  console.log(countryData);
   return (
     <View className='w-full'>
       <Text className='text-base text-primary font-pmedium mb-2'>Phone</Text>
@@ -133,10 +134,9 @@ const CountryCodePicker = ({ setCountry }) => {
             <TextInput
               className='flex-1 text-primary font-semibold text-base'
               value={
-                `${code} ${callingCode}`
-                // !code
-                //   ? `${selectedArea?.code} ${selectedArea?.callingCode}`
-                //   : ''
+                !code
+                  ? `${selectedArea?.code} ${selectedArea?.callingCode}`
+                  : `${code} ${callingCode}`
               }
               placeholder='+233'
               placeholderTextColor='#CDCDE0'
