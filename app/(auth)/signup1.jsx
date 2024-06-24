@@ -37,9 +37,9 @@ const Signup1 = () => {
     }
     setSignupData({
       ...signupData,
-      firstName: form.firstName,
-      lastName: form.lastName,
-      email: form.email,
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      email: form.email.trim(),
     });
 
     router.push('/signup2');
@@ -60,21 +60,19 @@ const Signup1 = () => {
             <FormField
               title='First Name'
               value={form.firstName}
-              handleChangeText={(e) =>
-                setForm({ ...form, firstName: e.trim() })
-              }
+              handleChangeText={(e) => setForm({ ...form, firstName: e })}
               otherStyles='mt-3'
             />
             <FormField
               title='Last Name'
               value={form.lastName}
-              handleChangeText={(e) => setForm({ ...form, lastName: e.trim() })}
+              handleChangeText={(e) => setForm({ ...form, lastName: e })}
               otherStyles='mt-3'
             />
             <FormField
               title='Email'
               value={form.email}
-              handleChangeText={(e) => setForm({ ...form, email: e.trim() })}
+              handleChangeText={(e) => setForm({ ...form, email: e })}
               otherStyles='mt-3'
               keyboardType='email-address'
             />

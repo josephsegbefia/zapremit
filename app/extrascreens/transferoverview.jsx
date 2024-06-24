@@ -46,6 +46,7 @@ const TransferOverView = () => {
               <InfoCard
                 title={`Transfer to ${recipientFirstName}`}
                 info={`${recipientFirstName.trim()} will receive GHS ${receivableAmount} in less than a minute`}
+                styles='px-4'
               />
             </View>
             <View className='flex-row justify-between px-1 mt-4'>

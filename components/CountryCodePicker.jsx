@@ -16,7 +16,7 @@ import { memo } from 'react';
 
 const { width, height } = Dimensions.get('window');
 
-const CountryCodePicker = ({ phone, code, setPhone }) => {
+const CountryCodePicker = ({ phone, code, setPhone, setCountry }) => {
   const [areas, setAreas] = useState([]);
   const [selectedArea, setSelectedArea] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -65,8 +65,6 @@ const CountryCodePicker = ({ phone, code, setPhone }) => {
 
   const keyExtractor = useCallback((item) => item.code, []);
 
-  // console.log(phone);
-
   const renderCountryCodesModal = useMemo(() => {
     return (
       <Modal animationType='slide' transparent={true} visible={modalVisible}>
@@ -112,6 +110,7 @@ const CountryCodePicker = ({ phone, code, setPhone }) => {
 
   const handlePhoneChange = (phoneNumber) => {
     setPhone(phoneNumber, selectedArea?.callingCode);
+    setCountry(selectedArea.name);
   };
 
   return (

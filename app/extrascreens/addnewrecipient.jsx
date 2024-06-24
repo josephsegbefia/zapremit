@@ -45,8 +45,6 @@ const AddNewRecipient = () => {
         code,
       });
 
-      console.log('New Recipient:', newRecipient);
-
       setTransferData((prev) => ({
         ...prev,
         recipientId: newRecipient.$id,

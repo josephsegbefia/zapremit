@@ -1,9 +1,9 @@
 import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const InfoCard = ({ title, info }) => {
+const InfoCard = ({ title, info, styles }) => {
   return (
-    <View className='flex-row px-4'>
+    <View className={`flex-row ${styles}`}>
       <Ionicons
         name='information-circle-outline'
         size={24}

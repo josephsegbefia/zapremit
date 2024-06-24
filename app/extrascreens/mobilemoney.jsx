@@ -44,6 +44,7 @@ const MobileMoney = () => {
             info='Please make sure the recipient has a registered mobile money account
             number with the provider. A wrong number may lead to a delay in your
             transfer.'
+            styles='px-4'
           />
         </View>
 

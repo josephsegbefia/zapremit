@@ -43,6 +43,7 @@ const DeliveryOptions = () => {
           <InfoCard
             title='Important Information'
             info='You can choose your preferred delivery option. Under each option there are other suboptions to pick'
+            styles='px-4'
           />
         </View>
 

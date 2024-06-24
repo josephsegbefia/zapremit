@@ -53,6 +53,7 @@ const SelectRecipient = () => {
                 title='Select an option below'
                 info='Add a new recipient and send money to them, choose to import your contacts,this means allowing us to have access
                  to your contact information, we promise your data is safe with us, or you can select from an exisiting recipient'
+                styles='px-4'
               />
             </View>
 

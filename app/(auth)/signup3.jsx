@@ -16,28 +16,28 @@ import FormField from '../../components/FormField';
 import { SignupContext } from '../../context/signup-context';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { createUser } from '../../lib/appwrite';
+import InfoCard from '../../components/InfoCard';
+import CountryCodePicker from '../../components/CountryCodePicker';
 
 const Signup3 = () => {
   const { signupData, setSignupData } = useContext(SignupContext);
   const { setUser, setIsLoggedIn } = useGlobalContext();
   const navigation = useNavigation();
 
-  const [selected, setSelected] = useState('+233');
+  // const [selected, setSelected] = useState('+233');
   const [country, setCountry] = useState('');
   const [phone, setPhone] = useState('');
-
-  let countryName;
-  if (country) {
-    countryName = country.name;
-  }
+  const [code, setCode] = useState('');
+  const [completePhone, setCompletePhone] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = async () => {
     setSignupData({
       ...signupData,
-      country: countryName,
-      phone: `${selected}${phone}`,
+      country: country,
+      code: code,
+      phone: phone,
     });
     if (!phone || !country) {
       Alert.alert(
@@ -52,6 +52,8 @@ const Signup3 = () => {
     const email = signupData.email.trim();
     const password = signupData.password.trim();
 
+    // if(phone.charAt(0))
+
     try {
       const result = await createUser(
         firstName,
@@ -59,7 +61,9 @@ const Signup3 = () => {
         email,
         password,
         countryName,
-        phone
+        phone,
+        callingCode,
+        completePhone
       );
       setUser(result);
       setIsLoggedIn(true);
@@ -68,7 +72,13 @@ const Signup3 = () => {
     } finally {
       setIsSubmitting(false);
     }
-    router.replace('/home');
+    router.replace('/extrascreens/otpscreen');
+  };
+
+  const setPhoneNumber = (phone, code) => {
+    setPhone(phone);
+    setCode(code);
+    setCompletePhone(code + phone);
   };
 
   return (
@@ -79,46 +89,33 @@ const Signup3 = () => {
           keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
           style={{ flex: 1 }}
         >
-          <View className='w-full justify-center px-4'>
+          <View className='w-full items-center px-4'>
             <Text className='text-2xl text-primary text-semibold my-10 text-center font-semibold'>
               Sign up to zap
             </Text>
           </View>
           <View className='w-full justify-center px-4 mb-6 mt-3'>
-            <Text className='text-base text-black-200 font-pmedium'>
+            <Text className='text-base text-primary font-pmedium'>
               Country & Phone
             </Text>
+            <View className='w-[95%] mt-4'>
+              <InfoCard
+                title='Phone number format'
+                info='Please start your phone number without the first zero after the country code. Failure to do so will result in not receiving the OTP'
+              />
+            </View>
+
             <View className='mt-3'>
-              <CountryCodeDropdownPicker
-                selected={selected}
-                setSelected={setSelected}
-                setCountryDetails={setCountry}
+              <CountryCodePicker
                 phone={phone}
-                setPhone={setPhone}
-                countryCodeTextStyles={{
-                  fontSize: 14,
-                  fontFamily: 'Poppins-SemiBold',
-                }}
-                countryCodeContainerStyles={{
-                  height: 42,
-                  backgroundColor: '#e0f2f1',
-                  borderColor: '#80cbc4',
-                  borderWidth: 2,
-                }}
-                phoneStyles={{
-                  fontSize: 20,
-                  borderColor: '#80cbc4',
-                  borderWidth: 2,
-                  color: '#004d40',
-                  fontFamily: 'Poppins-SemiBold',
-                }}
-                searchTextStyles={{ fontSize: 28 }}
-                dropdownStyles={{ backgroundColor: '#e0f2f1' }}
+                code={code}
+                setPhone={setPhoneNumber}
+                setCountry={setCountry}
               />
             </View>
             {country && (
               <Text className='text-base text-black-200 font-pmedium mt-3'>
-                You will be sending money from {country.name}
+                You will be sending money from {country}
               </Text>
             )}
           </View>

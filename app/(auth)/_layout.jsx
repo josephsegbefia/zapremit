@@ -17,7 +17,6 @@ const AuthLayout = () => {
           <Stack.Screen name='signup1' options={{ headerShown: false }} />
           <Stack.Screen name='signup2' options={{ headerShown: false }} />
           <Stack.Screen name='signup3' options={{ headerShown: false }} />
-          <Stack.Screen name='confirmOTP' options={{ headerShown: false }} />
         </Stack>
       </SignupProvider>
     </>
