@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback, memo, useContext } from 'react';
 import {
   View,
   Text,
@@ -7,129 +7,142 @@ import {
   Modal,
   Dimensions,
   FlatList,
-  StyleSheet,
 } from 'react-native';
+
+import { useCountryPickerContext } from '../context/country-picker-context';
 import { Ionicons } from '@expo/vector-icons';
 import { countriesData } from '../constants/countries';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { memo } from 'react';
 
 const { width, height } = Dimensions.get('window');
 
-const CountryCodePicker = ({ phone, code, setPhone, setCountry }) => {
+const CountryCodePicker = ({ setCountry }) => {
+  const { countryData, setCountryData } = useCountryPickerContext();
   const [areas, setAreas] = useState([]);
   const [selectedArea, setSelectedArea] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [phone, setPhone] = useState('');
+  const [code, setCode] = useState('');
+  const [callingCode, setCallingCode] = useState('');
+  const [name, setName] = useState('');
+  const [flag, setFlag] = useState('');
 
   useEffect(() => {
-    const data = countriesData.map((country) => {
-      return {
-        code: country.alpha2Code,
-        name: country.name,
-        callingCode: country.callingCode,
-        flag: country.flag,
-      };
-    });
+    const data = countriesData.map((country) => ({
+      code: country.alpha2Code,
+      name: country.name,
+      callingCode: country.callingCode,
+      flag: country.flag,
+    }));
 
     setAreas(data);
+
     if (data.length > 0) {
-      let defaultData = data.filter((a) => a.code === 'GH');
-      if (defaultData.length > 0) {
-        setSelectedArea(defaultData[0]);
-        setPhone(phone, defaultData[0].callingCode);
+      let defaultData = data.find((a) => a.code === 'GH');
+      if (defaultData) {
+        setSelectedArea(defaultData);
+        // setCode(defaultData.code);
+        setPhone(phone, defaultData.callingCode);
       }
     }
   }, []);
 
+  useEffect(() => {
+    setCountryData((prev) => ({
+      ...prev,
+      callingCode: callingCode,
+      code: code,
+      name: name,
+      flag: flag,
+      phone: phone,
+    }));
+  }, [name, code, callingCode, flag, phone]);
+
+  const handleSelectCountry = (item) => {
+    setCode(item.code);
+    setCallingCode(item.callingCode);
+    setFlag(item.flag);
+    setName(item.name);
+    setCountry(item.name);
+  };
+
   const renderItem = useCallback(
     ({ item }) => (
       <TouchableOpacity
-        style={{
-          flexDirection: 'row',
-          paddingHorizontal: 20,
-          paddingVertical: 10,
-        }}
+        className='flex-row px-5 py-2'
         onPress={() => {
           setSelectedArea(item);
           setModalVisible(false);
-          setPhone(phone, item.callingCode);
+          handleSelectCountry(item);
         }}
       >
-        <Text style={{ color: '#004d40', fontSize: 14, fontWeight: '600' }}>
+        <Text className='text-[#004d40] text-base font-semibold'>
           {item.name} ({item.callingCode})
         </Text>
       </TouchableOpacity>
     ),
-    [phone]
+    // [phone, setPhone, setCountry]
+    []
   );
 
   const keyExtractor = useCallback((item) => item.code, []);
 
-  const renderCountryCodesModal = useMemo(() => {
-    return (
+  const renderCountryCodesModal = useCallback(
+    () => (
       <Modal animationType='slide' transparent={true} visible={modalVisible}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <View
-            style={{
-              height: '100%',
-              width: '100%',
-              backgroundColor: '#e0f2f1',
-              marginTop: 200,
-              paddingBottom: 100,
-            }}
-          >
+        <View className='flex-1 items-center justify-center'>
+          <View className='h-full w-full bg-[#e0f2f1] mt-48 pb-24'>
             <FlatList
               data={areas}
               renderItem={renderItem}
               keyExtractor={keyExtractor}
               showsVerticalScrollIndicator={false}
               ListHeaderComponent={() => (
-                <>
-                  <TouchableOpacity
-                    className='items-end mx-5 my-2'
-                    onPress={() => setModalVisible(false)}
-                  >
-                    <Ionicons name='close' size={24} color='#004d40' />
-                  </TouchableOpacity>
-                </>
+                <TouchableOpacity
+                  className='items-end mx-5 my-2'
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Ionicons name='close' size={24} color='#004d40' />
+                </TouchableOpacity>
               )}
               stickyHeaderIndices={[0]}
-              ListHeaderComponentStyle={styles.header}
             />
           </View>
         </View>
       </Modal>
-    );
-  }, [modalVisible, areas, renderItem, keyExtractor]);
+    ),
+    [modalVisible, areas, renderItem, keyExtractor]
+  );
 
-  const handlePhoneChange = (phoneNumber) => {
-    setPhone(phoneNumber, selectedArea?.callingCode);
-    setCountry(selectedArea.name);
+  // const handlePhoneChange = (phoneNumber) => {
+  //   setPhone(phoneNumber, selectedArea?.callingCode);
+  // };
+
+  const handlePhoneChange = (e) => {
+    setPhone(e);
   };
 
+  console.log(countryData);
   return (
-    <View style={{ width: '100%' }}>
+    <View className='w-full'>
       <Text className='text-base text-primary font-pmedium mb-2'>Phone</Text>
-      <View style={{ flexDirection: 'row', gap: 10 }}>
+      <View className='flex-row gap-2'>
         <View className='border border-primary-200 w-[27%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary items-center'>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <TouchableOpacity
+          // onPress={() => setModalVisible(true)}
+          >
             <TextInput
               className='flex-1 text-primary font-semibold text-base'
               value={
-                !code
-                  ? `${selectedArea?.code} ${selectedArea?.callingCode}`
-                  : code
+                `${code} ${callingCode}`
+                // !code
+                //   ? `${selectedArea?.code} ${selectedArea?.callingCode}`
+                //   : ''
               }
               placeholder='+233'
               placeholderTextColor='#CDCDE0'
               editable={false}
-              onPressIn={() => setModalVisible(true)}
+              onPressOut={() => setModalVisible(true)}
+              // onPressIn={() => setModalVisible(true)}
             />
           </TouchableOpacity>
         </View>
@@ -144,15 +157,9 @@ const CountryCodePicker = ({ phone, code, setPhone, setCountry }) => {
           />
         </View>
       </View>
-      {renderCountryCodesModal}
+      {renderCountryCodesModal()}
     </View>
   );
 };
 
 export default memo(CountryCodePicker);
-
-const styles = StyleSheet.create({
-  header: {
-    backgroundColor: '#e0f2f1',
-  },
-});

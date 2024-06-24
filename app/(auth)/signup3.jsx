@@ -1,5 +1,4 @@
 import { useState, useContext } from 'react';
-import CountryCodeDropdownPicker from 'react-native-dropdown-country-picker';
 import {
   View,
   Text,
@@ -12,24 +11,21 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, useNavigation, router } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
-import FormField from '../../components/FormField';
+import InfoCard from '../../components/InfoCard';
+import CountryCodePicker from '../../components/CountryCodePicker';
 import { SignupContext } from '../../context/signup-context';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { createUser } from '../../lib/appwrite';
-import InfoCard from '../../components/InfoCard';
-import CountryCodePicker from '../../components/CountryCodePicker';
 
 const Signup3 = () => {
   const { signupData, setSignupData } = useContext(SignupContext);
   const { setUser, setIsLoggedIn } = useGlobalContext();
   const navigation = useNavigation();
 
-  // const [selected, setSelected] = useState('+233');
-  const [country, setCountry] = useState('');
+  const [country, setCountry] = useState(null);
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [completePhone, setCompletePhone] = useState('');
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = async () => {
@@ -38,6 +34,7 @@ const Signup3 = () => {
       country: country,
       code: code,
       phone: phone,
+      completePhone: completePhone,
     });
     if (!phone || !country) {
       Alert.alert(
@@ -52,27 +49,17 @@ const Signup3 = () => {
     const email = signupData.email.trim();
     const password = signupData.password.trim();
 
-    // if(phone.charAt(0))
-
-    try {
-      const result = await createUser(
-        firstName,
-        lastName,
-        email,
-        password,
-        countryName,
-        phone,
-        callingCode,
-        completePhone
-      );
-      setUser(result);
-      setIsLoggedIn(true);
-    } catch (error) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setIsSubmitting(false);
-    }
-    router.replace('/extrascreens/otpscreen');
+    // try {
+    //   const result = await createUser(signupData);
+    //   setUser(result);
+    //   setIsLoggedIn(true);
+    // } catch (error) {
+    //   Alert.alert('Error', error.message);
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
+    // router.replace('/extrascreens/otpscreen');
+    console.log(signupData);
   };
 
   const setPhoneNumber = (phone, code) => {
@@ -80,6 +67,9 @@ const Signup3 = () => {
     setCode(code);
     setCompletePhone(code + phone);
   };
+
+  console.log(completePhone);
+  console.log(country);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -101,17 +91,11 @@ const Signup3 = () => {
             <View className='w-[95%] mt-4'>
               <InfoCard
                 title='Phone number format'
-                info='Please start your phone number without the first zero after the country code. Failure to do so will result in not receiving the OTP'
+                info='Please start your phone number without the first zero after the country code. Failure to do so will result in not receiving the OTP.'
               />
             </View>
-
             <View className='mt-3'>
-              <CountryCodePicker
-                phone={phone}
-                code={code}
-                setPhone={setPhoneNumber}
-                setCountry={setCountry}
-              />
+              <CountryCodePicker setCountry={setCountry} />
             </View>
             {country && (
               <Text className='text-base text-black-200 font-pmedium mt-3'>
