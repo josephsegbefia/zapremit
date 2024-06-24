@@ -77,7 +77,7 @@ const Signup3 = () => {
     } finally {
       setIsSubmitting(false);
     }
-    // router.replace('/extrascreens/otpscreen');
+    router.replace('/extrascreens/otpscreen');
   };
 
   return (

@@ -1,18 +1,34 @@
+import { useState } from 'react';
 import {
   View,
   Text,
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import React from 'react';
+
 import Logo from '../../components/Logo';
+import { useGlobalContext } from '../../context/GlobalProvider';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import CustomButton from '../../components/CustomButton';
-import { sendOTP } from '../../lib/appwrite';
+import { verifyOTP } from '../../lib/appwrite';
 
 const OTPScreen = () => {
+  const { user } = useGlobalContext();
+  const [verificationCode, setVerificationCode] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  const handleVerification = async (number, code) => {
+    setIsVerifying(true);
+    try {
+      const response = await verifyOTP(number, code);
+      console.log(response);
+    } catch (error) {
+      Alert.alert('Error', 'Code could not be verified');
+    }
+  };
   return (
     <SafeAreaView className='flex-1 bg-primary-50 h-full'>
       <KeyboardAvoidingView
@@ -52,11 +68,14 @@ const OTPScreen = () => {
               }}
               onCodeFilled={(code) => {
                 console.log(`Code is ${code}`);
+                setVerificationCode(code);
               }}
             />
             <CustomButton
               title='VERIFY'
-              handlePress={() => sendOTP('+4915213111325')}
+              handlePress={() =>
+                handleVerification(user.completePhone, verificationCode)
+              }
             />
             <View
               style={{
