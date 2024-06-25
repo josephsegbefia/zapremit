@@ -13,6 +13,7 @@ const FormField = ({
   handleChangeText,
   otherStyles,
   keyboardType,
+  editable,
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -34,6 +35,7 @@ const FormField = ({
             (title === 'Password' || title === 'Confirm Password') &&
             !showPassword
           }
+          editable={editable}
         />
         {(title === 'Password' || title === 'Confirm Password') && (
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>

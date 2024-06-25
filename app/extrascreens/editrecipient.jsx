@@ -151,25 +151,31 @@ const EditRecipient = () => {
       >
         <TouchableWithoutFeedback>
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View className='w-[90%]'>
+            <View className='w-[95%]'>
               <Text className='px-4 text-sm text-primary font-psemibold mb-4'>
                 Edit recipient's contact information
               </Text>
             </View>
 
             <View className='flex-1 items-center'>
-              <View className='w-[90%]'>
+              <View className='w-[95%]'>
                 <FormField
                   title='First Name'
                   otherStyles='mt-4'
                   value={form.firstName}
                   handleChangeText={(e) => setForm({ ...form, firstName: e })}
+                  autoComplete={false}
+                  autoCorrect={false}
+                  autoCapitalize={false}
                 />
                 <FormField
                   title='Middle Name'
                   otherStyles='mt-4'
                   value={form.middleName}
                   handleChangeText={(e) => setForm({ ...form, middleName: e })}
+                  autoComplete={false}
+                  autoCorrect={false}
+                  autoCapitalize={false}
                 />
 
                 <FormField
@@ -177,6 +183,9 @@ const EditRecipient = () => {
                   otherStyles='mt-4'
                   value={form.lastName}
                   handleChangeText={(e) => setForm({ ...form, lastName: e })}
+                  autoComplete={false}
+                  autoCorrect={false}
+                  autoCapitalize={false}
                 />
                 <FormField
                   title='Email'
@@ -184,6 +193,9 @@ const EditRecipient = () => {
                   value={form.email}
                   keyboardType='email-address'
                   handleChangeText={(e) => setForm({ ...form, email: e })}
+                  autoComplete={false}
+                  autoCorrect={false}
+                  autoCapitalize={false}
                 />
                 <View className='mt-3'>
                   <CountryCodePicker

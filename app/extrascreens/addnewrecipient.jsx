@@ -133,7 +133,7 @@ const AddNewRecipient = () => {
       >
         <TouchableWithoutFeedback>
           <ScrollView className=''>
-            <View className='w-[90%]'>
+            <View className='w-[95%]'>
               <Text className='px-4 text-sm text-primary font-psemibold mb-4'>
                 Recipient's contact information
               </Text>
