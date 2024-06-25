@@ -44,6 +44,7 @@ const AddNewRecipient = () => {
     const code = countryData.code.trim();
     const completePhone = countryData.completePhone.trim();
     const phone = countryData.phone.trim();
+    const callingCode = countryData.callingCode;
     const recipientCountry = countryData.name.trim();
 
     const data = {
@@ -52,6 +53,7 @@ const AddNewRecipient = () => {
       lastName: form.lastName.trim(),
       email: form.email.trim(),
       code: code,
+      callingCode: callingCode,
       completePhone: completePhone,
       phone: phone,
       country: recipientCountry,

@@ -31,13 +31,9 @@ const Signup3 = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = async () => {
-    setSignupData((prev) => ({
-      ...prev,
-      // country: country,
-      // code: countryData.code,
-      // phone: countryData.phone,
-      // completePhone: countryData.completePhone,
-    }));
+    // setSignupData((prev) => ({
+    //   ...prev,
+    // }));
 
     if (!countryData.phone || !countryData.name) {
       Alert.alert(

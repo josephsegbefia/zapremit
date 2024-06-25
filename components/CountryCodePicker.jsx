@@ -15,7 +15,16 @@ import { countriesData } from '../constants/countries';
 
 const { width, height } = Dimensions.get('window');
 
-const CountryCodePicker = ({ setCountry }) => {
+const CountryCodePicker = ({
+  setCountry,
+  isEditing,
+  countryCode,
+  countryCallingCode,
+  setCountryCode,
+  setCountryCallingCode,
+  recipientPhone,
+  setRecipientPhone,
+}) => {
   const { countryData, setCountryData } = useCountryPickerContext();
   const [areas, setAreas] = useState([]);
   const [selectedArea, setSelectedArea] = useState(null);
@@ -66,6 +75,11 @@ const CountryCodePicker = ({ setCountry }) => {
     setFlag(item.flag);
     setName(item.name);
     setCountry(item.name);
+
+    if (isEditing) {
+      setCountryCode(item.code);
+      setCountryCallingCode(item.callingCode);
+    }
   };
 
   const renderItem = useCallback(
@@ -121,6 +135,10 @@ const CountryCodePicker = ({ setCountry }) => {
   // };
 
   const handlePhoneChange = (e) => {
+    if (isEditing) {
+      setRecipientPhone(e);
+      return;
+    }
     setPhone(e);
   };
 
@@ -135,9 +153,11 @@ const CountryCodePicker = ({ setCountry }) => {
             <TextInput
               className='flex-1 text-primary font-semibold text-base'
               value={
-                !code
-                  ? `${selectedArea?.code} ${selectedArea?.callingCode}`
-                  : `${code} ${callingCode}`
+                !isEditing
+                  ? !code
+                    ? `${selectedArea?.code} ${selectedArea?.callingCode}`
+                    : `${code} ${callingCode}`
+                  : `${countryCode} ${countryCallingCode}`
               }
               placeholder='+233'
               placeholderTextColor='#CDCDE0'
@@ -150,7 +170,7 @@ const CountryCodePicker = ({ setCountry }) => {
         <View className='border border-primary-200 w-[71%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary'>
           <TextInput
             className='flex-1 text-primary font-semibold text-base'
-            value={phone}
+            value={isEditing ? `${recipientPhone}` : `${phone}`}
             placeholder='207849440'
             placeholderTextColor='#CDCDE0'
             onChangeText={handlePhoneChange}

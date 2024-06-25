@@ -16,18 +16,30 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 import CustomButton from '../../components/CustomButton';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import CountryCodePicker from '../../components/CountryCodePicker';
-
+import useAppwrite from '../../lib/useAppwrite';
+import { getRecipientById } from '../../lib/appwrite';
 import { updateRecipient } from '../../lib/appwrite';
 import { deleteRecipient } from '../../lib/appwrite';
 
 const EditRecipient = () => {
+  const { user } = useGlobalContext();
   const navigation = useNavigation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { item } = useLocalSearchParams();
   const parsedItem = JSON.parse(item);
-  console.log('ITEM====>', parsedItem.phone);
+
   // const [code, setCode] = useState('');
-  // const [phone, setPhone] = useState('');
+
+  const { data: recipient, isLoading } = useAppwrite(() =>
+    getRecipientById(user.$id, parsedItem.$id)
+  );
+
+  const [countryCode, setCountryCode] = useState('');
+  const [countryCallingCode, setCountryCallingCode] = useState('');
+  // Not needed here but required in adding a recipient. Passed tp the country picker comp here to prevent the code from breaking
+  const [country, setCountry] = useState();
+  const [recipientPhone, setRecipientPhone] = useState('');
+
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -35,6 +47,7 @@ const EditRecipient = () => {
     email: '',
   });
 
+  console.log(recipient);
   // const setPhoneNumber = (phone, code) => {
   //   setPhone(phone);
   //   setCode(code);
@@ -42,27 +55,40 @@ const EditRecipient = () => {
 
   useEffect(() => {
     setForm({
-      firstName: parsedItem.firstName,
-      lastName: parsedItem.lastName,
-      middleName: parsedItem.middleName,
-      email: parsedItem.email,
+      firstName: recipient.firstName,
+      lastName: recipient.lastName,
+      middleName: recipient.middleName,
+      email: recipient.email,
     });
-    // setCode(parsedItem.callingCode);
-    // setPhone(parsedItem.phone);
-  }, []);
+    setCountryCode(recipient.code);
+    setCountryCallingCode(recipient.callingCode);
+    setRecipientPhone(recipient.phone);
+  }, [recipient]);
 
   const submit = async () => {
-    if (!form.firstName || !form.lastName || !form.email || !code || !phone) {
+    if (
+      !form.firstName ||
+      !form.lastName ||
+      !form.email ||
+      !countryCode ||
+      !recipientPhone
+    ) {
       return Alert.alert('Error', 'Please fill in all the fields');
     }
     setIsSubmitting(true);
+    const data = {
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      middleName: form.middleName.trim(),
+      email: form.email.trim(),
+      phone: recipientPhone,
+      code: countryCode,
+      callingCode: countryCallingCode,
+      completePhone: `${countryCallingCode}${recipientPhone}`,
+      documentId: recipient.$id,
+    };
     try {
-      await updateRecipient({
-        ...form,
-        documentId: parsedItem.$id,
-        code: code,
-        phone: phone,
-      });
+      await updateRecipient(data);
       router.replace(`/recipients`);
     } catch (error) {
       Alert.alert('Error', error.message);
@@ -74,10 +100,13 @@ const EditRecipient = () => {
         email: '',
         middleName: '',
       });
-      // setPhone: '';
-      // setCode: '';
+      setCountryCode('');
+      setCountryCallingCode('');
+      setCountry('');
       setIsSubmitting(false);
     }
+
+    console.log('DATA====>', data);
   };
 
   const deleteHandler = async () => {
@@ -95,6 +124,14 @@ const EditRecipient = () => {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <View>
+        <LoadingOverlay message='Loading recipient data...' />
+      </View>
+    );
+  }
 
   if (isSubmitting) {
     return (
@@ -149,9 +186,14 @@ const EditRecipient = () => {
                 />
                 <View className='mt-3'>
                   <CountryCodePicker
-                  // phone={phone}
-                  // code={code}
-                  // setPhone={setPhoneNumber}
+                    isEditing
+                    countryCode={countryCode}
+                    countryCallingCode={countryCallingCode}
+                    setCountry={setCountry}
+                    setCountryCode={setCountryCode}
+                    setCountryCallingCode={setCountryCallingCode}
+                    recipientPhone={recipientPhone}
+                    setRecipientPhone={setRecipientPhone}
                   />
                 </View>
                 <TouchableOpacity className='mt-5' onPress={deleteHandler}>
