@@ -25,8 +25,9 @@ const EditRecipient = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { item } = useLocalSearchParams();
   const parsedItem = JSON.parse(item);
-  const [code, setCode] = useState('');
-  const [phone, setPhone] = useState('');
+  console.log('ITEM====>', parsedItem.phone);
+  // const [code, setCode] = useState('');
+  // const [phone, setPhone] = useState('');
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -34,10 +35,10 @@ const EditRecipient = () => {
     email: '',
   });
 
-  const setPhoneNumber = (phone, code) => {
-    setPhone(phone);
-    setCode(code);
-  };
+  // const setPhoneNumber = (phone, code) => {
+  //   setPhone(phone);
+  //   setCode(code);
+  // };
 
   useEffect(() => {
     setForm({
@@ -46,8 +47,8 @@ const EditRecipient = () => {
       middleName: parsedItem.middleName,
       email: parsedItem.email,
     });
-    setCode(parsedItem.callingCode);
-    setPhone(parsedItem.phone);
+    // setCode(parsedItem.callingCode);
+    // setPhone(parsedItem.phone);
   }, []);
 
   const submit = async () => {
@@ -73,8 +74,8 @@ const EditRecipient = () => {
         email: '',
         middleName: '',
       });
-      setPhone: '';
-      setCode: '';
+      // setPhone: '';
+      // setCode: '';
       setIsSubmitting(false);
     }
   };
@@ -148,9 +149,9 @@ const EditRecipient = () => {
                 />
                 <View className='mt-3'>
                   <CountryCodePicker
-                    phone={phone}
-                    code={code}
-                    setPhone={setPhoneNumber}
+                  // phone={phone}
+                  // code={code}
+                  // setPhone={setPhoneNumber}
                   />
                 </View>
                 <TouchableOpacity className='mt-5' onPress={deleteHandler}>

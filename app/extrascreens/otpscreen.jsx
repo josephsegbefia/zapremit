@@ -20,10 +20,10 @@ const OTPScreen = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
 
-  const handleVerification = async (number, code) => {
+  const handleVerification = async (number, code, userId) => {
     setIsVerifying(true);
     try {
-      const response = await verifyOTP(number, code);
+      const response = await verifyOTP(number, code, userId);
       console.log(response);
     } catch (error) {
       Alert.alert('Error', 'Code could not be verified');
@@ -74,7 +74,11 @@ const OTPScreen = () => {
             <CustomButton
               title='VERIFY'
               handlePress={() =>
-                handleVerification(user.completePhone, verificationCode)
+                handleVerification(
+                  user.completePhone,
+                  verificationCode,
+                  user.$id
+                )
               }
             />
             <View

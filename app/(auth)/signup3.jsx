@@ -33,10 +33,10 @@ const Signup3 = () => {
   const submit = async () => {
     setSignupData((prev) => ({
       ...prev,
-      country: country,
-      code: countryData.code,
-      phone: countryData.phone,
-      completePhone: countryData.completePhone,
+      // country: country,
+      // code: countryData.code,
+      // phone: countryData.phone,
+      // completePhone: countryData.completePhone,
     }));
 
     if (!countryData.phone || !countryData.name) {
@@ -76,6 +76,20 @@ const Signup3 = () => {
       Alert.alert('Error', error.message);
     } finally {
       setIsSubmitting(false);
+      setCountryData({
+        callingCode: '',
+        code: '',
+        phone: '',
+        completePhone: '',
+        country: '',
+      });
+      setSignupData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      });
     }
     router.replace('/extrascreens/otpscreen');
   };

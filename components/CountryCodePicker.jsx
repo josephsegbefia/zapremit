@@ -41,8 +41,6 @@ const CountryCodePicker = ({ setCountry }) => {
       let defaultData = data.find((a) => a.code === 'GH');
       if (defaultData) {
         setSelectedArea(defaultData);
-        // setCode(defaultData.code);
-        // setPhone(phone, defaultData.callingCode);
       }
     }
   }, []);
@@ -50,12 +48,15 @@ const CountryCodePicker = ({ setCountry }) => {
   useEffect(() => {
     setCountryData((prev) => ({
       ...prev,
-      callingCode: callingCode,
-      code: code,
-      name: name,
+      // to solve the where the user doesnt change the default country.
+      // When the user doesnt change the default country the country it means hes selecting ghana, this code is to make sure
+      // Ghana is passed on to other parts of the app that need this data.
+      callingCode: !callingCode ? '+233' : callingCode,
+      code: !code ? 'GH' : code,
+      name: !name ? 'Ghana' : name,
       flag: flag,
       phone: phone,
-      completePhone: `${callingCode}${phone}`,
+      completePhone: !completePhone ? '+233' + phone : `${callingCode}${phone}`,
     }));
   }, [name, code, callingCode, flag, phone]);
 

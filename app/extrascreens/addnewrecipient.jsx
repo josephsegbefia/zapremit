@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import CountryCodePicker from '../../components/CountryCodePicker';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import { useCountryPickerContext } from '../../context/country-picker-context';
 import { createRecipient } from '../../lib/appwrite';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import { router } from 'expo-router';
@@ -22,9 +23,11 @@ import { router } from 'expo-router';
 const AddNewRecipient = () => {
   const navigation = useNavigation();
   const { user, transferData, setTransferData } = useGlobalContext();
+  const { countryData, setCountryData } = useCountryPickerContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [code, setCode] = useState('');
-  const [phone, setPhone] = useState('');
+  const [country, setCountry] = useState('');
+  // const [countryCode, setCountryCode] = useState('');
+  // const [recipientPhone, setRecipientPhone] = useState('');
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -32,33 +35,55 @@ const AddNewRecipient = () => {
     email: '',
   });
 
+  // useEffect(() => {
+  //   setRecipientPhone(countryData.completePhone);
+  //   setCountryCode(countryData.code);
+  // }, [code, completePhone]);
+
   const submit = async () => {
-    if (!form.firstName || !form.lastName || !form.email || !code || !phone) {
+    const code = countryData.code.trim();
+    const completePhone = countryData.completePhone.trim();
+    const phone = countryData.phone.trim();
+    const recipientCountry = countryData.name.trim();
+
+    const data = {
+      firstName: form.firstName.trim(),
+      middleName: form.middleName.trim(),
+      lastName: form.lastName.trim(),
+      email: form.email.trim(),
+      code: code,
+      completePhone: completePhone,
+      phone: phone,
+      country: recipientCountry,
+      userId: user.$id,
+    };
+    if (!form.firstName || !form.lastName || !form.email || !phone) {
       return Alert.alert('Error', 'Please fill in all the fields');
     }
+
+    console.log(data);
     setIsSubmitting(true);
     try {
-      const newRecipient = await createRecipient({
-        ...form,
-        userId: user.$id,
-        phone,
-        code,
-      });
-
-      setTransferData((prev) => ({
-        ...prev,
-        recipientId: newRecipient.$id,
-        recipientFirstName: newRecipient.firstName,
-        recipientMiddleName: newRecipient?.middleName,
-        recipientLastName: newRecipient.lastName,
-        recipientPhone: newRecipient.phone,
-      }));
+      const newRecipient = await createRecipient(data);
 
       if (transferData.identifier === 'add-new-recipient') {
-        setTransferData((prev) => ({
-          ...prev,
-          identifier: '',
-        }));
+        try {
+          setTransferData((prev) => ({
+            ...prev,
+            recipientId: newRecipient.$id,
+            recipientFirstName: newRecipient.firstName,
+            recipientMiddleName: newRecipient?.middleName,
+            recipientLastName: newRecipient.lastName,
+            recipientPhone: newRecipient.phone,
+          }));
+        } catch (error) {
+          console.log('Could not create recipient', error);
+        } finally {
+          setTransferData((prev) => ({
+            ...prev,
+            identifier: '',
+          }));
+        }
         router.replace('/send');
         return;
       }
@@ -72,8 +97,14 @@ const AddNewRecipient = () => {
         email: '',
         middleName: '',
       });
-      setPhone('');
-      setCode('');
+      setCountryData({
+        callingCode: '',
+        code: '',
+        name: '',
+        phone: '',
+        flag: '',
+        completePhone: '',
+      });
       setIsSubmitting(false);
     }
   };
@@ -86,10 +117,10 @@ const AddNewRecipient = () => {
     );
   }
 
-  const setPhoneNumber = (phone, code) => {
-    setPhone(phone);
-    setCode(code);
-  };
+  // const setPhoneNumber = (phone, code) => {
+  //   setPhone(phone);
+  //   setCode(code);
+  // };
 
   return (
     <SafeAreaView className='h-full bg-primary-50'>
@@ -148,11 +179,7 @@ const AddNewRecipient = () => {
                 />
 
                 <View className='mt-3'>
-                  <CountryCodePicker
-                    phone={phone}
-                    code={code}
-                    setPhone={setPhoneNumber}
-                  />
+                  <CountryCodePicker setCountry={setCountry} />
                 </View>
               </View>
             </View>
