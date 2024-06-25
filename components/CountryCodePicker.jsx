@@ -79,6 +79,7 @@ const CountryCodePicker = ({
     if (isEditing) {
       setCountryCode(item.code);
       setCountryCallingCode(item.callingCode);
+      setCountry(item.name);
     }
   };
 

@@ -82,6 +82,7 @@ const EditRecipient = () => {
       middleName: form.middleName.trim(),
       email: form.email.trim(),
       phone: recipientPhone,
+      country: country,
       code: countryCode,
       callingCode: countryCallingCode,
       completePhone: `${countryCallingCode}${recipientPhone}`,
