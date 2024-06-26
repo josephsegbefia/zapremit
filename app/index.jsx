@@ -7,9 +7,19 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomButton from '../components/CustomButton';
 import { useGlobalContext } from '../context/GlobalProvider';
 import Logo from '../components/Logo';
+import LoadingOverlay from '../components/LoadingOverlay';
+import VerifyPhone from './extrascreens/verifyPhone';
 
 export default function App() {
   const { user, isLoading, isLoggedIn } = useGlobalContext();
+
+  if (isLoading) {
+    return <LoadingOverlay message='Loading...' />;
+  }
+
+  // if (!user?.numberIsVerified) {
+  //   return <Redirect href='/extrascreens/verifyPhone' />;
+  // }
   if (!isLoading && isLoggedIn) return <Redirect href='/home' />;
 
   return (

@@ -15,10 +15,13 @@ import CustomButton from '../../components/CustomButton';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import DateField from '../../components/DateField';
 import { updateUser } from '../../lib/appwrite';
+import CountryCodePicker from '../../components/CountryCodePicker';
+import Countries from '../../components/Countries';
 
 const UserExtraDetails = () => {
   const { user, isLoading } = useGlobalContext();
   const [dob, setDob] = useState('');
+  const [country, setCountry] = useState();
   const [dateError, setDateError] = useState('');
   const [form, setForm] = useState({
     street: '',
@@ -107,13 +110,16 @@ const UserExtraDetails = () => {
               />
               <DateField
                 title='Date of birth'
-                otherStyles='mt-3 mb-10'
+                otherStyles='mt-3 mb-3'
                 placeholder='DD/MM/YYYY'
                 setDob={setDob}
                 dob={dob}
                 setDateError={setDateError}
               />
-              <CustomButton title='SUBMIT' handlePress={submitHandler} />
+              <Countries />
+              <View className='mt-10'>
+                <CustomButton title='SUBMIT' handlePress={submitHandler} />
+              </View>
             </View>
           </View>
         </ScrollView>

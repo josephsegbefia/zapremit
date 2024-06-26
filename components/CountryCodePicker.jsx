@@ -152,7 +152,7 @@ const CountryCodePicker = ({
           // onPress={() => setModalVisible(true)}
           >
             <TextInput
-              className='flex-1 text-primary font-semibold text-base'
+              className='flex-1 text-primary font-semibold text-sm'
               value={
                 !isEditing
                   ? !code
@@ -170,7 +170,7 @@ const CountryCodePicker = ({
         </View>
         <View className='border border-primary-200 w-[71%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary'>
           <TextInput
-            className='flex-1 text-primary font-semibold text-base'
+            className='flex-1 text-primary font-semibold text-sm'
             value={isEditing ? `${recipientPhone}` : `${phone}`}
             placeholder='207849440'
             placeholderTextColor='#CDCDE0'
