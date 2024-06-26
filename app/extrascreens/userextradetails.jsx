@@ -12,17 +12,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import LoadingOverlay from '../../components/LoadingOverlay';
+import DateField from '../../components/DateField';
 
 const UserExtraDetails = () => {
   const { user, isLoading } = useGlobalContext();
+  const [dob, setDob] = useState('');
+  const [error, setError] = useState('');
   const [form, setForm] = useState({
-    dob: '',
+    // dob: '',
     street: '',
     hseNum: '',
     city: '',
     postcode: '',
   });
 
+  console.log(dob);
+  console.log(error);
   const submitHandler = () => {};
 
   if (isLoading) {
@@ -82,16 +87,13 @@ const UserExtraDetails = () => {
                 autoCorrect={false}
                 placeholder='e.g. Berlin'
               />
-              <FormField
+              <DateField
                 title='Date of birth'
-                otherStyles='mt-4 mb-16'
-                value={form.dob}
-                // keyboardType='email-address'
-                handleChangeText={(e) => setForm({ ...form, dob: e })}
-                autoComplete={false}
-                autoCapitalize={false}
-                autoCorrect={false}
-                placeholder='YYYY-MM-DD'
+                otherStyles='mt-3 mb-10'
+                placeholder='DD/MM/YYYY'
+                setDob={setDob}
+                dob={dob}
+                setError={setError}
               />
               <CustomButton title='SUBMIT' handlePress={submitHandler} />
             </View>

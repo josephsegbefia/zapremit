@@ -13,7 +13,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import CustomButton from '../../components/CustomButton';
-import CustomDropDown from '../../components/CustomDropDown';
+
 import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
 import MiniTransferSummary from '../../components/MiniTransferSummary';
 import ReasonsModal from '../extrascreens/reasonsModal';
