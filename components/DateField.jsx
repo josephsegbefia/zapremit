@@ -7,7 +7,7 @@ const DateField = ({
   placeholder,
   dob,
   setDob,
-  setError,
+  setDateError,
 }) => {
   // const [dob, setDob] = useState('');
   // const [error, setError] = useState('');
@@ -28,7 +28,7 @@ const DateField = ({
     if (input.length === 10) {
       validateDate(input);
     } else {
-      setError('');
+      setDateError('');
     }
   };
 
@@ -44,35 +44,35 @@ const DateField = ({
       month <= 0 ||
       year.toString().length !== 4
     ) {
-      setError('Invalid date or format.');
+      setDateError('Invalid date or format.');
       return;
     }
 
     if (month === 2 && day > 29) {
-      setError('Invalid date or format.');
+      setDateError('Invalid date or format.');
       return;
     }
     if (month === 2 && day === 29) {
       if (year % 4 !== 0 || (year % 100 === 0 && year % 400 !== 0)) {
-        setError('Invalid date or format.');
+        setDateError('Invalid date or format.');
         return;
       }
     }
 
     const daysInMonth = new Date(year, month, 0).getDate();
     if (day > daysInMonth) {
-      setError('Invalid date or format.');
+      setDateError('Invalid date or format.');
       return;
     }
 
     const currentDate = new Date();
     const inputDate = new Date(`${year}-${month}-${day}`);
     if (inputDate > currentDate) {
-      setError('Date cannot be in the future.');
+      setDateError('Date cannot be in the future.');
       return;
     }
 
-    setError('');
+    setDateError('');
   };
 
   return (

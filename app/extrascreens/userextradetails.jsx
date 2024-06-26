@@ -6,6 +6,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,22 +14,39 @@ import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import DateField from '../../components/DateField';
+import { updateUser } from '../../lib/appwrite';
 
 const UserExtraDetails = () => {
   const { user, isLoading } = useGlobalContext();
   const [dob, setDob] = useState('');
-  const [error, setError] = useState('');
+  const [dateError, setDateError] = useState('');
   const [form, setForm] = useState({
-    // dob: '',
     street: '',
     hseNum: '',
     city: '',
     postcode: '',
   });
 
-  console.log(dob);
-  console.log(error);
-  const submitHandler = () => {};
+  const submitHandler = async () => {
+    if (!form.street || !form.city || !form.postcode || !dob) {
+      Alert.alert('Error', 'Please make sure all fields are filled');
+      return;
+    }
+    if (dateError) {
+      Alert.alert('Error', dateError);
+      return;
+    }
+
+    const data = {
+      street: form.street,
+      postcode: form.postcode,
+      city: form.city,
+      dob: dob,
+      userId: user.$id,
+    };
+    const response = await updateUser(data);
+    console.log(response);
+  };
 
   if (isLoading) {
     <LoadingOverlay message='Loading...' />;
@@ -93,7 +111,7 @@ const UserExtraDetails = () => {
                 placeholder='DD/MM/YYYY'
                 setDob={setDob}
                 dob={dob}
-                setError={setError}
+                setDateError={setDateError}
               />
               <CustomButton title='SUBMIT' handlePress={submitHandler} />
             </View>
