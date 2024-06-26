@@ -14,12 +14,12 @@ import { countriesData } from '../constants/countries';
 import FormField from './FormField';
 
 const Countries = ({ setCountry, country }) => {
-  const { countryData, setCountryData } = useCountryPickerContext();
+  // const { countryData, setCountryData } = useCountryPickerContext();
   const [name, setName] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [currencyName, setCurrencyName] = useState('');
-  const [currencyCode, setCurrencyCode] = useState('');
-  const [currencySymbol, setCurrencySymbol] = useState('');
+  // const [currencyName, setCurrencyName] = useState('');
+  // const [currencyCode, setCurrencyCode] = useState('');
+  // const [currencySymbol, setCurrencySymbol] = useState('');
   const [lands, setLands] = useState([]);
   const [selectedLand, setSelectedLand] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -92,12 +92,6 @@ const Countries = ({ setCountry, country }) => {
                 />
               </View>
 
-              {/* <TextInput
-                className='flex-1 bg-white border border-gray-300 rounded-lg p-2'
-                placeholder='Search for a country'
-                value={searchQuery}
-                onChangeText={(text) => setSearchQuery(text)}
-              /> */}
               <View className='mt-4'>
                 <TouchableOpacity onPress={() => setModalVisible(false)}>
                   <Ionicons name='close' size={24} color='#004d40' />

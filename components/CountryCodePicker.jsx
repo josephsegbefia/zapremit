@@ -8,7 +8,7 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
-
+import FormField from './FormField';
 import { useCountryPickerContext } from '../context/country-picker-context';
 import { Ionicons } from '@expo/vector-icons';
 import { countriesData } from '../constants/countries';
@@ -27,6 +27,7 @@ const CountryCodePicker = ({
 }) => {
   const { countryData, setCountryData } = useCountryPickerContext();
   const [areas, setAreas] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedArea, setSelectedArea] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [phone, setPhone] = useState('');
@@ -102,6 +103,10 @@ const CountryCodePicker = ({
     []
   );
 
+  const filteredAreas = areas.filter((area) =>
+    area.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const keyExtractor = useCallback((item) => item.code, []);
 
   const renderCountryCodesModal = useCallback(
@@ -109,26 +114,41 @@ const CountryCodePicker = ({
       <Modal animationType='slide' transparent={true} visible={modalVisible}>
         <View className='flex-1 items-center justify-center'>
           <View className='h-full w-full bg-[#e0f2f1] mt-48 pb-24'>
+            <View className='mx-3 my-2 flex-row justify-between  items-center'>
+              <View className='w-[90%]'>
+                <FormField
+                  value={searchQuery}
+                  placeholder='Search for a country'
+                  handleChangeText={(text) => setSearchQuery(text)}
+                />
+              </View>
+
+              <View className='mt-4'>
+                <TouchableOpacity onPress={() => setModalVisible(false)}>
+                  <Ionicons name='close' size={24} color='#004d40' />
+                </TouchableOpacity>
+              </View>
+            </View>
             <FlatList
-              data={areas}
+              data={filteredAreas}
               renderItem={renderItem}
               keyExtractor={keyExtractor}
               showsVerticalScrollIndicator={false}
-              ListHeaderComponent={() => (
-                <TouchableOpacity
-                  className='items-end mx-5 my-2'
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Ionicons name='close' size={24} color='#004d40' />
-                </TouchableOpacity>
-              )}
-              stickyHeaderIndices={[0]}
+              // ListHeaderComponent={() => (
+              //   <TouchableOpacity
+              //     className='items-end mx-5 my-2'
+              //     onPress={() => setModalVisible(false)}
+              //   >
+              //     <Ionicons name='close' size={24} color='#004d40' />
+              //   </TouchableOpacity>
+              // )}
+              // stickyHeaderIndices={[0]}
             />
           </View>
         </View>
       </Modal>
     ),
-    [modalVisible, areas, renderItem, keyExtractor]
+    [modalVisible, areas, filteredAreas, searchQuery, renderItem, keyExtractor]
   );
 
   // const handlePhoneChange = (phoneNumber) => {
