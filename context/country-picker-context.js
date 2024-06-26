@@ -10,6 +10,9 @@ const CountryPickerProvider = ({ children }) => {
     phone: '',
     flag: '',
     completePhone: '',
+    currencyName: '',
+    currencyCode: '',
+    currencySymbol: '',
   });
 
   return (

@@ -21,8 +21,14 @@ import Countries from '../../components/Countries';
 const UserExtraDetails = () => {
   const { user, isLoading } = useGlobalContext();
   const [dob, setDob] = useState('');
-  const [country, setCountry] = useState();
   const [dateError, setDateError] = useState('');
+  const [country, setCountry] = useState({
+    name: '',
+    currencyCode: '',
+    currencyName: '',
+    currencySymbol: '',
+    flag: '',
+  });
   const [form, setForm] = useState({
     street: '',
     hseNum: '',
@@ -50,6 +56,8 @@ const UserExtraDetails = () => {
     const response = await updateUser(data);
     console.log(response);
   };
+
+  console.log(country);
 
   if (isLoading) {
     <LoadingOverlay message='Loading...' />;
@@ -116,7 +124,7 @@ const UserExtraDetails = () => {
                 dob={dob}
                 setDateError={setDateError}
               />
-              <Countries />
+              <Countries country={country} setCountry={setCountry} />
               <View className='mt-10'>
                 <CustomButton title='SUBMIT' handlePress={submitHandler} />
               </View>
