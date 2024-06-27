@@ -17,9 +17,7 @@ const Countries = ({ setCountry, country }) => {
   // const { countryData, setCountryData } = useCountryPickerContext();
   const [name, setName] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  // const [currencyName, setCurrencyName] = useState('');
-  // const [currencyCode, setCurrencyCode] = useState('');
-  // const [currencySymbol, setCurrencySymbol] = useState('');
+
   const [lands, setLands] = useState([]);
   const [selectedLand, setSelectedLand] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');

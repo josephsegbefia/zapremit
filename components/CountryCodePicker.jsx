@@ -134,15 +134,6 @@ const CountryCodePicker = ({
               renderItem={renderItem}
               keyExtractor={keyExtractor}
               showsVerticalScrollIndicator={false}
-              // ListHeaderComponent={() => (
-              //   <TouchableOpacity
-              //     className='items-end mx-5 my-2'
-              //     onPress={() => setModalVisible(false)}
-              //   >
-              //     <Ionicons name='close' size={24} color='#004d40' />
-              //   </TouchableOpacity>
-              // )}
-              // stickyHeaderIndices={[0]}
             />
           </View>
         </View>
