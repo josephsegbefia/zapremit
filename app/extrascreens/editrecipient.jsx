@@ -107,6 +107,17 @@ const EditRecipient = () => {
         email: '',
         middleName: '',
       });
+      setCountry({
+        callingCode: '',
+        code: '',
+        name: '',
+        phone: '',
+        flag: '',
+        completePhone: '',
+        currencyName: '',
+        currencyCode: '',
+        currencySymbol: '',
+      });
       setIsSubmitting(false);
     }
 

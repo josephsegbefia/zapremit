@@ -115,6 +115,9 @@ const AddNewRecipient = () => {
         phone: '',
         flag: '',
         completePhone: '',
+        currencyName: '',
+        currencyCode: '',
+        currencySymbol: '',
       });
       setIsSubmitting(false);
     }

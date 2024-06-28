@@ -24,18 +24,28 @@ const Signup3 = () => {
   const { setUser, setIsLoggedIn } = useGlobalContext();
   const navigation = useNavigation();
 
-  const [country, setCountry] = useState(null);
-  const [phone, setPhone] = useState('');
-  const [code, setCode] = useState('');
+  // const [phone, setPhone] = useState('');
+  // const [code, setCode] = useState('');
   const [completePhone, setCompletePhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submit = async () => {
-    // setSignupData((prev) => ({
-    //   ...prev,
-    // }));
+  const [countryInfo, setCountryInfo] = useState({
+    name: '',
+    code: '',
+    callingCode: '',
+    currencyCode: '',
+    currencyName: '',
+    currencySymbol: '',
+    flag: '',
+    phone: '',
+  });
 
-    if (!countryData.phone || !countryData.name) {
+  const submit = async () => {
+    setSignupData((prev) => ({
+      ...prev,
+    }));
+
+    if (!countryInfo.phone || !countryInfo.name || !countryInfo.code) {
       Alert.alert(
         'Error',
         'Please select a country and enter your phone number'
@@ -47,11 +57,15 @@ const Signup3 = () => {
     const lastName = signupData.lastName.trim();
     const email = signupData.email.trim();
     const password = signupData.password.trim();
-    const callingCode = countryData.callingCode.trim();
-    const code = countryData.code.trim();
-    const completePhone = countryData.completePhone.trim();
-    const phone = countryData.phone.trim();
-    const country = countryData.name.trim();
+    const callingCode = countryInfo.callingCode.trim();
+    const code = countryInfo.code.trim();
+    const completePhone = countryInfo.completePhone.trim();
+    const phone = countryInfo.phone.trim();
+    const country = countryInfo.name.trim();
+    const currencyCode = countryInfo.currencyCode.trim();
+    const currencyName = countryInfo.currencyName.trim();
+    const flag = countryInfo.flag.trim();
+    const currencySymbol = countryInfo.currencySymbol.trim();
 
     const data = {
       firstName,
@@ -63,21 +77,28 @@ const Signup3 = () => {
       code,
       completePhone,
       phone,
+      currencyCode,
+      currencyName,
+      flag,
+      currencySymbol,
     };
     try {
       const result = await createUser(data);
+      console.log(data);
       setUser(result);
       setIsLoggedIn(true);
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {
       setIsSubmitting(false);
-      setCountryData({
-        callingCode: '',
+      setCountryInfo({
+        name: '',
         code: '',
-        phone: '',
-        completePhone: '',
-        country: '',
+        callingCode: '',
+        currencyCode: '',
+        currencyName: '',
+        currencySymbol: '',
+        flag: '',
       });
       setSignupData({
         firstName: '',
@@ -87,7 +108,8 @@ const Signup3 = () => {
         confirmPassword: '',
       });
     }
-    router.replace('/extrascreens/otpscreen');
+    // router.replace('/extrascreens/otpscreen');
+    router.replace('/home');
   };
 
   return (
@@ -114,11 +136,14 @@ const Signup3 = () => {
               />
             </View>
             <View className='mt-3'>
-              <CountryCodePicker setCountry={setCountry} />
+              <CountryCodePicker
+                setCountryInfo={setCountryInfo}
+                countryInfo={countryInfo}
+              />
             </View>
-            {country && (
+            {countryInfo.name && (
               <Text className='text-base text-primary font-pmedium mt-3'>
-                You will be sending money from {country}
+                You will be sending money from {countryInfo.name}
               </Text>
             )}
           </View>
