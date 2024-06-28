@@ -28,16 +28,9 @@ const EditRecipient = () => {
   const { item } = useLocalSearchParams();
   const parsedItem = JSON.parse(item);
 
-  // const [code, setCode] = useState('');
-
   const { data: recipient, isLoading } = useAppwrite(() =>
     getRecipientById(user.$id, parsedItem.$id)
   );
-
-  // const [countryCode, setCountryCode] = useState('');
-  // const [countryCallingCode, setCountryCallingCode] = useState('');
-  // Not needed here but required in adding a recipient. Passed tp the country picker comp here to prevent the code from breaking
-  // const [country, setCountry] = useState();
 
   const [country, setCountry] = useState({
     name: '',
@@ -49,7 +42,6 @@ const EditRecipient = () => {
     flag: '',
     phone: '',
   });
-  const [recipientPhone, setRecipientPhone] = useState('');
 
   const [form, setForm] = useState({
     firstName: '',
@@ -58,12 +50,6 @@ const EditRecipient = () => {
     email: '',
   });
 
-  console.log(recipient);
-  // const setPhoneNumber = (phone, code) => {
-  //   setPhone(phone);
-  //   setCode(code);
-  // };
-
   useEffect(() => {
     setForm({
       firstName: recipient.firstName,
@@ -71,9 +57,7 @@ const EditRecipient = () => {
       middleName: recipient.middleName,
       email: recipient.email,
     });
-    // setCountryCode(recipient.code);
-    // setCountryCallingCode(recipient.callingCode);
-    // setRecipientPhone(recipient.phone);
+
     setCountry((prev) => ({
       ...prev,
       callingCode: recipient.callingCode,
