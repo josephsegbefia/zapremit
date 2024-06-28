@@ -9,7 +9,6 @@ import {
   FlatList,
 } from 'react-native';
 import FormField from './FormField';
-import { useCountryPickerContext } from '../context/country-picker-context';
 import { Ionicons } from '@expo/vector-icons';
 import { countriesData } from '../constants/countries';
 
