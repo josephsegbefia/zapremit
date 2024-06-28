@@ -32,7 +32,7 @@ const EditRecipient = () => {
     getRecipientById(user.$id, parsedItem.$id)
   );
 
-  const [country, setCountry] = useState({
+  const [countryInfo, setCountryInfo] = useState({
     name: '',
     code: '',
     callingCode: '',
@@ -58,11 +58,17 @@ const EditRecipient = () => {
       email: recipient.email,
     });
 
-    setCountry((prev) => ({
+    setCountryInfo((prev) => ({
       ...prev,
       callingCode: recipient.callingCode,
+      name: recipient.country,
       code: recipient.code,
       phone: recipient.phone,
+      callingCode: recipient.callingCode,
+      currencyCode: recipient.currencyCode,
+      currencyName: recipient.currencyName,
+      currencySymbol: recipient.currencySymbol,
+      flag: recipient.flag,
     }));
   }, [recipient]);
 
@@ -71,8 +77,8 @@ const EditRecipient = () => {
       !form.firstName ||
       !form.lastName ||
       !form.email ||
-      !country.code ||
-      !country.phone
+      !countryInfo.code ||
+      !countryInfo.phone
     ) {
       return Alert.alert('Error', 'Please fill in all the fields');
     }
@@ -82,16 +88,16 @@ const EditRecipient = () => {
       lastName: form.lastName.trim(),
       middleName: form.middleName.trim(),
       email: form.email.trim(),
-      phone: country.phone,
-      country: country.name,
-      code: country.code,
-      currencyName: country.currencyName,
-      flag: country.flag,
-      currencyCode: country.currencyCode,
-      currencyCode: country.currencyCode,
-      currencySymbol: country.currencySymbol,
-      callingCode: country.callingCode,
-      completePhone: `${country.callingCode}${country.phone}`,
+      phone: countryInfo.phone,
+      country: countryInfo.name,
+      code: countryInfo.code,
+      currencyName: countryInfo.currencyName,
+      flag: countryInfo.flag,
+      currencyCode: countryInfo.currencyCode,
+      currencyCode: countryInfo.currencyCode,
+      currencySymbol: countryInfo.currencySymbol,
+      callingCode: countryInfo.callingCode,
+      completePhone: countryInfo.completePhone,
       documentId: recipient.$id,
     };
     try {
@@ -107,7 +113,7 @@ const EditRecipient = () => {
         email: '',
         middleName: '',
       });
-      setCountry({
+      setCountryInfo({
         callingCode: '',
         code: '',
         name: '',
@@ -120,8 +126,6 @@ const EditRecipient = () => {
       });
       setIsSubmitting(false);
     }
-
-    console.log('DATA====>', data);
   };
 
   const deleteHandler = async () => {
@@ -214,8 +218,8 @@ const EditRecipient = () => {
                 <View className='mt-3'>
                   <CountryCodePicker
                     isEditing
-                    setCountry={setCountry}
-                    country={country}
+                    setCountryInfo={setCountryInfo}
+                    countryInfo={countryInfo}
                   />
                 </View>
                 <TouchableOpacity className='mt-5' onPress={deleteHandler}>

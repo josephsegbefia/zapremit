@@ -22,9 +22,8 @@ import { router } from 'expo-router';
 const AddNewRecipient = () => {
   const navigation = useNavigation();
   const { user, transferData, setTransferData } = useGlobalContext();
-  const { countryData, setCountryData } = useCountryPickerContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [country, setCountry] = useState({
+  const [countryInfo, setCountryInfo] = useState({
     name: '',
     code: '',
     callingCode: '',
@@ -43,15 +42,15 @@ const AddNewRecipient = () => {
   });
 
   const submit = async () => {
-    const code = countryData.code.trim();
-    const completePhone = countryData.completePhone.trim();
-    const phone = countryData.phone.trim();
-    const callingCode = countryData.callingCode;
-    const recipientCountry = countryData.name.trim();
-    const currencyCode = countryData.currencyCode.trim();
-    const currencyName = countryData.currencyName.trim();
-    const flag = countryData.flag.trim();
-    const currencySymbol = countryData.currencySymbol.trim();
+    const code = countryInfo.code.trim();
+    const completePhone = countryInfo.completePhone.trim();
+    const phone = countryInfo.phone.trim();
+    const callingCode = countryInfo.callingCode;
+    const recipientCountry = countryInfo.name.trim();
+    const currencyCode = countryInfo.currencyCode.trim();
+    const currencyName = countryInfo.currencyName.trim();
+    const flag = countryInfo.flag.trim();
+    const currencySymbol = countryInfo.currencySymbol.trim();
 
     const data = {
       firstName: form.firstName.trim(),
@@ -108,7 +107,7 @@ const AddNewRecipient = () => {
         email: '',
         middleName: '',
       });
-      setCountryData({
+      setCountryInfo({
         callingCode: '',
         code: '',
         name: '',
@@ -188,7 +187,10 @@ const AddNewRecipient = () => {
                 />
 
                 <View className='mt-3'>
-                  <CountryCodePicker setCountry={setCountry} />
+                  <CountryCodePicker
+                    setCountryInfo={setCountryInfo}
+                    countryInfo={countryInfo}
+                  />
                 </View>
               </View>
             </View>

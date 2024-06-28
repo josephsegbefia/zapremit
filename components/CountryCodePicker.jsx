@@ -15,8 +15,7 @@ import { countriesData } from '../constants/countries';
 
 const { width, height } = Dimensions.get('window');
 
-const CountryCodePicker = ({ setCountryInfo, countryInfo, isEditing }) => {
-  // const { countryData, setCountryData } = useCountryPickerContext();
+const CountryCodePicker = ({ setCountryInfo, countryInfo }) => {
   const [areas, setAreas] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedArea, setSelectedArea] = useState(null);

@@ -20,13 +20,9 @@ import { createUser } from '../../lib/appwrite';
 
 const Signup3 = () => {
   const { signupData, setSignupData } = useContext(SignupContext);
-  const { countryData, setCountryData } = useCountryPickerContext();
   const { setUser, setIsLoggedIn } = useGlobalContext();
   const navigation = useNavigation();
 
-  // const [phone, setPhone] = useState('');
-  // const [code, setCode] = useState('');
-  const [completePhone, setCompletePhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [countryInfo, setCountryInfo] = useState({
