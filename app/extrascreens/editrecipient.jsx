@@ -102,6 +102,7 @@ const EditRecipient = () => {
       country: country.name,
       code: country.code,
       currencyName: country.currencyName,
+      flag: country.flag,
       currencyCode: country.currencyCode,
       currencyCode: country.currencyCode,
       currencySymbol: country.currencySymbol,

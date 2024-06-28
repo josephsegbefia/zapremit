@@ -15,17 +15,7 @@ import { countriesData } from '../constants/countries';
 
 const { width, height } = Dimensions.get('window');
 
-const CountryCodePicker = ({
-  setCountry,
-  country,
-  isEditing,
-  // countryCode,
-  // countryCallingCode,
-  // setCountryCode,
-  // setCountryCallingCode,
-  // recipientPhone,
-  // setRecipientPhone,
-}) => {
+const CountryCodePicker = ({ setCountry, country, isEditing }) => {
   const { countryData, setCountryData } = useCountryPickerContext();
   const [areas, setAreas] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,11 +55,13 @@ const CountryCodePicker = ({
       // to solve the where the user doesnt change the default country.
       // When the user doesnt change the default country the country it means hes selecting ghana, this code is to make sure
       // Ghana is passed on to other parts of the app that need this data.
-      callingCode: !callingCode ? '+233' : callingCode,
-      code: !code ? 'GH' : code,
-      name: !name ? 'Ghana' : name,
-      flag: flag,
+
+      callingCode: !country?.callingCode ? '+233' : country.callingCode,
+      code: !country?.code ? 'GH' : country.code,
+      name: !country?.name ? 'Ghana' : country.name,
+      flag: !country?.flag ? 'https://flagcdn.com/w320/gh.png' : country.flag,
       phone: phone,
+      currencySymbol: !country?.currencySymbol ? '₵' : currencySymbol,
       currencyCode: !country?.currencyCode ? 'GHS' : country.currencyCode,
       currencyName: !country?.currencyName
         ? 'Ghanaian cedi'

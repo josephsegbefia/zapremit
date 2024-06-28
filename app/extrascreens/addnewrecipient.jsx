@@ -51,6 +51,7 @@ const AddNewRecipient = () => {
     const recipientCountry = countryData.name.trim();
     const currencyCode = countryData.currencyCode.trim();
     const currencyName = countryData.currencyName.trim();
+    const flag = countryData.flag.trim();
     const currencySymbol = countryData.currencySymbol.trim();
 
     const data = {
@@ -62,6 +63,7 @@ const AddNewRecipient = () => {
       callingCode: callingCode,
       completePhone: completePhone,
       phone: phone,
+      flag: flag,
       country: recipientCountry,
       currencyCode: currencyCode,
       currencyName: currencyName,
