@@ -25,9 +25,17 @@ const AddNewRecipient = () => {
   const { user, transferData, setTransferData } = useGlobalContext();
   const { countryData, setCountryData } = useCountryPickerContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [country, setCountry] = useState('');
-  // const [countryCode, setCountryCode] = useState('');
-  // const [recipientPhone, setRecipientPhone] = useState('');
+  const [country, setCountry] = useState({
+    name: '',
+    code: '',
+    callingCode: '',
+    currencyCode: '',
+    currencyName: '',
+    currencySymbol: '',
+    flag: '',
+    phone: '',
+  });
+
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -35,17 +43,15 @@ const AddNewRecipient = () => {
     email: '',
   });
 
-  // useEffect(() => {
-  //   setRecipientPhone(countryData.completePhone);
-  //   setCountryCode(countryData.code);
-  // }, [code, completePhone]);
-
   const submit = async () => {
     const code = countryData.code.trim();
     const completePhone = countryData.completePhone.trim();
     const phone = countryData.phone.trim();
     const callingCode = countryData.callingCode;
     const recipientCountry = countryData.name.trim();
+    const currencyCode = countryData.currencyCode.trim();
+    const currencyName = countryData.currencyName.trim();
+    const currencySymbol = countryData.currencySymbol.trim();
 
     const data = {
       firstName: form.firstName.trim(),
@@ -57,13 +63,15 @@ const AddNewRecipient = () => {
       completePhone: completePhone,
       phone: phone,
       country: recipientCountry,
+      currencyCode: currencyCode,
+      currencyName: currencyName,
+      currencySymbol: currencySymbol,
       userId: user.$id,
     };
     if (!form.firstName || !form.lastName || !form.email || !phone) {
       return Alert.alert('Error', 'Please fill in all the fields');
     }
 
-    console.log(data);
     setIsSubmitting(true);
     try {
       const newRecipient = await createRecipient(data);
@@ -118,11 +126,6 @@ const AddNewRecipient = () => {
       </View>
     );
   }
-
-  // const setPhoneNumber = (phone, code) => {
-  //   setPhone(phone);
-  //   setCode(code);
-  // };
 
   return (
     <SafeAreaView className='h-full bg-primary-50'>

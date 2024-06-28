@@ -17,13 +17,14 @@ const { width, height } = Dimensions.get('window');
 
 const CountryCodePicker = ({
   setCountry,
+  country,
   isEditing,
-  countryCode,
-  countryCallingCode,
-  setCountryCode,
-  setCountryCallingCode,
-  recipientPhone,
-  setRecipientPhone,
+  // countryCode,
+  // countryCallingCode,
+  // setCountryCode,
+  // setCountryCallingCode,
+  // recipientPhone,
+  // setRecipientPhone,
 }) => {
   const { countryData, setCountryData } = useCountryPickerContext();
   const [areas, setAreas] = useState([]);
@@ -43,6 +44,9 @@ const CountryCodePicker = ({
       name: country.name,
       callingCode: country.callingCode,
       flag: country.flag,
+      currencyName: country.currencyName,
+      currencyCode: country.currencyCode,
+      currencySymbol: country.currencySymbol,
     }));
 
     setAreas(data);
@@ -66,22 +70,27 @@ const CountryCodePicker = ({
       name: !name ? 'Ghana' : name,
       flag: flag,
       phone: phone,
-      completePhone: !completePhone ? '+233' + phone : `${callingCode}${phone}`,
+      currencyCode: !country?.currencyCode ? 'GHS' : country.currencyCode,
+      currencyName: !country?.currencyName
+        ? 'Ghanaian cedi'
+        : country.currencyName,
+      completePhone: !country?.completePhone
+        ? '+233' + phone
+        : `${country?.callingCode}${country?.phone}`,
     }));
   }, [name, code, callingCode, flag, phone]);
 
   const handleSelectCountry = (item) => {
-    setCode(item.code);
-    setCallingCode(item.callingCode);
-    setFlag(item.flag);
-    setName(item.name);
-    setCountry(item.name);
-
-    if (isEditing) {
-      setCountryCode(item.code);
-      setCountryCallingCode(item.callingCode);
-      setCountry(item.name);
-    }
+    setCountry((prev) => ({
+      name: item.name,
+      code: item.code,
+      callingCode: item.callingCode,
+      currencyCode: item.currencyCode,
+      currencyName: item.currencyName,
+      currencySymbol: item.currencySymbol,
+      flag: item.flag,
+      phone: phone,
+    }));
   };
 
   const renderItem = useCallback(
@@ -99,7 +108,7 @@ const CountryCodePicker = ({
         </Text>
       </TouchableOpacity>
     ),
-    // [phone, setPhone, setCountry]
+
     []
   );
 
@@ -142,13 +151,12 @@ const CountryCodePicker = ({
     [modalVisible, areas, filteredAreas, searchQuery, renderItem, keyExtractor]
   );
 
-  // const handlePhoneChange = (phoneNumber) => {
-  //   setPhone(phoneNumber, selectedArea?.callingCode);
-  // };
-
   const handlePhoneChange = (e) => {
     if (isEditing) {
-      setRecipientPhone(e);
+      setCountry((prev) => ({
+        ...prev,
+        phone: e,
+      }));
       return;
     }
     setPhone(e);
@@ -166,10 +174,10 @@ const CountryCodePicker = ({
               className='flex-1 text-primary font-semibold text-sm'
               value={
                 !isEditing
-                  ? !code
+                  ? !country?.code
                     ? `${selectedArea?.code} ${selectedArea?.callingCode}`
-                    : `${code} ${callingCode}`
-                  : `${countryCode} ${countryCallingCode}`
+                    : `${country?.code} ${country?.callingCode}`
+                  : `${country.code} ${country.callingCode}`
               }
               placeholder='+233'
               placeholderTextColor='#CDCDE0'
@@ -182,7 +190,8 @@ const CountryCodePicker = ({
         <View className='border border-primary-200 w-[71%] h-12 px-4 bg-primary-50 rounded-xl focus:border-primary'>
           <TextInput
             className='flex-1 text-primary font-semibold text-sm'
-            value={isEditing ? `${recipientPhone}` : `${phone}`}
+            value={isEditing ? `${country?.phone}` : phone}
+            // value={`${country?.phone}`}
             placeholder='207849440'
             placeholderTextColor='#CDCDE0'
             onChangeText={handlePhoneChange}
