@@ -26,6 +26,7 @@ const UserExtraDetails = () => {
   const [dateError, setDateError] = useState('');
   const [country, setCountry] = useState({
     name: '',
+    countryCode: '',
     currencyCode: '',
     currencyName: '',
     currencySymbol: '',
@@ -58,12 +59,15 @@ const UserExtraDetails = () => {
         dob: dob,
         userId: user.$id,
         // Destination country details
+
         destinationCountry: country.name,
         destinationCountryCurrencyCode: country.currencyCode,
         destinationCountryCurrencyName: country.currencyName,
         destinationCountryFlag: country.flag,
         destinationCountryCurrencySymbol: country.currencySymbol,
+        destinationCountryCode: country.countryCode,
       };
+      console.log(data);
       await updateUser(data);
       router.replace('/home');
     } catch (error) {

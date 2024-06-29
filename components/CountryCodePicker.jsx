@@ -54,9 +54,9 @@ const CountryCodePicker = ({ setCountryInfo, countryInfo }) => {
     }));
   };
 
-  useEffect(() => {
-    // Left empty
-  }, [countryInfo]);
+  // useEffect(() => {
+  //   // Left empty
+  // }, [countryInfo]);
 
   const renderItem = useCallback(
     ({ item }) => (

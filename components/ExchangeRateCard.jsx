@@ -1,10 +1,15 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { router } from 'expo-router';
 import CountryFlag from 'react-native-country-flag';
 import { FontAwesome } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
 
-const ExchangeRateCard = ({ title, hostCountryId, recipientCountryId }) => {
+const ExchangeRateCard = ({
+  title,
+  hostCountryId,
+  userCountryFlag,
+  recipientCountryId,
+}) => {
   return (
     <View className='bg-white rounded-xl'>
       <Text className='text-center text-primary font-psemibold text-sm py-5'>
@@ -36,13 +41,6 @@ const ExchangeRateCard = ({ title, hostCountryId, recipientCountryId }) => {
         </View>
       </View>
       <View className='items-center py-5'>
-        {/* <TouchableOpacity
-          onPress={() => router.replace('/send')}
-          activeOpacity={0.3}
-          className='bg-primary-200 border-none rounded-full justify-center items-center w-[80%] py-1'
-        >
-          <Text className='text-primary text-xl font-psemibold'>Send</Text>
-        </TouchableOpacity> */}
         <CustomButton
           title='Send Now'
           containerStyles='w-[80%]'

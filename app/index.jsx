@@ -17,9 +17,9 @@ export default function App() {
     return <LoadingOverlay message='Loading...' />;
   }
 
-  // if (!user?.numberIsVerified) {
-  //   return <Redirect href='/extrascreens/verifyPhone' />;
-  // }
+  if (isLoggedIn && !user?.numberIsVerified) {
+    return <Redirect href='/extrascreens/verifyPhone' />;
+  }
   if (!isLoading && isLoggedIn) return <Redirect href='/home' />;
 
   return (

@@ -25,6 +25,7 @@ const Countries = ({ setCountry, country }) => {
   useEffect(() => {
     const data = countriesData.map((country) => ({
       name: country.name,
+      countryCode: country.alpha2Code,
       currencyName: country.currencyName,
       currencyCode: country.currencyCode,
       currencySymbol: country.currencySymbol,
@@ -45,12 +46,16 @@ const Countries = ({ setCountry, country }) => {
     setCountry((prev) => ({
       ...prev,
       name: item.name,
+      countryCode: item.countryCode,
       currencyCode: item.currencyCode,
       currencyName: item.currencyName,
       currencySymbol: item.currencySymbol,
       flag: item.flag,
     }));
   };
+
+  // useEffect(() => {}, [country]);
+  console.log(country);
 
   const renderItem = useCallback(
     ({ item }) => (
@@ -63,7 +68,7 @@ const Countries = ({ setCountry, country }) => {
         }}
       >
         <Text className='text-primary text-base font-semibold'>
-          {item.name} ({item.currencyCode})
+          {item.name} ({item.currencyCode}) {item.alpha2Code}
         </Text>
       </TouchableOpacity>
     ),

@@ -55,7 +55,7 @@ const Signup1 = () => {
         <ScrollView>
           <View className='w-full justify-center px-4'>
             <Text className='text-2xl text-primary text-semibold mt-5 text-center font-semibold'>
-              Sign up to zap
+              Sign up to Zap Remit
             </Text>
             <FormField
               title='First Name'

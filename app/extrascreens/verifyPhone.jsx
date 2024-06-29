@@ -1,14 +1,17 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
-
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Logo from '../../components/Logo';
 import CustomButton from '../../components/CustomButton';
+import { sendOTP } from '../../lib/appwrite';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 // The purpose of this component is to make sure users verify their phone numbers before they can use the app.
 // Phone number verification should normally happen during the signup process, but some users may have aborted the process along the way
 // This component ensures they verify their number when they open the app
 const VerifyPhone = () => {
+  const { user } = useGlobalContext();
   return (
     <SafeAreaView className='bg-primary-50 h-full'>
       <View className='justify-center items-center px-6'>
@@ -26,7 +29,13 @@ const VerifyPhone = () => {
       </View>
       <View className='items-center mt-20'>
         <View className='w-[95%]'>
-          <CustomButton title='VERIFY NUMBER NOW' />
+          <CustomButton
+            title='VERIFY NUMBER NOW'
+            handlePress={async () => {
+              router.push('/extrascreens/otpscreen');
+              await sendOTP(user.completePhone);
+            }}
+          />
         </View>
       </View>
     </SafeAreaView>

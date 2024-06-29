@@ -23,6 +23,10 @@ const Home = () => {
     }
   }, [transfers]);
 
+  const userCountryCode = user?.code.toLowerCase();
+  const recipientCountryCode = user?.destinationCountryCode.toLowerCase();
+  // console.log(recipientCountryCode);
+
   return (
     <ScrollView className='h-full bg-primary-50'>
       <SafeAreaView className='items-center mb-10'>
@@ -34,8 +38,8 @@ const Home = () => {
         <View className='justify-center text-center w-[95%] mt-5'>
           <ExchangeRateCard
             title='Current Rate'
-            hostCountryId='de'
-            recipientCountryId='gh'
+            hostCountryId={userCountryCode}
+            recipientCountryId={recipientCountryCode}
           />
         </View>
         <View className='mt-4 flex flex-row border-b-2 border-primary'>

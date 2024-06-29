@@ -47,7 +47,7 @@ const Signup2 = () => {
       >
         <View className='w-full justify-center px-4'>
           <Text className='text-2xl text-primary text-semibold my-10 text-center font-semibold'>
-            Sign up to zap
+            Sign up to Zap Remit
           </Text>
         </View>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
