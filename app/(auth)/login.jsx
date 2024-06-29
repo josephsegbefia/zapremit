@@ -14,6 +14,7 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 import FormField from '../../components/FormField';
 import Logo from '../../components/Logo';
 import { getCurrentUser, signIn } from '../../lib/appwrite';
+import LoadingOverlay from '../../components/LoadingOverlay';
 
 // import {login} from '../../lib/appwrite
 const Login = () => {
@@ -44,6 +45,10 @@ const Login = () => {
       setIsSubmitting(false);
     }
   };
+
+  if (isSubmitting) {
+    return <LoadingOverlay message='Logging you in...' />;
+  }
   return (
     <SafeAreaView className='bg-primary-50 h-full'>
       <KeyboardAvoidingView

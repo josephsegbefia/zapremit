@@ -20,7 +20,7 @@ export default function App() {
   if (isLoggedIn && !user?.numberIsVerified) {
     return <Redirect href='/extrascreens/verifyPhone' />;
   }
-  if (!isLoading && isLoggedIn) return <Redirect href='/home' />;
+  if (!isLoading && isLoggedIn && user) return <Redirect href='/home' />;
 
   return (
     <SafeAreaView className='bg-primary h-full'>

@@ -10,19 +10,19 @@ const Account = () => {
   const { user } = useGlobalContext();
 
   const initials =
-    user.firstName.charAt(0).toUpperCase() +
-    user.lastName.charAt(0).toUpperCase();
+    user?.firstName.charAt(0).toUpperCase() +
+    user?.lastName.charAt(0).toUpperCase();
 
   let fullName;
-  if (user.middleName) {
+  if (user?.middleName) {
     fullName =
-      user.firstName.trim() +
+      user?.firstName.trim() +
       ' ' +
-      user.middleName.trim() +
+      user?.middleName.trim() +
       ' ' +
-      user.lastName.trim();
+      user?.lastName.trim();
   } else {
-    fullName = user.firstName.trim() + ' ' + user.lastName.trim();
+    fullName = user?.firstName.trim() + ' ' + user?.lastName.trim();
   }
 
   const accountItems = [
@@ -46,7 +46,9 @@ const Account = () => {
     {
       title: 'Support',
       icon: <MaterialIcons name='support-agent' size={30} color='#004d40' />,
-      onClick: () => {},
+      onClick: () => {
+        router.push('/extrascreens/DebugRoutes');
+      },
     },
     {
       title: 'About',

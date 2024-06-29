@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, useNavigation } from 'expo-router';
+import { router, useNavigation, Redirect } from 'expo-router';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { Feather } from '@expo/vector-icons';
 import { signOut } from '../../lib/appwrite';
@@ -12,29 +12,23 @@ const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
 
   let fullName;
-  if (user.middleName) {
+  if (user?.middleName) {
     fullName =
-      user.firstName.trim() +
+      user?.firstName.trim() +
       ' ' +
-      user.middleName.trim() +
+      user?.middleName.trim() +
       ' ' +
-      user.lastName.trim();
+      user?.lastName.trim();
   } else {
-    fullName = user.firstName.trim() + ' ' + user.lastName.trim();
+    fullName = user?.firstName.trim() + ' ' + user?.lastName.trim();
   }
 
   const signout = async () => {
     await signOut();
-    // setUser(null);
+    setUser(null);
     setIsLoggedIn(false);
-    navigation.navigate('index');
+    return navigation.navigate('index');
   };
-
-  console.log('USER====>', user);
-
-  useEffect(() => {
-    //  Left empty
-  }, [user]);
 
   return (
     <SafeAreaView className='h-full bg-primary-50'>
@@ -51,12 +45,12 @@ const Profile = () => {
           </View>
           <View className='w-[95%] rounded-lg bg-white px-3 py-3 my-2'>
             <Text className='font-psemibold text-primary'>Date of birth</Text>
-            <Text className='text-base text-primary'>{user.dob}</Text>
+            <Text className='text-base text-primary'>{user?.dob}</Text>
           </View>
           <View className='w-[95%] rounded-lg bg-white px-3 py-3 my-2'>
             <Text className='font-psemibold text-primary'>Address</Text>
             <Text className='text-base text-primary'>
-              {user.street}, {user.postcode} {user.city} {user.country}
+              {user?.street}, {user?.postcode} {user?.city} {user?.country}
             </Text>
           </View>
 
@@ -67,16 +61,18 @@ const Profile = () => {
           </View>
           <View className='w-[95%] rounded-lg bg-white px-3 py-3 mb-2'>
             <Text className='font-psemibold text-primary'>Email Address</Text>
-            <Text className='text-base text-primary'>{user.email}</Text>
+            <Text className='text-base text-primary'>{user?.email}</Text>
           </View>
           <View className='w-[95%] rounded-lg bg-white px-3 py-3 my-2'>
             <Text className='font-psemibold text-primary'>Phone Number</Text>
-            <Text className='text-base text-primary'>{user.completePhone}</Text>
+            <Text className='text-base text-primary'>
+              {user?.completePhone}
+            </Text>
           </View>
           <View className='w-[95%] rounded-lg bg-white px-3 py-3 my-2'>
             <Text className='font-psemibold text-primary'>Member Since</Text>
             <Text className='text-base text-primary'>
-              {formatDate(user.$createdAt)}
+              {user && formatDate(user?.$createdAt)}
             </Text>
           </View>
           <TouchableOpacity activeOpacity={0.3} onPress={signout}>
