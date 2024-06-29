@@ -163,7 +163,7 @@ const Signup3 = () => {
             handlePress={submit}
           />
         </View>
-        <View className='justify-center pt-5 flex-row gap-2'>
+        {/* <View className='justify-center pt-5 flex-row gap-2'>
           <Text className='text-lg text-primary font-regular'>
             Don't have an account?
           </Text>
@@ -173,7 +173,7 @@ const Signup3 = () => {
           >
             Sign up
           </Link>
-        </View>
+        </View> */}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

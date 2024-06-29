@@ -21,6 +21,7 @@ import Countries from '../../components/Countries';
 
 const UserExtraDetails = () => {
   const { user, isLoading } = useGlobalContext();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [dob, setDob] = useState('');
   const [dateError, setDateError] = useState('');
   const [country, setCountry] = useState({
@@ -47,6 +48,8 @@ const UserExtraDetails = () => {
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
       const data = {
         street: form.street,
@@ -65,11 +68,17 @@ const UserExtraDetails = () => {
       router.replace('/home');
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   if (isLoading) {
-    <LoadingOverlay message='Loading...' />;
+    return <LoadingOverlay message='Loading...' />;
+  }
+
+  if (isSubmitting) {
+    return <LoadingOverlay message='Updating user info...' />;
   }
   return (
     <SafeAreaView className='h-full bg-primary-50'>

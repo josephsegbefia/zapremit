@@ -14,6 +14,7 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import CustomButton from '../../components/CustomButton';
 import { verifyOTP } from '../../lib/appwrite';
+import LoadingOverlay from '../../components/LoadingOverlay';
 
 const OTPScreen = () => {
   const { user } = useGlobalContext();
@@ -32,8 +33,15 @@ const OTPScreen = () => {
       router.replace('/extrascreens/userextradetails');
     } catch (error) {
       Alert.alert('Error', 'Code could not be verified');
+    } finally {
+      setIsVerifying(false);
     }
   };
+
+  if (isVerifying) {
+    return <LoadingOverlay message='Verifying OTP...' />;
+  }
+
   return (
     <SafeAreaView className='flex-1 bg-primary-50 h-full'>
       <KeyboardAvoidingView

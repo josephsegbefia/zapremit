@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useNavigation } from 'expo-router';
@@ -29,6 +29,12 @@ const Profile = () => {
     setIsLoggedIn(false);
     navigation.navigate('index');
   };
+
+  console.log('USER====>', user);
+
+  useEffect(() => {
+    //  Left empty
+  }, [user]);
 
   return (
     <SafeAreaView className='h-full bg-primary-50'>

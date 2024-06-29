@@ -84,13 +84,13 @@ const Signup2 = () => {
         </View>
         <View className='justify-center pt-5 flex-row gap-2'>
           <Text className='text-lg text-primary font-regular'>
-            Don't have an account?
+            Forgot password?
           </Text>
           <Link
             href='/signup1'
             className='text-lg font-psemibold text-secondary-100'
           >
-            Sign up
+            Reset it here
           </Link>
         </View>
       </KeyboardAvoidingView>
