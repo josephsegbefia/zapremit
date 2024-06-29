@@ -8,6 +8,7 @@ import {
   Platform,
   Alert,
 } from 'react-native';
+import { router } from 'expo-router';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FormField from '../../components/FormField';
@@ -46,18 +47,26 @@ const UserExtraDetails = () => {
       return;
     }
 
-    const data = {
-      street: form.street,
-      postcode: form.postcode,
-      city: form.city,
-      dob: dob,
-      userId: user.$id,
-    };
-    const response = await updateUser(data);
-    console.log(response);
+    try {
+      const data = {
+        street: form.street,
+        postcode: form.postcode,
+        city: form.city,
+        dob: dob,
+        userId: user.$id,
+        // Destination country details
+        destinationCountry: country.name,
+        destinationCountryCurrencyCode: country.currencyCode,
+        destinationCountryCurrencyName: country.currencyName,
+        destinationCountryFlag: country.flag,
+        destinationCountryCurrencySymbol: country.currencySymbol,
+      };
+      await updateUser(data);
+      router.replace('/home');
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  console.log(country);
 
   if (isLoading) {
     <LoadingOverlay message='Loading...' />;

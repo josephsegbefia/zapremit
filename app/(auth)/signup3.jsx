@@ -17,6 +17,7 @@ import { SignupContext } from '../../context/signup-context';
 import { useCountryPickerContext } from '../../context/country-picker-context';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { createUser } from '../../lib/appwrite';
+import LoadingOverlay from '../../components/LoadingOverlay';
 
 const Signup3 = () => {
   const { signupData, setSignupData } = useContext(SignupContext);
@@ -104,9 +105,13 @@ const Signup3 = () => {
         confirmPassword: '',
       });
     }
-    // router.replace('/extrascreens/otpscreen');
-    router.replace('/home');
+    router.replace('/extrascreens/otpscreen');
+    // router.replace('/home');
   };
+
+  if (isSubmitting) {
+    return <LoadingOverlay message='Signing you up. Please wait...' />;
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

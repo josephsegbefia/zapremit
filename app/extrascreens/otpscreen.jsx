@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { router } from 'expo-router';
 import Logo from '../../components/Logo';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
@@ -20,11 +20,16 @@ const OTPScreen = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
 
-  const handleVerification = async (number, code, userId) => {
+  const handleVerification = async () => {
     setIsVerifying(true);
     try {
-      const response = await verifyOTP(number, code, userId);
+      const response = await verifyOTP(
+        user.completePhone,
+        verificationCode,
+        user.$id
+      );
       console.log(response);
+      router.replace('/extrascreens/userextradetails');
     } catch (error) {
       Alert.alert('Error', 'Code could not be verified');
     }

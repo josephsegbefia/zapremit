@@ -45,12 +45,12 @@ const Profile = () => {
           </View>
           <View className='w-[95%] rounded-lg bg-white px-3 py-3 my-2'>
             <Text className='font-psemibold text-primary'>Date of birth</Text>
-            <Text className='text-base text-primary'>October 13, 2024</Text>
+            <Text className='text-base text-primary'>{user.dob}</Text>
           </View>
           <View className='w-[95%] rounded-lg bg-white px-3 py-3 my-2'>
             <Text className='font-psemibold text-primary'>Address</Text>
             <Text className='text-base text-primary'>
-              Müllerstraße Straße 21, 12623 Berlin
+              {user.street}, {user.postcode} {user.city} {user.country}
             </Text>
           </View>
 
@@ -65,10 +65,7 @@ const Profile = () => {
           </View>
           <View className='w-[95%] rounded-lg bg-white px-3 py-3 my-2'>
             <Text className='font-psemibold text-primary'>Phone Number</Text>
-            <Text className='text-base text-primary'>
-              {user.callingCode}
-              {user.phone}
-            </Text>
+            <Text className='text-base text-primary'>{user.completePhone}</Text>
           </View>
           <View className='w-[95%] rounded-lg bg-white px-3 py-3 my-2'>
             <Text className='font-psemibold text-primary'>Member Since</Text>
