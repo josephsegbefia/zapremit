@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { router } from 'expo-router';
 import CountryFlag from 'react-native-country-flag';
 import { FontAwesome } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
+import { getRate } from '../lib/appwrite';
 
 const ExchangeRateCard = ({
   title,
@@ -10,6 +12,14 @@ const ExchangeRateCard = ({
   userCountryFlag,
   recipientCountryId,
 }) => {
+  const [rate, setRate] = useState('');
+
+  useEffect(() => {
+    const rate = getRate('USD', 'EUR');
+    setRate(rate);
+  }, []);
+
+  console.log('RATE========>', rate);
   return (
     <View className='bg-white rounded-xl'>
       <Text className='text-center text-primary font-psemibold text-sm py-5'>
