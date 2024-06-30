@@ -6,13 +6,14 @@ import { FontAwesome } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
 import { getRate } from '../lib/appwrite';
 import { useGlobalContext } from '../context/GlobalProvider';
+import { applyProfitMargin } from '../lib/profitCalculator';
 const ExchangeRateCard = ({
   title,
   hostCountryId,
   userCountryFlag,
   recipientCountryId,
 }) => {
-  const { user } = useGlobalContext();
+  const { user, setRates, profitMargin } = useGlobalContext();
   const [exchangeRate, setExchangeRate] = useState('');
   const [offeredRate, setOfferedRate] = useState('');
   const [profit, setProfit] = useState('');
@@ -26,24 +27,14 @@ const ExchangeRateCard = ({
     return result;
   };
 
-  const applyProfitMargin = (rate, profitMargin) => {
-    const profitRate = rate * (profitMargin / 100);
-    const rawOfferedRate = rate - profitRate;
-    const offeredRate = Math.floor(rawOfferedRate * 100) / 100; // Truncate to 2 decimal places
-    const additionalProfit = rawOfferedRate - offeredRate;
-    return {
-      offeredRate: offeredRate.toFixed(2),
-      profit: (profitRate + additionalProfit).toString(),
-    };
-  };
-
   useEffect(() => {
     const updateRate = async () => {
+      // to limit API requests I will set the exchange rate values manually in development
       const rate = await fetchRate();
       const parsedRate = JSON.parse(rate);
       setExchangeRate(parsedRate);
 
-      const profitMargin = 1; // Example profit margin percentage
+      // Example profit margin percentage
       const actualRate = parsedRate.rate;
       const { offeredRate, profit } = applyProfitMargin(
         actualRate,
@@ -51,13 +42,17 @@ const ExchangeRateCard = ({
       );
 
       setOfferedRate(offeredRate);
+      setRates({
+        offeredExchangeRate: offeredRate,
+        unitProfit: profit,
+        actualExhangeRate: actualRate,
+      });
       setProfit(profit);
     };
 
     updateRate();
   }, []);
 
-  console.log(profit);
   return (
     <View className='bg-white rounded-xl'>
       <Text className='text-center text-primary font-psemibold text-sm py-5'>

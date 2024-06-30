@@ -28,7 +28,14 @@ const GlobalProvider = ({ children }) => {
     identifier: '', // for page or screen identification
   });
 
-  const [rate, setRate] = useState(16.12);
+  const [profitMargin, setProfitMargin] = useState(1);
+
+  const [rates, setRates] = useState({
+    actualExchangeRate: '',
+    offeredExchangeRate: '',
+    unitProfit: '',
+    transferProfit: '',
+  });
 
   const [userIsVerified, setUserIsVerified] = useState(false); // This will later come from the backend on the user object.
   // Will be true if the user has provided his address information and ID document has been checked.
@@ -62,10 +69,11 @@ const GlobalProvider = ({ children }) => {
         isLoading,
         transferData,
         setTransferData,
-        rate,
-        setRate,
+        rates,
+        setRates,
         userIsVerified,
         setUserIsVerified,
+        profitMargin,
       }}
     >
       {children}

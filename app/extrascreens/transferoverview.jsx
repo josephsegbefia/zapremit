@@ -94,9 +94,9 @@ const TransferOverView = () => {
                 <Text className='text-primary font-psemibold'>
                   Transfer Fees
                 </Text>
-                <Text className='text-primary font-pregular'>
+                {/* <Text className='text-primary font-pregular'>
                   EUR {transferFee}
-                </Text>
+                </Text> */}
               </View>
               <View className='flex-row justify-between mb-3'>
                 <Text className='text-primary font-psemibold'>ETA</Text>

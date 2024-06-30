@@ -39,8 +39,8 @@ const Home = () => {
         <View className='justify-center text-center w-[95%] mt-5'>
           <ExchangeRateCard
             title='Current Rate'
-            hostCountryId='DE'
-            recipientCountryId='GH'
+            hostCountryId={user?.code}
+            recipientCountryId={user?.destinationCountryCode}
           />
         </View>
         <View className='mt-4 flex flex-row border-b-2 border-primary'>

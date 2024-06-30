@@ -6,21 +6,18 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CountryFlag from 'react-native-country-flag';
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import CustomButton from '../../components/CustomButton';
-
 import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
-import MiniTransferSummary from '../../components/MiniTransferSummary';
 import ReasonsModal from '../extrascreens/reasonsModal';
 
 const Send = () => {
   const navigation = useNavigation();
-  const { user, transferData, setTransferData, rate } = useGlobalContext();
+  const { user, transferData, setTransferData, rates } = useGlobalContext();
   const {
     deliveryMethod,
     transferFee,
@@ -34,12 +31,47 @@ const Send = () => {
     ? null
     : `${recipientFirstName.trim()} ${recipientLastName.trim()}`;
 
-  const [transferAmt, setTransferAmt] = useState('100');
-  const [sendingCurrency, setSendingCurrency] = useState('');
-  const [receivingCurrency, setReceivingCurrency] = useState('');
-  const [amtReceivable, setAmtReceivable] = useState(null);
-
+  const [transferAmt, setTransferAmt] = useState(
+    transferData.transferAmount || '0.00'
+  );
+  const [amtReceivable, setAmtReceivable] = useState(
+    transferData.receivableAmount || '0.00'
+  );
   const [modalVisible, setModalVisible] = useState(false);
+
+  const handleTransferAmtChange = (amt) => {
+    amt = amt.replace(/[^0-9.]/g, '');
+    setTransferAmt(amt);
+    if (!isNaN(parseFloat(amt))) {
+      const receivable = (parseFloat(amt) * rates.offeredExchangeRate).toFixed(
+        2
+      );
+      setAmtReceivable(receivable);
+      setTransferData((prev) => ({
+        ...prev,
+        transferAmount: amt,
+        receivableAmount: receivable,
+      }));
+    } else {
+      setAmtReceivable('0.00');
+    }
+  };
+
+  const handleAmtReceivableChange = (amt) => {
+    amt = amt.replace(/[^0-9.]/g, '');
+    setAmtReceivable(amt);
+    if (!isNaN(parseFloat(amt))) {
+      const toSend = (parseFloat(amt) / rates.offeredExchangeRate).toFixed(2);
+      setTransferAmt(toSend);
+      setTransferData((prev) => ({
+        ...prev,
+        transferAmount: toSend,
+        receivableAmount: amt,
+      }));
+    } else {
+      setTransferAmt('0.00');
+    }
+  };
 
   const openModal = () => {
     setModalVisible(true);
@@ -51,18 +83,6 @@ const Send = () => {
 
   const closeModal = () => {
     setModalVisible(false);
-  };
-
-  // const total = parseFloat(transferAmt) + parseFloat(transferFee);
-
-  const conversionHandler = () => {
-    if (transferAmt === undefined) {
-      setAmtReceivable(parseFloat(0));
-      return;
-    }
-    let conAmt = parseFloat(transferAmt) * rate;
-    let finalAmt = conAmt.toFixed(2);
-    setAmtReceivable(finalAmt.toString());
   };
 
   const openDeliveryMethods = () => {
@@ -81,10 +101,6 @@ const Send = () => {
     closeModal();
   };
 
-  useEffect(() => {
-    conversionHandler();
-  }, [transferAmt]);
-
   const handleRecipientSelectPress = () => {
     navigation.navigate('extrascreens/selectrecipient');
   };
@@ -96,7 +112,7 @@ const Send = () => {
       receivableAmount: amtReceivable,
       totalToPay: totalToPay,
     });
-    navigation.navigate('extrascreens/transferoverview');
+    router.push('/extrascreens/transferoverview');
   };
 
   return (
@@ -112,13 +128,13 @@ const Send = () => {
               <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mb-5'>
                 <View className='bg-primary-50 px-7 py-5 rounded-lg flex-row'>
                   <CountryFlag
-                    isoCode='de'
+                    isoCode={user?.code}
                     size={40}
                     className='w-[40px] h-[25px]'
                   />
                   <View className='justify-center'>
                     <Text className='text-primary font-psemibold px-4'>
-                      EUR
+                      {user?.currencyCode}
                     </Text>
                   </View>
                 </View>
@@ -131,31 +147,36 @@ const Send = () => {
                   <TextInput
                     className='flex-1 text-primary font-semibold text-2xl text-center'
                     value={transferAmt}
-                    placeholderTextColor='#7b7b8b'
-                    onChangeText={(e) => setTransferAmt(e)}
+                    onChangeText={handleTransferAmtChange}
+                    keyboardType='numeric'
                   />
                 </View>
               </View>
 
               <View className='items-center justify-center'>
                 <View className='flex flex-row w-[70%] p-1 justify-between rounded-lg'>
-                  <Text className='text-sm font-psemibold'>1 EUR </Text>
+                  <Text className='text-sm font-psemibold text-primary'>
+                    1 {user?.currencyCode}
+                  </Text>
                   <FontAwesome name='bolt' size={20} color='#004d40' />
-                  <Text className='text-sm font-psemibold'>16.12 GHS </Text>
+                  <Text className='text-sm font-psemibold text-primary'>
+                    {rates.offeredExchangeRate}{' '}
+                    {user?.destinationCountryCurrencyCode}
+                  </Text>
                 </View>
               </View>
 
               <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mt-5'>
                 <TouchableOpacity className='bg-primary-50 px-5 py-5 rounded-lg flex-row'>
                   <CountryFlag
-                    isoCode='gh'
+                    isoCode={user?.destinationCountryCode}
                     size={40}
                     className='w-[40px] h-[25px]'
                   />
                   <View className='justify-center'>
                     <View className='flex flex-row justify-between'>
                       <Text className='text-primary font-psemibold px-4'>
-                        GHS
+                        {user?.destinationCountryCurrencyCode}
                       </Text>
                       <View className='justify-center'>
                         <AntDesign name='caretdown' size={14} color='#004d40' />
@@ -172,8 +193,8 @@ const Send = () => {
                   <TextInput
                     className='flex-1 text-primary font-semibold text-2xl text-center'
                     value={amtReceivable}
-                    placeholderTextColor='#7b7b8b'
-                    onChangeText={(e) => setTransferAmt(e)}
+                    onChangeText={handleAmtReceivableChange}
+                    keyboardType='numeric'
                   />
                 </View>
               </View>
@@ -188,7 +209,6 @@ const Send = () => {
               title='Select recipient'
               subtitle='Sending to'
               selectedOption={fullName}
-              // selectedOption={transferData.identifier === 'from-recipient-transfer-screen' ? }
               icon={<FontAwesome name='bolt' size={20} color='#004d40' />}
               styles='mt-2'
               opacity={0.5}
@@ -226,19 +246,13 @@ const Send = () => {
               />
             )}
           </View>
-          {/* {reason ? (
-            <MiniTransferSummary
-              transferFee={transferFee}
-              totalToPay={totalToPay}
-            />
-          ) : null} */}
         </View>
       </ScrollView>
-      {reason ? (
+      {reason && (
         <View className='absolute bottom-5 w-full px-4 pb-4'>
           <CustomButton title='NEXT' handlePress={handleNext} />
         </View>
-      ) : null}
+      )}
 
       {modalVisible && (
         <ReasonsModal
