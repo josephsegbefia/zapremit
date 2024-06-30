@@ -5,21 +5,59 @@ import CountryFlag from 'react-native-country-flag';
 import { FontAwesome } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
 import { getRate } from '../lib/appwrite';
-
+import { useGlobalContext } from '../context/GlobalProvider';
 const ExchangeRateCard = ({
   title,
   hostCountryId,
   userCountryFlag,
   recipientCountryId,
 }) => {
-  const [rate, setRate] = useState('');
+  const { user } = useGlobalContext();
+  const [exchangeRate, setExchangeRate] = useState('');
+  const [offeredRate, setOfferedRate] = useState('');
+  const [profit, setProfit] = useState('');
+
+  const fetchRate = async () => {
+    const result = await getRate(
+      user.currencyCode,
+      user.destinationCountryCurrencyCode,
+      1
+    );
+    return result;
+  };
+
+  const applyProfitMargin = (rate, profitMargin) => {
+    const profitRate = rate * (profitMargin / 100);
+    const rawOfferedRate = rate - profitRate;
+    const offeredRate = Math.floor(rawOfferedRate * 100) / 100; // Truncate to 2 decimal places
+    const additionalProfit = rawOfferedRate - offeredRate;
+    return {
+      offeredRate: offeredRate.toFixed(2),
+      profit: (profitRate + additionalProfit).toString(),
+    };
+  };
 
   useEffect(() => {
-    const rate = getRate('USD', 'EUR');
-    setRate(rate);
+    const updateRate = async () => {
+      const rate = await fetchRate();
+      const parsedRate = JSON.parse(rate);
+      setExchangeRate(parsedRate);
+
+      const profitMargin = 1; // Example profit margin percentage
+      const actualRate = parsedRate.rate;
+      const { offeredRate, profit } = applyProfitMargin(
+        actualRate,
+        profitMargin
+      );
+
+      setOfferedRate(offeredRate);
+      setProfit(profit);
+    };
+
+    updateRate();
   }, []);
 
-  console.log('RATE========>', rate);
+  console.log(profit);
   return (
     <View className='bg-white rounded-xl'>
       <Text className='text-center text-primary font-psemibold text-sm py-5'>
@@ -33,7 +71,7 @@ const ExchangeRateCard = ({
             className='rounded-full w-[50px] h-[50px]'
           />
           <Text className='text-center mt-3 text-primary font-pbold'>
-            1.00 EUR
+            1.00 {user.currencyCode}
           </Text>
         </View>
         <View className='mt-5'>
@@ -46,7 +84,7 @@ const ExchangeRateCard = ({
             className='rounded-full w-[50px] h-[50px]'
           />
           <Text className='text-center mt-3 text-primary font-pbold'>
-            17.00 GHS
+            {offeredRate} {user.destinationCountryCurrencyCode}
           </Text>
         </View>
       </View>
