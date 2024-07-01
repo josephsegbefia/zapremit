@@ -41,12 +41,13 @@ const Send = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleTransferAmtChange = (amt) => {
-    amt = amt.replace(/[^0-9.]/g, '');
+    amt = amt.replace(/[^0-9.,]/g, ''); // Allow numbers, periods, and commas
     setTransferAmt(amt);
-    if (!isNaN(parseFloat(amt))) {
-      const receivable = (parseFloat(amt) * rates.offeredExchangeRate).toFixed(
-        2
-      );
+    const normalizedAmt = amt.replace(',', '.'); // Replace comma with period
+    if (!isNaN(parseFloat(normalizedAmt))) {
+      const receivable = (
+        parseFloat(normalizedAmt) * rates.offeredExchangeRate
+      ).toFixed(2);
       setAmtReceivable(receivable);
       setTransferData((prev) => ({
         ...prev,
@@ -59,10 +60,13 @@ const Send = () => {
   };
 
   const handleAmtReceivableChange = (amt) => {
-    amt = amt.replace(/[^0-9.]/g, '');
+    amt = amt.replace(/[^0-9.,]/g, ''); // Allow numbers, periods, and commas
     setAmtReceivable(amt);
-    if (!isNaN(parseFloat(amt))) {
-      const toSend = (parseFloat(amt) / rates.offeredExchangeRate).toFixed(2);
+    const normalizedAmt = amt.replace(',', '.'); // Replace comma with period
+    if (!isNaN(parseFloat(normalizedAmt))) {
+      const toSend = (
+        parseFloat(normalizedAmt) / rates.offeredExchangeRate
+      ).toFixed(2);
       setTransferAmt(toSend);
       setTransferData((prev) => ({
         ...prev,
