@@ -14,6 +14,7 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 import CustomButton from '../../components/CustomButton';
 import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
 import ReasonsModal from '../extrascreens/reasonsModal';
+import { transferProfit } from '../../lib/profitCalculator';
 
 const Send = () => {
   const navigation = useNavigation();

@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
+import { useGlobalContext } from '../context/GlobalProvider';
 
 const CustomCard = ({
   firstName,
@@ -12,6 +13,7 @@ const CustomCard = ({
   isTransferHistory,
   empty,
 }) => {
+  const { user } = useGlobalContext();
   const initials =
     firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase();
 
@@ -48,7 +50,10 @@ const CustomCard = ({
             <Text className='text-xl font-psemibold'>{fullName}</Text>
           </View> */}
           <View>
-            <Text className='py-4 font-psemibold text-primary'>{amount}</Text>
+            <Text className='py-4 font-psemibold text-primary'>
+              {isTransferHistory && user?.destinationCountryCurrencyCode}{' '}
+              {amount}
+            </Text>
           </View>
         </View>
         {isTransferHistory && (

@@ -7,6 +7,7 @@ import CustomButton from './CustomButton';
 import { getRate } from '../lib/appwrite';
 import { useGlobalContext } from '../context/GlobalProvider';
 import { applyProfitMargin } from '../lib/profitCalculator';
+import LoadingOverlay from './LoadingOverlay';
 const ExchangeRateCard = ({
   title,
   hostCountryId,
@@ -17,6 +18,7 @@ const ExchangeRateCard = ({
   const [exchangeRate, setExchangeRate] = useState('');
   const [offeredRate, setOfferedRate] = useState('');
   const [profit, setProfit] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchRate = async () => {
     const result = await getRate(
@@ -28,31 +30,41 @@ const ExchangeRateCard = ({
   };
 
   useEffect(() => {
-    const updateRate = async () => {
-      // to limit API requests I will set the exchange rate values manually in development
-      const rate = await fetchRate();
-      const parsedRate = JSON.parse(rate);
-      setExchangeRate(parsedRate);
+    try {
+      const updateRate = async () => {
+        // to limit API requests I will set the exchange rate values manually in development
+        const rate = await fetchRate();
+        const parsedRate = JSON.parse(rate);
+        setExchangeRate(parsedRate);
 
-      // Example profit margin percentage
-      const actualRate = parsedRate.rate;
-      const { offeredRate, profit } = applyProfitMargin(
-        actualRate,
-        profitMargin
-      );
+        // Example profit margin percentage
+        const actualRate = parsedRate.rate;
+        const { offeredRate, profit } = applyProfitMargin(
+          actualRate,
+          profitMargin
+        );
 
-      setOfferedRate(offeredRate);
-      setRates({
-        offeredExchangeRate: offeredRate,
-        unitProfit: profit,
-        actualExhangeRate: actualRate,
-      });
-      setProfit(profit);
-    };
+        setOfferedRate(offeredRate);
+        setRates({
+          offeredExchangeRate: offeredRate,
+          unitProfit: profit,
+          actualExhangeRate: actualRate,
+        });
+        setProfit(profit);
+      };
 
-    updateRate();
+      updateRate();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
+  console.log('Loading====>', isLoading);
+  if (isLoading) {
+    return <LoadingOverlay message='Loading...' />;
+  }
   return (
     <View className='bg-white rounded-xl'>
       <Text className='text-center text-primary font-psemibold text-sm py-5'>
@@ -66,7 +78,7 @@ const ExchangeRateCard = ({
             className='rounded-full w-[50px] h-[50px]'
           />
           <Text className='text-center mt-3 text-primary font-pbold'>
-            1.00 {user.currencyCode}
+            1.00 {user?.currencyCode}
           </Text>
         </View>
         <View className='mt-5'>
@@ -79,7 +91,7 @@ const ExchangeRateCard = ({
             className='rounded-full w-[50px] h-[50px]'
           />
           <Text className='text-center mt-3 text-primary font-pbold'>
-            {offeredRate} {user.destinationCountryCurrencyCode}
+            {offeredRate} {user?.destinationCountryCurrencyCode}
           </Text>
         </View>
       </View>
