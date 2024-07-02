@@ -15,10 +15,43 @@ import CustomButton from '../../components/CustomButton';
 import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
 import ReasonsModal from '../extrascreens/reasonsModal';
 import { transferProfit } from '../../lib/profitCalculator';
+import ChangeSendCountry from '../../components/ChangeSendCountry';
 
 const Send = () => {
   const navigation = useNavigation();
   const { user, transferData, setTransferData, rates } = useGlobalContext();
+  const [showCountries, setShowCountries] = useState(false);
+  const [destinationCountry, setDestinationCountry] = useState(
+    user?.destinationCountry
+  );
+  const [transferCurrencyCode, setTransferCurrencyCode] = useState(
+    user?.destinationCountryCurrencyCode
+  );
+  const [transferCurrencyName, setTransferCurrencyName] = useState(
+    user?.destinationCountryCurrencyName
+  );
+
+  const [transferDestinationCountryCode, setTransferDestinationCountryCode] =
+    useState(user?.destinationCountryCode);
+
+  const [country, setCountry] = useState({
+    name: '',
+    countryCode: '',
+    currencyCode: '',
+    currencyName: '',
+    currencySymbol: '',
+    flag: '',
+  });
+
+  useEffect(() => {
+    setTransferData((prev) => ({
+      ...prev,
+      transferCurrencyCode: country.currencyCode,
+      destinationCountryCode: country.countryCode,
+    }));
+  }, [country]);
+
+  console.log(country);
   const {
     deliveryMethod,
     transferFee,
@@ -26,6 +59,7 @@ const Send = () => {
     recipientLastName,
     totalToPay,
     reason,
+    destination,
   } = transferData;
 
   const fullName = !recipientFirstName
@@ -120,6 +154,8 @@ const Send = () => {
     router.push('/extrascreens/transferoverview');
   };
 
+  console.log(transferData);
+
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>
@@ -172,16 +208,25 @@ const Send = () => {
               </View>
 
               <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mt-5'>
-                <TouchableOpacity className='bg-primary-50 px-5 py-5 rounded-lg flex-row'>
+                <TouchableOpacity
+                  className='bg-primary-50 px-5 py-5 rounded-lg flex-row'
+                  onPress={() => setShowCountries(true)}
+                >
                   <CountryFlag
-                    isoCode={user?.destinationCountryCode}
+                    isoCode={
+                      transferData.destinationCountryCode
+                        ? transferData.destinationCountryCode
+                        : user.destinationCountryCode
+                    }
                     size={40}
                     className='w-[40px] h-[25px]'
                   />
                   <View className='justify-center'>
                     <View className='flex flex-row justify-between'>
                       <Text className='text-primary font-psemibold px-4'>
-                        {user?.destinationCountryCurrencyCode}
+                        {transferData.transferCurrencyCode
+                          ? transferData.transferCurrencyCode
+                          : transferCurrencyCode}
                       </Text>
                       <View className='justify-center'>
                         <AntDesign name='caretdown' size={14} color='#004d40' />
@@ -264,6 +309,13 @@ const Send = () => {
           modalVisible={modalVisible}
           closeModal={closeReasons}
           selectReason={selectReason}
+        />
+      )}
+      {showCountries && (
+        <ChangeSendCountry
+          country={country}
+          setCountry={setCountry}
+          setModalVisible={setShowCountries}
         />
       )}
     </SafeAreaView>

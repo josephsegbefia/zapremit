@@ -24,10 +24,15 @@ const GlobalProvider = ({ children }) => {
     transferInitiated: false,
     inProgress: false,
     status: '',
+    destinationCountry: '',
+    destinationCountryCode: '',
+    tranferCurrency: '',
+    transferCurrencyCode: '',
 
     identifier: '', // for page or screen identification
   });
 
+  console.log(user);
   const [profitMargin, setProfitMargin] = useState(1);
 
   const [rates, setRates] = useState({

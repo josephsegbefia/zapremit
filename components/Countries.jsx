@@ -54,9 +54,6 @@ const Countries = ({ setCountry, country }) => {
     }));
   };
 
-  // useEffect(() => {}, [country]);
-  console.log(country);
-
   const renderItem = useCallback(
     ({ item }) => (
       <TouchableOpacity

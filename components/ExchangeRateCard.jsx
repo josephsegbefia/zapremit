@@ -61,7 +61,6 @@ const ExchangeRateCard = ({
     }
   }, []);
 
-  console.log('Loading====>', isLoading);
   if (isLoading) {
     return <LoadingOverlay message='Loading...' />;
   }

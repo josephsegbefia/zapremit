@@ -46,9 +46,6 @@ const CustomCard = ({
             </View>
           </View>
 
-          {/* <View className='py-3'>
-            <Text className='text-xl font-psemibold'>{fullName}</Text>
-          </View> */}
           <View>
             <Text className='py-4 font-psemibold text-primary'>
               {isTransferHistory && user?.destinationCountryCurrencyCode}{' '}
