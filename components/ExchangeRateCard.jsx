@@ -8,58 +8,69 @@ import { getRate } from '../lib/appwrite';
 import { useGlobalContext } from '../context/GlobalProvider';
 import { applyProfitMargin } from '../lib/profitCalculator';
 import LoadingOverlay from './LoadingOverlay';
+import useFetchRate from '../lib/fetchRate';
+
 const ExchangeRateCard = ({
   title,
   hostCountryId,
   userCountryFlag,
   recipientCountryId,
 }) => {
+  const { data: rateData, isLoading } = useFetchRate(() =>
+    getRate('EUR', 'GHS', 2)
+  );
   const { user, setRates, profitMargin } = useGlobalContext();
   const [exchangeRate, setExchangeRate] = useState('');
-  const [offeredRate, setOfferedRate] = useState('');
-  const [profit, setProfit] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
 
-  const fetchRate = async () => {
-    const result = await getRate(
-      user.currencyCode,
-      user.destinationCountryCurrencyCode,
-      1
-    );
-    return result;
-  };
+  // Rate && profit computation
+  console.log(rateData);
 
-  useEffect(() => {
-    try {
-      const updateRate = async () => {
-        // to limit API requests I will set the exchange rate values manually in development
-        const rate = await fetchRate();
-        const parsedRate = JSON.parse(rate);
-        setExchangeRate(parsedRate);
+  const parsedRate = JSON.parse(rateData);
+  const actualRate = parsedRate?.rate;
+  const { offeredRate, profit } = applyProfitMargin(actualRate, profitMargin);
 
-        // Example profit margin percentage
-        const actualRate = parsedRate.rate;
-        const { offeredRate, profit } = applyProfitMargin(
-          actualRate,
-          profitMargin
-        );
+  // const [isLoading, setIsLoading] = useState(false);
 
-        setOfferedRate(offeredRate);
-        setRates({
-          offeredExchangeRate: offeredRate,
-          unitProfit: profit,
-          actualExhangeRate: actualRate,
-        });
-        setProfit(profit);
-      };
+  // const fetchRate = async () => {
+  //   const result = await getRate(
+  //     user.currencyCode,
+  //     user.destinationCountryCurrencyCode,
+  //     1
+  //   );
+  //   return result;
+  // };
 
-      updateRate();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const updateRate = async () => {
+  //       // to limit API requests I will set the exchange rate values manually in development
+  //       const rate = await fetchRate();
+  //       const parsedRate = JSON.parse(rate);
+  //       setExchangeRate(parsedRate);
+
+  //       // Example profit margin percentage
+  //       const actualRate = parsedRate.rate;
+  //       const { offeredRate, profit } = applyProfitMargin(
+  //         actualRate,
+  //         profitMargin
+  //       );
+
+  //       setOfferedRate(offeredRate);
+  //       setRates({
+  //         offeredExchangeRate: offeredRate,
+  //         unitProfit: profit,
+  //         actualExhangeRate: actualRate,
+  //       });
+  //       setProfit(profit);
+  //     };
+
+  //     updateRate();
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }, []);
 
   if (isLoading) {
     return <LoadingOverlay message='Loading...' />;
