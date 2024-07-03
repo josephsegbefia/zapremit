@@ -14,12 +14,19 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 import CustomButton from '../../components/CustomButton';
 import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
 import ReasonsModal from '../extrascreens/reasonsModal';
-import { transferProfit } from '../../lib/profitCalculator';
+import { applyProfitMargin, transferProfit } from '../../lib/profitCalculator';
 import ChangeSendCountry from '../../components/ChangeSendCountry';
+import { getRate } from '../../lib/appwrite';
 
 const Send = () => {
   const navigation = useNavigation();
-  const { user, transferData, setTransferData, rates } = useGlobalContext();
+
+  const { user, transferData, setTransferData, rates, setRates, profitMargin } =
+    useGlobalContext();
+  const [exchangeRate, setExchangeRate] = useState('');
+  const [offeredRate, setOfferedRate] = useState('');
+  // const [initialOfferedRate, setInitialOfferedrate] = useState('');
+  const [profit, setProfit] = useState('');
   const [showCountries, setShowCountries] = useState(false);
   const [destinationCountry, setDestinationCountry] = useState(
     user?.destinationCountry
@@ -41,7 +48,43 @@ const Send = () => {
     currencyName: '',
     currencySymbol: '',
     flag: '',
+    rate: '',
   });
+
+  const fetchRate = async () => {
+    const result = await getRate(
+      user.currencyCode,
+      transferData?.transferCurrencyCode,
+      1
+    );
+    return result;
+  };
+
+  const updateRate = async () => {
+    // to limit API requests I will set the exchange rate values manually in development
+    const rate = await fetchRate();
+    const parsedRate = JSON.parse(rate);
+    setExchangeRate(parsedRate);
+
+    // Example profit margin percentage
+    const actualRate = parsedRate.rate;
+    const { offeredRate, profit } = applyProfitMargin(actualRate, profitMargin);
+
+    setOfferedRate(offeredRate);
+    setRates({
+      offeredExchangeRate: offeredRate,
+      unitProfit: profit,
+      actualExhangeRate: actualRate,
+    });
+    setProfit(profit);
+  };
+
+  // Update exchange rate only when country changes
+  useEffect(() => {
+    if (country.currencyCode) {
+      updateRate();
+    }
+  }, [country]);
 
   useEffect(() => {
     setTransferData((prev) => ({
@@ -51,7 +94,8 @@ const Send = () => {
     }));
   }, [country]);
 
-  console.log(country);
+  console.log(transferData);
+
   const {
     deliveryMethod,
     transferFee,
@@ -154,8 +198,6 @@ const Send = () => {
     router.push('/extrascreens/transferoverview');
   };
 
-  console.log(transferData);
-
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>
@@ -201,8 +243,12 @@ const Send = () => {
                   </Text>
                   <FontAwesome name='bolt' size={20} color='#004d40' />
                   <Text className='text-sm font-psemibold text-primary'>
-                    {rates.offeredExchangeRate}{' '}
-                    {user?.destinationCountryCurrencyCode}
+                    {rates.offeredExchangeRate
+                      ? rates.offeredExchangeRate
+                      : initialOfferedRate}{' '}
+                    {transferData.transferCurrencyCode
+                      ? transferData.transferCurrencyCode
+                      : user?.destinationCountryCurrencyCode}
                   </Text>
                 </View>
               </View>

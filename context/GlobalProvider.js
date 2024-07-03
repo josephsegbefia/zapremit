@@ -32,7 +32,6 @@ const GlobalProvider = ({ children }) => {
     identifier: '', // for page or screen identification
   });
 
-  console.log(user);
   const [profitMargin, setProfitMargin] = useState(1);
 
   const [rates, setRates] = useState({

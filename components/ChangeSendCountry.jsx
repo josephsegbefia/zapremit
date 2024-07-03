@@ -9,10 +9,15 @@ import {
   Image,
 } from 'react-native';
 import FormField from './FormField';
+import { useGlobalContext } from '../context/GlobalProvider';
 import { countriesData } from '../constants/countries';
 import { Ionicons } from '@expo/vector-icons';
+import { getRate } from '../lib/appwrite';
+import { applyProfitMargin } from '../lib/profitCalculator';
 
 const ChangeSendCountry = ({ setCountry, setModalVisible }) => {
+  const { user, setRates, profitMargin, transferData, setTransferData } =
+    useGlobalContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [lands, setLands] = useState([]);
 

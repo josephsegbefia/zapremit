@@ -23,11 +23,6 @@ const Home = () => {
     }
   }, [transfers]);
 
-  // const userCountryCode = user.code
-  // const recipientCountryCode = user.destinationCountryCode
-
-  // console.log(recipientCountryCode);
-
   return (
     <ScrollView className='h-full bg-primary-50'>
       <SafeAreaView className='items-center mb-10'>
