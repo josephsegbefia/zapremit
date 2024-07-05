@@ -5,6 +5,7 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import { router, useNavigation } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,29 +18,30 @@ import ReasonsModal from '../extrascreens/reasonsModal';
 import { applyProfitMargin, transferProfit } from '../../lib/profitCalculator';
 import ChangeSendCountry from '../../components/ChangeSendCountry';
 import { getRate } from '../../lib/appwrite';
+import useFetchRate from '../../lib/fetchRate';
+import { updateUserCurrencyInfo } from '../../lib/appwrite';
+import LoadingOverlay from '../../components/LoadingOverlay';
 
 const Send = () => {
+  const {
+    user,
+    transferData,
+    setTransferData,
+    rates,
+    setRates,
+    profitMargin,
+    refreshUser,
+  } = useGlobalContext();
   const navigation = useNavigation();
+  const { data: rateData } = useFetchRate(() =>
+    getRate(user?.currencyCode, user?.destinationCountryCurrencyCode, 1)
+  );
 
-  const { user, transferData, setTransferData, rates, setRates, profitMargin } =
-    useGlobalContext();
-  const [exchangeRate, setExchangeRate] = useState('');
-  const [offeredRate, setOfferedRate] = useState('');
-  // const [initialOfferedRate, setInitialOfferedrate] = useState('');
-  const [profit, setProfit] = useState('');
+  const parsedRate = JSON.parse(rateData);
+  const actualRate = parsedRate?.rate;
+  const { offeredRate, profit } = applyProfitMargin(actualRate, profitMargin);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [showCountries, setShowCountries] = useState(false);
-  const [destinationCountry, setDestinationCountry] = useState(
-    user?.destinationCountry
-  );
-  const [transferCurrencyCode, setTransferCurrencyCode] = useState(
-    user?.destinationCountryCurrencyCode
-  );
-  const [transferCurrencyName, setTransferCurrencyName] = useState(
-    user?.destinationCountryCurrencyName
-  );
-
-  const [transferDestinationCountryCode, setTransferDestinationCountryCode] =
-    useState(user?.destinationCountryCode);
 
   const [country, setCountry] = useState({
     name: '',
@@ -48,43 +50,7 @@ const Send = () => {
     currencyName: '',
     currencySymbol: '',
     flag: '',
-    rate: '',
   });
-
-  const fetchRate = async () => {
-    const result = await getRate(
-      user.currencyCode,
-      transferData?.transferCurrencyCode,
-      1
-    );
-    return result;
-  };
-
-  const updateRate = async () => {
-    // to limit API requests I will set the exchange rate values manually in development
-    const rate = await fetchRate();
-    const parsedRate = JSON.parse(rate);
-    setExchangeRate(parsedRate);
-
-    // Example profit margin percentage
-    const actualRate = parsedRate.rate;
-    const { offeredRate, profit } = applyProfitMargin(actualRate, profitMargin);
-
-    setOfferedRate(offeredRate);
-    setRates({
-      offeredExchangeRate: offeredRate,
-      unitProfit: profit,
-      actualExhangeRate: actualRate,
-    });
-    setProfit(profit);
-  };
-
-  // Update exchange rate only when country changes
-  useEffect(() => {
-    if (country.currencyCode) {
-      updateRate();
-    }
-  }, [country]);
 
   useEffect(() => {
     setTransferData((prev) => ({
@@ -92,9 +58,11 @@ const Send = () => {
       transferCurrencyCode: country.currencyCode,
       destinationCountryCode: country.countryCode,
     }));
-  }, [country]);
+  }, [country, setTransferData]);
 
-  console.log(transferData);
+  useEffect(() => {
+    refreshUser();
+  }, [refreshUser]);
 
   const {
     deliveryMethod,
@@ -198,6 +166,9 @@ const Send = () => {
     router.push('/extrascreens/transferoverview');
   };
 
+  if (isUpdating) {
+    return <LoadingOverlay message='Applying changes...' />;
+  }
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>
@@ -210,11 +181,12 @@ const Send = () => {
             <View className='bg-white rounded-xl mt-8 w-[95%] px-5 py-7'>
               <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mb-5'>
                 <View className='bg-primary-50 px-7 py-5 rounded-lg flex-row'>
-                  <CountryFlag
-                    isoCode={user?.code}
-                    size={40}
-                    className='w-[40px] h-[25px]'
+                  <Image
+                    source={{ uri: user?.flag }}
+                    resizeMode='contain'
+                    style={{ width: 30, height: 30 }}
                   />
+
                   <View className='justify-center'>
                     <Text className='text-primary font-psemibold px-4'>
                       {user?.currencyCode}
@@ -243,12 +215,7 @@ const Send = () => {
                   </Text>
                   <FontAwesome name='bolt' size={20} color='#004d40' />
                   <Text className='text-sm font-psemibold text-primary'>
-                    {rates.offeredExchangeRate
-                      ? rates.offeredExchangeRate
-                      : initialOfferedRate}{' '}
-                    {transferData.transferCurrencyCode
-                      ? transferData.transferCurrencyCode
-                      : user?.destinationCountryCurrencyCode}
+                    {offeredRate} {user?.destinationCountryCurrencyCode}
                   </Text>
                 </View>
               </View>
@@ -258,21 +225,21 @@ const Send = () => {
                   className='bg-primary-50 px-5 py-5 rounded-lg flex-row'
                   onPress={() => setShowCountries(true)}
                 >
-                  <CountryFlag
-                    isoCode={
-                      transferData.destinationCountryCode
-                        ? transferData.destinationCountryCode
-                        : user.destinationCountryCode
-                    }
+                  <Image
+                    source={{ uri: user?.destinationCountryFlag }}
+                    resizeMode='contain'
+                    style={{ width: 25, height: 25 }}
+                  />
+                  {/* <CountryFlag
+                    isoCode={user?.destinationCountryCode}
                     size={40}
                     className='w-[40px] h-[25px]'
-                  />
+                  /> */}
+
                   <View className='justify-center'>
                     <View className='flex flex-row justify-between'>
                       <Text className='text-primary font-psemibold px-4'>
-                        {transferData.transferCurrencyCode
-                          ? transferData.transferCurrencyCode
-                          : transferCurrencyCode}
+                        {user?.destinationCountryCurrencyCode}
                       </Text>
                       <View className='justify-center'>
                         <AntDesign name='caretdown' size={14} color='#004d40' />
@@ -362,6 +329,8 @@ const Send = () => {
           country={country}
           setCountry={setCountry}
           setModalVisible={setShowCountries}
+          updateUser={updateUserCurrencyInfo}
+          setIsUpdating={setIsUpdating}
         />
       )}
     </SafeAreaView>

@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TextInput,
   Modal,
   FlatList,
   Image,
@@ -12,12 +11,15 @@ import FormField from './FormField';
 import { useGlobalContext } from '../context/GlobalProvider';
 import { countriesData } from '../constants/countries';
 import { Ionicons } from '@expo/vector-icons';
-import { getRate } from '../lib/appwrite';
-import { applyProfitMargin } from '../lib/profitCalculator';
 
-const ChangeSendCountry = ({ setCountry, setModalVisible }) => {
-  const { user, setRates, profitMargin, transferData, setTransferData } =
-    useGlobalContext();
+const ChangeSendCountry = ({
+  country,
+  setCountry,
+  setModalVisible,
+  updateUser,
+  setIsUpdating,
+}) => {
+  const { user, refreshUser, setUser } = useGlobalContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [lands, setLands] = useState([]);
 
@@ -30,20 +32,52 @@ const ChangeSendCountry = ({ setCountry, setModalVisible }) => {
       currencySymbol: country.currencySymbol,
       flag: country.flag,
     }));
-
     setLands(data);
   }, []);
 
-  const handleCountrySelect = (item) => {
-    setCountry({
-      name: item.name,
-      countryCode: item.countryCode,
-      currencyCode: item.currencyCode,
-      currencySymbol: item.currencySymbol,
-      flag: item.flag,
-    });
-    setModalVisible(false); // Close the modal after selecting a country
-  };
+  const handleCountrySelect = useCallback(
+    async (item) => {
+      setCountry((prev) => ({
+        ...prev,
+        name: item.name,
+        countryCode: item.countryCode,
+        currencyCode: item.currencyCode,
+        currencySymbol: item.currencySymbol,
+        currencyName: item.currencyName,
+        flag: item.flag,
+      }));
+
+      const data = {
+        destinationCountry: item.name,
+        destinationCountryCurrencyCode: item.currencyCode,
+        destinationCountryCurrencyName: item.currencyName,
+        destinationCountryCode: item.countryCode,
+        destinationCountryFlag: item.flag,
+        destinationCountryCurrencySymbol: item.currencySymbol,
+      };
+
+      try {
+        setIsUpdating(true);
+        const response = await updateUser(data, user.$id);
+        if (!response) return;
+        const refetchedUser = await refreshUser();
+        console.log(refetchedUser);
+      } catch (error) {
+        console.error('Error updating user:', error);
+      } finally {
+        setModalVisible(false);
+        setIsUpdating(false);
+      }
+    },
+    [
+      setCountry,
+      setIsUpdating,
+      setModalVisible,
+      updateUser,
+      user.$id,
+      refreshUser,
+    ]
+  );
 
   const renderItem = useCallback(
     ({ item }) => (
@@ -59,20 +93,19 @@ const ChangeSendCountry = ({ setCountry, setModalVisible }) => {
               style={{ width: 30, height: 15 }}
             />
           </View>
-
           <Text className='text-primary text-base font-semibold'>
             {item.name}
           </Text>
         </View>
       </TouchableOpacity>
     ),
-    []
+    [handleCountrySelect]
   );
 
   const keyExtractor = useCallback((item) => item.name, []);
 
   const filteredLands = lands.filter((land) =>
-    land.name.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+    land.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
