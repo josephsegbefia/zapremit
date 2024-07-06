@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Redirect, router } from 'expo-router';
@@ -12,6 +13,7 @@ import VerifyPhone from './extrascreens/verifyPhone';
 
 export default function App() {
   const { user, isLoading, isLoggedIn } = useGlobalContext();
+  useEffect(() => {}, [user]);
 
   if (isLoading) {
     return <LoadingOverlay message='Loading...' />;

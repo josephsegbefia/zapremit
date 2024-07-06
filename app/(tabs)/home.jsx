@@ -23,7 +23,6 @@ const Home = () => {
     }
   }, [transfers]);
 
-  console.log(user);
   return (
     <ScrollView className='h-full bg-primary-50'>
       <SafeAreaView className='items-center mb-10'>

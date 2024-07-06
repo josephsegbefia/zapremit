@@ -1,10 +1,5 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-} from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getCurrentUser } from '../lib/appwrite';
 
 const GlobalContext = createContext();
@@ -50,8 +45,12 @@ const GlobalProvider = ({ children }) => {
     try {
       const res = await getCurrentUser();
       if (res) {
+        // console.log('User fetched:', res); // Debug log
         setIsLoggedIn(true);
         setUser(res);
+        await AsyncStorage.setItem('accountEmail', res.email);
+        const storedAccountEmail = await AsyncStorage.getItem('accountEmail'); // Verify storage
+        console.log('Stored accountEmail:', storedAccountEmail); // Debug log
       } else {
         setIsLoggedIn(false);
         setUser(null);

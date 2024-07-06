@@ -19,7 +19,8 @@ import { applyProfitMargin, transferProfit } from '../../lib/profitCalculator';
 import ChangeSendCountry from '../../components/ChangeSendCountry';
 import { getRate } from '../../lib/appwrite';
 import useFetchRate from '../../lib/fetchRate';
-import { updateUserCurrencyInfo } from '../../lib/appwrite';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import LoadingOverlay from '../../components/LoadingOverlay';
 
 const Send = () => {
@@ -31,31 +32,20 @@ const Send = () => {
     getRate(user?.currencyCode, user?.destinationCountryCurrencyCode, 1)
   );
 
-  // const rateData = { rate: 16.7, result: 17 };
   const parsedRate = JSON.parse(rateData);
   const actualRate = parsedRate?.rate;
   const { offeredRate, profit } = applyProfitMargin(actualRate, profitMargin);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [showCountries, setShowCountries] = useState(false);
 
   const [reload, setReload] = useState(false);
-
-  const [country, setCountry] = useState({
-    name: '',
-    countryCode: '',
-    currencyCode: '',
-    currencyName: '',
-    currencySymbol: '',
-    flag: '',
-  });
+  const [accountEmail, setAccountEmail] = useState(null);
 
   useEffect(() => {
     setTransferData((prev) => ({
       ...prev,
-      transferCurrencyCode: country.currencyCode,
-      destinationCountryCode: country.countryCode,
+      // transferCurrencyCode: country.currencyCode,
+      // destinationCountryCode: country.countryCode,
     }));
-  }, [country, setTransferData]);
+  }, [setTransferData]);
 
   const {
     deliveryMethod,
@@ -159,9 +149,22 @@ const Send = () => {
     router.push('/extrascreens/transferoverview');
   };
 
-  if (isUpdating) {
-    return <LoadingOverlay message='Applying changes...' />;
-  }
+  const getAccountEmail = async () => {
+    try {
+      const email = await AsyncStorage.getItem('accountEmail');
+      if (email !== null) {
+        setAccountEmail(email);
+        console.log('ID=======>', email);
+      }
+    } catch (error) {
+      console.error('Error fetching accountId from AsyncStorage:', error);
+    }
+  };
+
+  useEffect(() => {
+    getAccountEmail();
+  }, []);
+
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>
@@ -179,11 +182,6 @@ const Send = () => {
                     size={40}
                     className='w-[40px] h-[25px]'
                   />
-                  {/* <Image
-                    source={{ uri: user?.flag }}
-                    resizeMode='contain'
-                    style={{ width: 30, height: 30 }}
-                  /> */}
 
                   <View className='justify-center'>
                     <Text className='text-primary font-psemibold px-4'>
@@ -223,11 +221,6 @@ const Send = () => {
                   className='bg-primary-50 px-5 py-5 rounded-lg flex-row'
                   // onPress={() => setShowCountries(true)}
                 >
-                  {/* <Image
-                    source={{ uri: user?.destinationCountryFlag }}
-                    resizeMode='contain'
-                    style={{ width: 25, height: 25 }}
-                  /> */}
                   <CountryFlag
                     isoCode={user?.destinationCountryCode}
                     size={40}
@@ -239,9 +232,6 @@ const Send = () => {
                       <Text className='text-primary font-psemibold px-4'>
                         {user?.destinationCountryCurrencyCode}
                       </Text>
-                      {/* <View className='justify-center'>
-                        <AntDesign name='caretdown' size={14} color='#004d40' />
-                      </View> */}
                     </View>
                   </View>
                 </View>
@@ -320,16 +310,6 @@ const Send = () => {
           modalVisible={modalVisible}
           closeModal={closeReasons}
           selectReason={selectReason}
-        />
-      )}
-      {showCountries && (
-        <ChangeSendCountry
-          country={country}
-          setCountry={setCountry}
-          setModalVisible={setShowCountries}
-          updateUser={updateUserCurrencyInfo}
-          setIsUpdating={setIsUpdating}
-          setReload={setReload}
         />
       )}
     </SafeAreaView>
