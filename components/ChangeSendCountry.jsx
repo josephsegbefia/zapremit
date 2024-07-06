@@ -11,7 +11,6 @@ import FormField from './FormField';
 import { useGlobalContext } from '../context/GlobalProvider';
 import { countriesData } from '../constants/countries';
 import { Ionicons } from '@expo/vector-icons';
-import { getCurrentUser } from '../lib/appwrite';
 
 const ChangeSendCountry = ({
   country,
@@ -21,7 +20,7 @@ const ChangeSendCountry = ({
   setIsUpdating,
   setReload,
 }) => {
-  const { user, refreshUser, setUser } = useGlobalContext();
+  const { user, refreshUser } = useGlobalContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [lands, setLands] = useState([]);
 
@@ -61,11 +60,6 @@ const ChangeSendCountry = ({
       try {
         setIsUpdating(true);
         const response = await updateUser(data, user.$id);
-        if (!response) return;
-        // const refreshedUser = await refreshUser();
-        const res = await getCurrentUser();
-        setUser(res);
-        setReload((reload) => !reload);
       } catch (error) {
         console.error('Error updating user:', error);
       } finally {
@@ -73,14 +67,7 @@ const ChangeSendCountry = ({
         setModalVisible(false);
       }
     },
-    [
-      setCountry,
-      setIsUpdating,
-      setModalVisible,
-      updateUser,
-      user.$id,
-      refreshUser,
-    ]
+    [setCountry, setIsUpdating, setModalVisible, updateUser, user.$id]
   );
 
   const renderItem = useCallback(

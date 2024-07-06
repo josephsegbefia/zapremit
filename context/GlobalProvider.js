@@ -67,8 +67,6 @@ const GlobalProvider = ({ children }) => {
     fetchCurrentUser();
   }, []);
 
-  const refetchUser = () => fetchCurrentUser();
-
   const value = {
     isLoggedIn,
     setIsLoggedIn,
@@ -82,7 +80,6 @@ const GlobalProvider = ({ children }) => {
     userIsVerified,
     setUserIsVerified,
     profitMargin,
-    refreshUser: refetchUser,
   };
 
   return (

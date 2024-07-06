@@ -23,16 +23,10 @@ import { updateUserCurrencyInfo } from '../../lib/appwrite';
 import LoadingOverlay from '../../components/LoadingOverlay';
 
 const Send = () => {
-  const {
-    user,
-    transferData,
-    setTransferData,
-    rates,
-    setRates,
-    profitMargin,
-    refreshUser,
-  } = useGlobalContext();
+  const { user, transferData, setTransferData, rates, setRates, profitMargin } =
+    useGlobalContext();
   const navigation = useNavigation();
+
   const { data: rateData } = useFetchRate(() =>
     getRate(user?.currencyCode, user?.destinationCountryCurrencyCode, 1)
   );
@@ -225,9 +219,9 @@ const Send = () => {
               </View>
 
               <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mt-5'>
-                <TouchableOpacity
+                <View
                   className='bg-primary-50 px-5 py-5 rounded-lg flex-row'
-                  onPress={() => setShowCountries(true)}
+                  // onPress={() => setShowCountries(true)}
                 >
                   {/* <Image
                     source={{ uri: user?.destinationCountryFlag }}
@@ -245,12 +239,12 @@ const Send = () => {
                       <Text className='text-primary font-psemibold px-4'>
                         {user?.destinationCountryCurrencyCode}
                       </Text>
-                      <View className='justify-center'>
+                      {/* <View className='justify-center'>
                         <AntDesign name='caretdown' size={14} color='#004d40' />
-                      </View>
+                      </View> */}
                     </View>
                   </View>
-                </TouchableOpacity>
+                </View>
                 <View className='px-5'>
                   <View className='justify-center pt-1'>
                     <Text className='text-primary text-xs font-pregular'>
