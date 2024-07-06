@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -17,25 +17,38 @@ import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
 import ReasonsModal from '../extrascreens/reasonsModal';
 import { applyProfitMargin, transferProfit } from '../../lib/profitCalculator';
 import ChangeSendCountry from '../../components/ChangeSendCountry';
-import { getRate } from '../../lib/appwrite';
-import useFetchRate from '../../lib/fetchRate';
-
+import { updateUserCurrencyInfo } from '../../lib/appwrite';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingOverlay from '../../components/LoadingOverlay';
+import { getUserById } from '../../lib/appwrite';
 
 const Send = () => {
-  const { user, transferData, setTransferData, rates, setRates, profitMargin } =
+  const { user, setUser, transferData, setTransferData, rates, profitMargin } =
     useGlobalContext();
   const navigation = useNavigation();
 
-  const { data: rateData } = useFetchRate(() =>
-    getRate(user?.currencyCode, user?.destinationCountryCurrencyCode, 1)
-  );
-
-  const parsedRate = JSON.parse(rateData);
-  const actualRate = parsedRate?.rate;
+  const actualRate = rates?.actualExchangeRate;
   const { offeredRate, profit } = applyProfitMargin(actualRate, profitMargin);
+  const [showCountries, setShowCountries] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [accountId, setAccountId] = useState(null);
+  const [transferAmt, setTransferAmt] = useState(
+    transferData.transferAmount || '0.00'
+  );
+  const [amtReceivable, setAmtReceivable] = useState(
+    transferData.receivableAmount || '0.00'
+  );
+  const [modalVisible, setModalVisible] = useState(false);
+  const [country, setCountry] = useState({
+    name: '',
+    countryCode: '',
+    currencyCode: '',
+    currencyName: '',
+    currencySymbol: '',
+    flag: '',
+  });
 
-  const [reload, setReload] = useState(false);
+  const initialRender = useRef(true);
 
   useEffect(() => {
     setTransferData((prev) => ({
@@ -58,14 +71,6 @@ const Send = () => {
   const fullName = !recipientFirstName
     ? null
     : `${recipientFirstName.trim()} ${recipientLastName.trim()}`;
-
-  const [transferAmt, setTransferAmt] = useState(
-    transferData.transferAmount || '0.00'
-  );
-  const [amtReceivable, setAmtReceivable] = useState(
-    transferData.receivableAmount || '0.00'
-  );
-  const [modalVisible, setModalVisible] = useState(false);
 
   const handleTransferAmtChange = (amt) => {
     amt = amt.replace(/[^0-9.,]/g, ''); // Allow numbers, periods, and commas
@@ -147,6 +152,40 @@ const Send = () => {
     router.push('/extrascreens/transferoverview');
   };
 
+  const getAccountId = async () => {
+    try {
+      const id = await AsyncStorage.getItem('accountId');
+      if (id !== null) {
+        setAccountId(id);
+        console.log('ID=======>', id);
+      }
+    } catch (error) {
+      console.error('Error fetching accountId from AsyncStorage:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (initialRender.current) {
+      // Skip the first render
+      initialRender.current = false;
+    } else {
+      const callUser = async () => {
+        const response = await getUserById(accountId);
+        setUser(response);
+        // console.log('user====>', response);
+      };
+      callUser();
+    }
+  }, [country]);
+
+  useEffect(() => {
+    getAccountId();
+  }, []);
+
+  if (isUpdating) {
+    return <LoadingOverlay message='Applying changes...' />;
+  }
+
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>
@@ -199,9 +238,9 @@ const Send = () => {
               </View>
 
               <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mt-5'>
-                <View
+                <TouchableOpacity
                   className='bg-primary-50 px-5 py-5 rounded-lg flex-row'
-                  // onPress={() => setShowCountries(true)}
+                  onPress={() => setShowCountries(true)}
                 >
                   <CountryFlag
                     isoCode={user?.destinationCountryCode}
@@ -216,7 +255,10 @@ const Send = () => {
                       </Text>
                     </View>
                   </View>
-                </View>
+                  <View className='justify-center'>
+                    <AntDesign name='caretdown' size={14} color='#004d40' />
+                  </View>
+                </TouchableOpacity>
                 <View className='px-5'>
                   <View className='justify-center pt-1'>
                     <Text className='text-primary text-xs font-pregular'>
@@ -292,6 +334,15 @@ const Send = () => {
           modalVisible={modalVisible}
           closeModal={closeReasons}
           selectReason={selectReason}
+        />
+      )}
+      {showCountries && (
+        <ChangeSendCountry
+          country={country}
+          setCountry={setCountry}
+          setModalVisible={setShowCountries}
+          updateUser={updateUserCurrencyInfo}
+          setIsUpdating={setIsUpdating}
         />
       )}
     </SafeAreaView>

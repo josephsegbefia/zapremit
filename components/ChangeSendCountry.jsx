@@ -67,7 +67,7 @@ const ChangeSendCountry = ({
         setModalVisible(false);
       }
     },
-    [setCountry, setIsUpdating, setModalVisible, updateUser, user.$id]
+    [setCountry, setIsUpdating, setModalVisible, updateUser]
   );
 
   const renderItem = useCallback(
