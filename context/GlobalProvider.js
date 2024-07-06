@@ -48,9 +48,9 @@ const GlobalProvider = ({ children }) => {
         // console.log('User fetched:', res); // Debug log
         setIsLoggedIn(true);
         setUser(res);
-        await AsyncStorage.setItem('accountEmail', res.email);
-        const storedAccountEmail = await AsyncStorage.getItem('accountEmail'); // Verify storage
-        console.log('Stored accountEmail:', storedAccountEmail); // Debug log
+        await AsyncStorage.setItem('accountId', res.$id);
+        const storedAccountId = await AsyncStorage.getItem('accountId'); // Verify storage
+        console.log('Stored accountid:', storedAccountId); // Debug log
       } else {
         setIsLoggedIn(false);
         setUser(null);

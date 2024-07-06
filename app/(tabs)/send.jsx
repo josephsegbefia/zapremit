@@ -19,7 +19,6 @@ import { applyProfitMargin, transferProfit } from '../../lib/profitCalculator';
 import ChangeSendCountry from '../../components/ChangeSendCountry';
 import { getRate } from '../../lib/appwrite';
 import useFetchRate from '../../lib/fetchRate';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import LoadingOverlay from '../../components/LoadingOverlay';
 
@@ -37,7 +36,6 @@ const Send = () => {
   const { offeredRate, profit } = applyProfitMargin(actualRate, profitMargin);
 
   const [reload, setReload] = useState(false);
-  const [accountEmail, setAccountEmail] = useState(null);
 
   useEffect(() => {
     setTransferData((prev) => ({
@@ -148,22 +146,6 @@ const Send = () => {
     });
     router.push('/extrascreens/transferoverview');
   };
-
-  const getAccountEmail = async () => {
-    try {
-      const email = await AsyncStorage.getItem('accountEmail');
-      if (email !== null) {
-        setAccountEmail(email);
-        console.log('ID=======>', email);
-      }
-    } catch (error) {
-      console.error('Error fetching accountId from AsyncStorage:', error);
-    }
-  };
-
-  useEffect(() => {
-    getAccountEmail();
-  }, []);
 
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
