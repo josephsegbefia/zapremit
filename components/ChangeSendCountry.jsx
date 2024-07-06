@@ -11,6 +11,7 @@ import FormField from './FormField';
 import { useGlobalContext } from '../context/GlobalProvider';
 import { countriesData } from '../constants/countries';
 import { Ionicons } from '@expo/vector-icons';
+import { getCurrentUser } from '../lib/appwrite';
 
 const ChangeSendCountry = ({
   country,
@@ -18,6 +19,7 @@ const ChangeSendCountry = ({
   setModalVisible,
   updateUser,
   setIsUpdating,
+  setReload,
 }) => {
   const { user, refreshUser, setUser } = useGlobalContext();
   const [searchQuery, setSearchQuery] = useState('');
@@ -60,13 +62,15 @@ const ChangeSendCountry = ({
         setIsUpdating(true);
         const response = await updateUser(data, user.$id);
         if (!response) return;
-        const refetchedUser = await refreshUser();
-        console.log(refetchedUser);
+        // const refreshedUser = await refreshUser();
+        const res = await getCurrentUser();
+        setUser(res);
+        setReload((reload) => !reload);
       } catch (error) {
         console.error('Error updating user:', error);
       } finally {
-        setModalVisible(false);
         setIsUpdating(false);
+        setModalVisible(false);
       }
     },
     [
@@ -108,6 +112,7 @@ const ChangeSendCountry = ({
     land.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  console.log('LOADED USER=====>', user);
   return (
     <Modal animationType='slide' transparent={true} visible={true}>
       <View className='flex-1 items-center justify-center'>

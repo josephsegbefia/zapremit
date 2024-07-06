@@ -37,11 +37,14 @@ const Send = () => {
     getRate(user?.currencyCode, user?.destinationCountryCurrencyCode, 1)
   );
 
+  // const rateData = { rate: 16.7, result: 17 };
   const parsedRate = JSON.parse(rateData);
   const actualRate = parsedRate?.rate;
   const { offeredRate, profit } = applyProfitMargin(actualRate, profitMargin);
   const [isUpdating, setIsUpdating] = useState(false);
   const [showCountries, setShowCountries] = useState(false);
+
+  const [reload, setReload] = useState(false);
 
   const [country, setCountry] = useState({
     name: '',
@@ -59,10 +62,6 @@ const Send = () => {
       destinationCountryCode: country.countryCode,
     }));
   }, [country, setTransferData]);
-
-  useEffect(() => {
-    refreshUser();
-  }, [refreshUser]);
 
   const {
     deliveryMethod,
@@ -181,11 +180,16 @@ const Send = () => {
             <View className='bg-white rounded-xl mt-8 w-[95%] px-5 py-7'>
               <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mb-5'>
                 <View className='bg-primary-50 px-7 py-5 rounded-lg flex-row'>
-                  <Image
+                  <CountryFlag
+                    isoCode={user?.code}
+                    size={40}
+                    className='w-[40px] h-[25px]'
+                  />
+                  {/* <Image
                     source={{ uri: user?.flag }}
                     resizeMode='contain'
                     style={{ width: 30, height: 30 }}
-                  />
+                  /> */}
 
                   <View className='justify-center'>
                     <Text className='text-primary font-psemibold px-4'>
@@ -225,16 +229,16 @@ const Send = () => {
                   className='bg-primary-50 px-5 py-5 rounded-lg flex-row'
                   onPress={() => setShowCountries(true)}
                 >
-                  <Image
+                  {/* <Image
                     source={{ uri: user?.destinationCountryFlag }}
                     resizeMode='contain'
                     style={{ width: 25, height: 25 }}
-                  />
-                  {/* <CountryFlag
+                  /> */}
+                  <CountryFlag
                     isoCode={user?.destinationCountryCode}
                     size={40}
                     className='w-[40px] h-[25px]'
-                  /> */}
+                  />
 
                   <View className='justify-center'>
                     <View className='flex flex-row justify-between'>
@@ -331,6 +335,7 @@ const Send = () => {
           setModalVisible={setShowCountries}
           updateUser={updateUserCurrencyInfo}
           setIsUpdating={setIsUpdating}
+          setReload={setReload}
         />
       )}
     </SafeAreaView>

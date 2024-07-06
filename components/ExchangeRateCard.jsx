@@ -20,6 +20,7 @@ const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
         user?.destinationCountryCurrencyCode,
         1
       );
+      // const rateData = { rate: 16.7, result: 17 };
       const parsedRate = JSON.parse(rateData);
       const actualRate = parsedRate?.rate;
       const { offeredRate } = applyProfitMargin(actualRate, profitMargin);

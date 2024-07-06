@@ -46,7 +46,7 @@ const GlobalProvider = ({ children }) => {
   });
   const [userIsVerified, setUserIsVerified] = useState(false);
 
-  const fetchCurrentUser = useCallback(async () => {
+  const fetchCurrentUser = async () => {
     try {
       const res = await getCurrentUser();
       if (res) {
@@ -61,7 +61,7 @@ const GlobalProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchCurrentUser();
