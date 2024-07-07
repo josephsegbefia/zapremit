@@ -20,14 +20,36 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 import LoadingOverlay from '../../components/LoadingOverlay';
 
 const Recipients = () => {
-  const [searchValue, setSearchValue] = useState('');
-  const [filteredRecipients, setFilteredRecipients] = useState([]);
   const navigation = useNavigation();
+  const [searchValue, setSearchValue] = useState('');
+
+  const [filteredRecipientsOnCountry, setFilteredRecipientsOnCountry] =
+    useState([]);
+  const [filteredRecipients, setFilteredRecipients] = useState([]);
+  const [destinationCountry, setDestinationCountry] = useState('');
 
   const { user, transferData, setTransferData } = useGlobalContext();
   const { data: recipients, isLoading } = useAppwrite(() =>
     getRecipients(user.$id)
   );
+
+  useEffect(() => {
+    const loadRelevantRecipients = () => {
+      if (transferData.identifier === 'select-existing-recipient') {
+        if (user?.destinationCountry) {
+          setDestinationCountry(user.destinationCountry);
+          const filtered = recipients.filter((recipient) => {
+            return (
+              recipient.country.toLowerCase() ===
+              user.destinationCountry.toLowerCase()
+            );
+          });
+          setFilteredRecipientsOnCountry(filtered);
+        }
+      }
+    };
+    loadRelevantRecipients();
+  }, [recipients]);
 
   useEffect(() => {
     if (recipients) {
@@ -39,15 +61,13 @@ const Recipients = () => {
     }
   }, [searchValue, recipients]);
 
-  // const handleRecipientPress = useCallback(() => {}, []);
-
   const renderItem = useCallback(
     ({ item }) => (
       <View className='w-full items-center'>
         <View className='w-[95%]'>
           <TouchableOpacity
             onPress={() => {
-              if (transferData.identifier === 'select-exisiting-recipient') {
+              if (transferData.identifier === 'select-existing-recipient') {
                 setTransferData({
                   ...transferData,
                   recipientId: item.$id,
@@ -113,22 +133,33 @@ const Recipients = () => {
             />
           </View>
         </View>
-        <FlatList
-          data={filteredRecipients}
-          keyExtractor={(item) => item.$id}
-          renderItem={renderItem}
-          ListHeaderComponentStyle={styles.header}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={() => (
-            <EmptyState
-              title='No recipients found'
-              subtitle='Your transfers will appear here'
-              buttonLabel='Add recipient'
-              handlePress={() => router.push('/extrascreens/addnewrecipient')}
-            />
-          )}
-        />
-        {transferData.identifier === 'select-exisiting-recipient' ? (
+        {transferData.identifier === 'select-existing-recipient' ? (
+          <FlatList
+            data={filteredRecipientsOnCountry}
+            keyExtractor={(item) => item.$id}
+            renderItem={renderItem}
+            ListHeaderComponentStyle={styles.header}
+            showsVerticalScrollIndicator={false}
+          />
+        ) : (
+          <FlatList
+            data={filteredRecipients}
+            keyExtractor={(item) => item.$id}
+            renderItem={renderItem}
+            ListHeaderComponentStyle={styles.header}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={() => (
+              <EmptyState
+                title='No recipients found'
+                subtitle='Your transfers will appear here'
+                buttonLabel='Add recipient'
+                handlePress={() => router.push('/extrascreens/addnewrecipient')}
+              />
+            )}
+          />
+        )}
+
+        {transferData.identifier === 'select-existing-recipient' ? (
           <View className='items-center'>
             <View className='w-[95%]'>
               <CustomButton

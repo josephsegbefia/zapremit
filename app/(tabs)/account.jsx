@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,7 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useGlobalContext } from '../../context/GlobalProvider';
 
 const Account = () => {
-  const { user } = useGlobalContext();
+  const { user, setTransferData } = useGlobalContext();
 
   const initials =
     user?.firstName.charAt(0).toUpperCase() +
@@ -24,6 +24,14 @@ const Account = () => {
   } else {
     fullName = user?.firstName.trim() + ' ' + user?.lastName.trim();
   }
+
+  // Make sure to set the identifier back to '' incase you return to this page from the select recipient page
+  useEffect(() => {
+    setTransferData((prev) => ({
+      ...prev,
+      identifier: '',
+    }));
+  }, []);
 
   const accountItems = [
     {

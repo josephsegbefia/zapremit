@@ -10,13 +10,20 @@ import formatDate from '../../lib/formatDate';
 import LoadingOverlay from '../../components/LoadingOverlay';
 
 const Home = () => {
-  const { user } = useGlobalContext();
+  const { user, setTransferData } = useGlobalContext();
   const [transfersList, setTransfersList] = useState([]);
 
   const { data: transfers, isLoading } = useAppwrite(() =>
     getUserLatestTransfers(user.$id)
   );
 
+  // Make sure to set the identifier back to '' incase you return to this page from the select recipient page
+  useEffect(() => {
+    setTransferData((prev) => ({
+      ...prev,
+      identifier: '',
+    }));
+  }, []);
   useEffect(() => {
     if (transfers) {
       setTransfersList(transfers);

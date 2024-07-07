@@ -110,6 +110,13 @@ const Send = () => {
     }
   };
 
+  useEffect(() => {
+    setTransferData((prev) => ({
+      ...prev,
+      identifier: '',
+    }));
+  }, []);
+
   const openModal = () => {
     setModalVisible(true);
   };
