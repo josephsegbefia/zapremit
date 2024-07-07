@@ -81,7 +81,6 @@ const Signup3 = () => {
     };
     try {
       const result = await createUser(data);
-      console.log(data);
       setUser(result);
       setIsLoggedIn(true);
     } catch (error) {

@@ -49,7 +49,6 @@ const GlobalProvider = ({ children }) => {
         setUser(res);
         await AsyncStorage.setItem('accountId', res.$id);
         const storedAccountId = await AsyncStorage.getItem('accountId');
-        console.log('Stored accountid:', storedAccountId);
       } else {
         setIsLoggedIn(false);
         setUser(null);

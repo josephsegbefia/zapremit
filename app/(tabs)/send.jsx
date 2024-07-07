@@ -157,7 +157,6 @@ const Send = () => {
       const id = await AsyncStorage.getItem('accountId');
       if (id !== null) {
         setAccountId(id);
-        console.log('ID=======>', id);
       }
     } catch (error) {
       console.error('Error fetching accountId from AsyncStorage:', error);
@@ -172,7 +171,6 @@ const Send = () => {
       const callUser = async () => {
         const response = await getUserById(accountId);
         setUser(response);
-        // console.log('user====>', response);
       };
       callUser();
     }

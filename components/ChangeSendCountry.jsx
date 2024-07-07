@@ -99,7 +99,6 @@ const ChangeSendCountry = ({
     land.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  console.log('LOADED USER=====>', user);
   return (
     <Modal animationType='slide' transparent={true} visible={true}>
       <View className='flex-1 items-center justify-center'>
