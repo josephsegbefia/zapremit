@@ -58,19 +58,19 @@ const Recipients = () => {
     loadRelevantRecipients();
   }, [recipients]);
 
-  // useEffect(() => {
-  //   if (transferData.identifier === 'select-existing-recipient') {
-  //     if (filteredRecipientsOnCountry) {
-  //       setFilterFilteredRecipientsOnCountry(
-  //         filteredRecipients.filter((recipient) =>
-  //           recipient.firstName
-  //             .toLowerCase()
-  //             .includes(searchValue.toLowerCase())
-  //         )
-  //       );
-  //     }
-  //   }
-  // }, [searchValue, recipients]);
+  useEffect(() => {
+    if (transferData.identifier === 'select-existing-recipient') {
+      if (filteredRecipientsOnCountry) {
+        setFilterFilteredRecipientsOnCountry(
+          filteredRecipientsOnCountry.filter((recipient) =>
+            recipient.firstName
+              .toLowerCase()
+              .includes(searchValue.toLowerCase())
+          )
+        );
+      }
+    }
+  }, [searchValue, filteredRecipients]);
 
   useEffect(() => {
     if (recipients) {
@@ -161,13 +161,14 @@ const Recipients = () => {
                 <InfoCard
                   title='Heads up'
                   info={`If you have added recipients in other countries, then you are only seeing recipients that belong to the selected transfer destination country, ${user.destinationCountry}`}
-                  styles='text-center'
+                  // styles='text-center'
                 />
               </View>
             </View>
 
             <FlatList
-              data={filteredRecipientsOnCountry}
+              // data={filteredRecipientsOnCountry}
+              data={filterFilteredRecipientsOnCountry}
               keyExtractor={(item) => item.$id}
               renderItem={renderItem}
               ListHeaderComponentStyle={styles.header}
