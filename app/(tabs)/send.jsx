@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
 import { router, useNavigation } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -50,13 +51,13 @@ const Send = () => {
 
   const initialRender = useRef(true);
 
-  useEffect(() => {
-    setTransferData((prev) => ({
-      ...prev,
-      // transferCurrencyCode: country.currencyCode,
-      // destinationCountryCode: country.countryCode,
-    }));
-  }, [setTransferData]);
+  // useEffect(() => {
+  //   setTransferData((prev) => ({
+  //     ...prev,
+  //     // transferCurrencyCode: country.currencyCode,
+  //     // destinationCountryCode: country.countryCode,
+  //   }));
+  // }, [transferData]);
 
   const {
     deliveryMethod,
@@ -150,6 +151,18 @@ const Send = () => {
   };
 
   const handleNext = () => {
+    if (
+      transferAmt === '0.00' ||
+      transferAmt === '' ||
+      amtReceivable === '0.00' ||
+      amtReceivable === ''
+    ) {
+      Alert.alert(
+        'Error',
+        'Please set amount to transfer or amount to receive'
+      );
+      return;
+    }
     setTransferData({
       ...transferData,
       transferAmount: transferAmt,
@@ -191,12 +204,14 @@ const Send = () => {
     return <LoadingOverlay message='Applying changes...' />;
   }
 
+  console.log(transferData);
+
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>
         <View className='py-10'>
           <Text className='text-xl text-primary font-psemibold px-4 mt-10'>
-            Start sending some money, {user?.firstName}
+            Start sending some money, {user?.firstName}!
           </Text>
 
           <View className='items-center'>

@@ -24,6 +24,7 @@ const Home = () => {
       identifier: '',
     }));
   }, []);
+
   useEffect(() => {
     if (transfers) {
       setTransfersList(transfers);
