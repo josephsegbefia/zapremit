@@ -18,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import CustomButton from '../../components/CustomButton';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import LoadingOverlay from '../../components/LoadingOverlay';
+import InfoCard from '../../components/InfoCard';
 
 const Recipients = () => {
   const navigation = useNavigation();
@@ -25,6 +26,12 @@ const Recipients = () => {
 
   const [filteredRecipientsOnCountry, setFilteredRecipientsOnCountry] =
     useState([]);
+
+  // For searching through already filtered recipients on country
+  const [
+    filterFilteredRecipientsOnCountry,
+    setFilterFilteredRecipientsOnCountry,
+  ] = useState([]);
   const [filteredRecipients, setFilteredRecipients] = useState([]);
   const [destinationCountry, setDestinationCountry] = useState('');
 
@@ -50,6 +57,20 @@ const Recipients = () => {
     };
     loadRelevantRecipients();
   }, [recipients]);
+
+  // useEffect(() => {
+  //   if (transferData.identifier === 'select-existing-recipient') {
+  //     if (filteredRecipientsOnCountry) {
+  //       setFilterFilteredRecipientsOnCountry(
+  //         filteredRecipients.filter((recipient) =>
+  //           recipient.firstName
+  //             .toLowerCase()
+  //             .includes(searchValue.toLowerCase())
+  //         )
+  //       );
+  //     }
+  //   }
+  // }, [searchValue, recipients]);
 
   useEffect(() => {
     if (recipients) {
@@ -134,13 +155,33 @@ const Recipients = () => {
           </View>
         </View>
         {transferData.identifier === 'select-existing-recipient' ? (
-          <FlatList
-            data={filteredRecipientsOnCountry}
-            keyExtractor={(item) => item.$id}
-            renderItem={renderItem}
-            ListHeaderComponentStyle={styles.header}
-            showsVerticalScrollIndicator={false}
-          />
+          <>
+            <View className='items-center'>
+              <View className='w-[95%] my-3'>
+                <InfoCard
+                  title='Heads up'
+                  info={`If you have added recipients in other countries, then you are only seeing recipients that belong to the selected transfer destination country, ${user.destinationCountry}`}
+                  styles='text-center'
+                />
+              </View>
+            </View>
+
+            <FlatList
+              data={filteredRecipientsOnCountry}
+              keyExtractor={(item) => item.$id}
+              renderItem={renderItem}
+              ListHeaderComponentStyle={styles.header}
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={() => (
+                <EmptyState
+                  title='No recipients found'
+                  subtitle='Your transfers will appear here'
+                  buttonLabel='Add recipient'
+                  // handlePress={() => router.push('/extrascreens/addnewrecipient')}
+                />
+              )}
+            />
+          </>
         ) : (
           <FlatList
             data={filteredRecipients}
