@@ -110,6 +110,15 @@ const Send = () => {
   const handleAmtReceivableChange = (amt) => {
     amt = amt.replace(/[^0-9.,]/g, '');
     setAmtReceivable(amt);
+    const normalizedAmt = amt.replace(',', '.');
+    const transferable = (
+      parseFloat(normalizedAmt) / rates.offeredExchangeRate
+    ).toFixed(2);
+    if (normalizedAmt === '') {
+      setTransferAmt('');
+      return;
+    }
+    setTransferAmt(transferable);
   };
   // console.log(typeof rates.offeredExchangeRate);
 
