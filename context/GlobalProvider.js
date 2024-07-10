@@ -12,7 +12,7 @@ const GlobalProvider = ({ children }) => {
   const [transferData, setTransferData] = useState({
     transferAmount: '',
     receivableAmount: '',
-    transferFee: '',
+    transferFee: 0.99,
     totalToPay: '',
     recipientPhone: '',
     recipientFirstName: '',
@@ -34,10 +34,20 @@ const GlobalProvider = ({ children }) => {
     transferProfit: '',
     identifier: '',
   });
+
+  const [country, setCountry] = useState({
+    name: '',
+    countryCode: '',
+    currencyCode: '',
+    currencyName: '',
+    currencySymbol: '',
+    flag: '',
+  });
+
   const [profitMargin, setProfitMargin] = useState(1);
   const [rates, setRates] = useState({
-    actualExchangeRate: '',
-    offeredExchangeRate: '',
+    actualExchangeRate: 16.7,
+    offeredExchangeRate: 16.53,
   });
   const [userIsVerified, setUserIsVerified] = useState(false);
 
@@ -77,6 +87,8 @@ const GlobalProvider = ({ children }) => {
     userIsVerified,
     setUserIsVerified,
     profitMargin,
+    country,
+    setCountry,
   };
 
   return (

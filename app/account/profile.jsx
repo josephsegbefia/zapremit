@@ -60,6 +60,8 @@ const Profile = () => {
     }
   };
 
+  useEffect(() => {}, [country]);
+
   useEffect(() => {
     if (initialRender.current) {
       // Skip the first render

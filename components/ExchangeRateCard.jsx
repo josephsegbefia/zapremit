@@ -13,30 +13,35 @@ const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
   const { user, profitMargin, setRates, rates } = useGlobalContext();
   const [isLoading, setIsLoading] = useState(true);
 
+  // Uncomment the code in the useEffect to get actual rates when ready. This is to prevent unneccessary API calls
   useEffect(() => {
-    const fetchRate = async () => {
-      const rateData = await getRate(
-        user?.currencyCode,
-        user?.destinationCountryCurrencyCode,
-        1
-      );
-      // const rateData = { rate: 16.7, result: 17 };
+    // const fetchRate = async () => {
+    //   const rateData = await getRate(
+    //     user?.currencyCode,
+    //     user?.destinationCountryCurrencyCode,
+    //     1
+    //   );
 
-      const parsedRate = JSON.parse(rateData);
-      const actualRate = parsedRate?.rate;
-      const { offeredRate } = applyProfitMargin(actualRate, profitMargin);
+    //   const parsedRate = JSON.parse(rateData);
+    //   const actualRate = parsedRate?.rate;
+    //   const { offeredRate } = applyProfitMargin(actualRate, profitMargin);
 
-      setRates((prev) => ({
-        ...prev,
-        actualExchangeRate: actualRate,
-        offeredExchangeRate: offeredRate,
-      }));
-      setIsLoading(false);
-    };
+    //   setRates((prev) => ({
+    //     ...prev,
+    //     actualExchangeRate: actualRate,
+    //     offeredExchangeRate: offeredRate,
+    //   }));
+    //   setIsLoading(false);
+    // };
 
-    if (user?.currencyCode && user?.destinationCountryCurrencyCode) {
-      fetchRate();
-    }
+    // Remove this from here when you uncomment the code above
+    setIsLoading(false);
+
+    // Uncomment this tooo
+
+    // if (user?.currencyCode && user?.destinationCountryCurrencyCode) {
+    //   fetchRate();
+    // }
   }, [
     user?.currencyCode,
     user?.destinationCountryCurrencyCode,

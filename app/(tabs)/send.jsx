@@ -24,92 +24,135 @@ import LoadingOverlay from '../../components/LoadingOverlay';
 import { getUserById } from '../../lib/appwrite';
 
 const Send = () => {
-  const { user, setUser, transferData, setTransferData, rates, profitMargin } =
-    useGlobalContext();
+  const {
+    user,
+    setUser,
+    transferData,
+    setTransferData,
+    rates,
+    profitMargin,
+    country,
+    setCountry,
+  } = useGlobalContext();
   const navigation = useNavigation();
-
-  const actualRate = rates?.actualExchangeRate;
-  const { offeredRate, profit } = applyProfitMargin(actualRate, profitMargin);
-  const [showCountries, setShowCountries] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [accountId, setAccountId] = useState(null);
-  const [transferAmt, setTransferAmt] = useState(
-    transferData.transferAmount || '0.00'
-  );
-  const [amtReceivable, setAmtReceivable] = useState(
-    transferData.receivableAmount || '0.00'
-  );
-  const [modalVisible, setModalVisible] = useState(false);
-  const [country, setCountry] = useState({
-    name: '',
-    countryCode: '',
-    currencyCode: '',
-    currencyName: '',
-    currencySymbol: '',
-    flag: '',
-  });
-
-  const initialRender = useRef(true);
-
-  // useEffect(() => {
-  //   setTransferData((prev) => ({
-  //     ...prev,
-  //     // transferCurrencyCode: country.currencyCode,
-  //     // destinationCountryCode: country.countryCode,
-  //   }));
-  // }, [transferData]);
 
   const {
     deliveryMethod,
     transferFee,
     recipientFirstName,
     recipientLastName,
-    totalToPay,
+    // totalToPay,
     reason,
-    destination,
   } = transferData;
+
+  const actualRate = rates?.actualExchangeRate;
+
+  // Convert transferFee, actualRate, and profit margin to floats
+  const fee = parseFloat(transferFee);
+  const actualTransferRate = parseFloat(actualRate);
+  const margin = parseFloat(profitMargin);
+
+  const { offeredRate, profit } = applyProfitMargin(
+    actualTransferRate,
+    margin,
+    fee
+  );
+  const [showCountries, setShowCountries] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [accountId, setAccountId] = useState(null);
+  // const [transferAmt, setTransferAmt] = useState(
+  //   transferData.transferAmount || 0
+  // );
+  // const [amtReceivable, setAmtReceivable] = useState(
+  //   transferData.receivableAmount || 0
+  // );
+
+  const [transferAmt, setTransferAmt] = useState('');
+  const [amtReceivable, setAmtReceivable] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // Fee plus transferAmt
+  const [amountToPay, setAmountToPay] = useState(0);
+
+  useEffect(() => {
+    setAmountToPay(parseFloat(transferAmt + fee));
+  }, [transferAmt, amtReceivable]);
+
+  useEffect(() => {
+    // force component therefore the screen to update to present new country info
+  }, [country]);
+
+  const initialRender = useRef(true);
+
+  // Transfer amount plus transfer fee. Amount to be deducted from user bank account
+  // const total = parseFloat(transferAmt) + transferFee;
+  // console.log(totalToPay);
 
   const fullName = !recipientFirstName
     ? null
     : `${recipientFirstName.trim()} ${recipientLastName.trim()}`;
 
   const handleTransferAmtChange = (amt) => {
-    amt = amt.replace(/[^0-9.,]/g, ''); // Allow numbers, periods, and commas
+    amt = amt.replace(/[^0-9.,]/g, '');
     setTransferAmt(amt);
-    const normalizedAmt = amt.replace(',', '.'); // Replace comma with period
-    if (!isNaN(parseFloat(normalizedAmt))) {
-      const receivable = (
-        parseFloat(normalizedAmt) * rates.offeredExchangeRate
-      ).toFixed(2);
-      setAmtReceivable(receivable);
-      setTransferData((prev) => ({
-        ...prev,
-        transferAmount: amt,
-        receivableAmount: receivable,
-      }));
-    } else {
-      setAmtReceivable('0.00');
+    const normalizedAmt = amt.replace(',', '.');
+    const receivable = (
+      parseFloat(normalizedAmt) * rates.offeredExchangeRate
+    ).toFixed(2);
+    if (normalizedAmt === '') {
+      setAmtReceivable('');
+      return;
     }
+    setAmtReceivable(receivable);
+    console.log(receivable);
   };
 
   const handleAmtReceivableChange = (amt) => {
-    amt = amt.replace(/[^0-9.,]/g, ''); // Allow numbers, periods, and commas
+    amt = amt.replace(/[^0-9.,]/g, '');
     setAmtReceivable(amt);
-    const normalizedAmt = amt.replace(',', '.'); // Replace comma with period
-    if (!isNaN(parseFloat(normalizedAmt))) {
-      const toSend = (
-        parseFloat(normalizedAmt) / rates.offeredExchangeRate
-      ).toFixed(2);
-      setTransferAmt(toSend);
-      setTransferData((prev) => ({
-        ...prev,
-        transferAmount: toSend,
-        receivableAmount: amt,
-      }));
-    } else {
-      setTransferAmt('0.00');
-    }
   };
+  // console.log(typeof rates.offeredExchangeRate);
+
+  // const handleTransferAmtChange = (amt) => {
+  //   amt = amt.replace(/[^0-9.,]/g, ''); // Allow numbers, periods, and commas
+
+  //   setTransferAmt(amt);
+  //   const normalizedAmt = amt.replace(',', '.'); // Replace comma with period
+  //   if (!isNaN(parseFloat(normalizedAmt))) {
+  //     const receivable = (
+  //       parseFloat(normalizedAmt) * rates.offeredExchangeRate
+  //     ).toFixed(2);
+  //     setAmtReceivable(receivable);
+
+  //     setTransferData((prev) => ({
+  //       ...prev,
+  //       transferAmount: amt,
+  //       receivableAmount: receivable,
+  //     }));
+  //   } else {
+  //     setAmtReceivable('0.00');
+  //   }
+  //   console.log(amountToPay);
+  // };
+
+  // const handleAmtReceivableChange = (amt) => {
+  //   amt = amt.replace(/[^0-9.,]/g, ''); // Allow numbers, periods, and commas
+  //   setAmtReceivable(amt);
+  //   const normalizedAmt = amt.replace(',', '.'); // Replace comma with period
+  //   if (!isNaN(parseFloat(normalizedAmt))) {
+  //     const toSend = (
+  //       parseFloat(normalizedAmt) / rates.offeredExchangeRate
+  //     ).toFixed(2);
+  //     setTransferAmt(toSend);
+  //     setTransferData((prev) => ({
+  //       ...prev,
+  //       transferAmount: toSend,
+  //       receivableAmount: amt,
+  //     }));
+  //   } else {
+  //     setTransferAmt('0.00');
+  //   }
+  // };
 
   useEffect(() => {
     setTransferData((prev) => ({
@@ -163,13 +206,28 @@ const Send = () => {
       );
       return;
     }
+
     setTransferData({
       ...transferData,
       transferAmount: transferAmt,
       receivableAmount: amtReceivable,
-      totalToPay: totalToPay,
+      totalToPay: amountToPay,
+      destinationCountry: country.name || user?.destinationCountry,
+      destinationCountryCode:
+        country.countryCode || user?.destinationCountryCode,
+      transferCurrency:
+        country.currencyName || user?.destinationCountryCurrencyName,
+      transferCurrencyCode:
+        country.currencyCode || user?.destinationCountryCurrencyCode,
+      offeredExchangeRate: rates?.offeredExchangeRate,
+      actualExchangeRate: rates?.actualExchangeRate,
+      transferProfit: profit,
+      identifier: '',
     });
-    router.push('/extrascreens/transferoverview');
+    // router.push('/extrascreens/transferoverview');
+    console.log(user);
+    console.log('COUNTRY===>', country);
+    console.log('TRANSFERDATA====>', transferData);
   };
 
   const getAccountId = async () => {
@@ -204,8 +262,6 @@ const Send = () => {
     return <LoadingOverlay message='Applying changes...' />;
   }
 
-  console.log(transferData);
-
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>
@@ -239,6 +295,7 @@ const Send = () => {
                   <TextInput
                     className='flex-1 text-primary font-semibold text-2xl text-center'
                     value={transferAmt}
+                    placeholder='0'
                     onChangeText={handleTransferAmtChange}
                     keyboardType='numeric'
                   />
@@ -288,6 +345,7 @@ const Send = () => {
                   <TextInput
                     className='flex-1 text-primary font-semibold text-2xl text-center'
                     value={amtReceivable}
+                    placeholder='0'
                     onChangeText={handleAmtReceivableChange}
                     keyboardType='numeric'
                   />
