@@ -78,6 +78,10 @@ const Send = () => {
   }, [country]);
 
   useEffect(() => {
+    getAccountId();
+  }, []);
+
+  useEffect(() => {
     setCountry((prev) => ({
       name: user?.destinationCountry,
       countryCode: user?.destinationCountryCode,
@@ -104,7 +108,6 @@ const Send = () => {
       return;
     }
     setAmtReceivable(receivable);
-    console.log(receivable);
   };
 
   const handleAmtReceivableChange = (amt) => {
@@ -217,23 +220,6 @@ const Send = () => {
       controller.abort();
     };
   }, [country, accountId, setUser]);
-
-  // useEffect(() => {
-  //   if (initialRender.current) {
-  //     // Skip the first render
-  //     initialRender.current = false;
-  //   } else {
-  //     const callUser = async () => {
-  //       const response = await getUserById(accountId);
-  //       setUser(response);
-  //     };
-  //     callUser();
-  //   }
-  // }, [country]);
-
-  useEffect(() => {
-    getAccountId();
-  }, []);
 
   if (isUpdating) {
     return <LoadingOverlay message='Applying changes...' />;
