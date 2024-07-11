@@ -35,6 +35,7 @@ const Send = () => {
     setCountry,
   } = useGlobalContext();
   const navigation = useNavigation();
+  const initialRender = useRef(true);
 
   const {
     deliveryMethod,
@@ -60,12 +61,6 @@ const Send = () => {
   const [showCountries, setShowCountries] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [accountId, setAccountId] = useState(null);
-  // const [transferAmt, setTransferAmt] = useState(
-  //   transferData.transferAmount || 0
-  // );
-  // const [amtReceivable, setAmtReceivable] = useState(
-  //   transferData.receivableAmount || 0
-  // );
 
   const [transferAmt, setTransferAmt] = useState('');
   const [amtReceivable, setAmtReceivable] = useState('');
@@ -82,11 +77,16 @@ const Send = () => {
     // force component therefore the screen to update to present new country info
   }, [country]);
 
-  const initialRender = useRef(true);
-
-  // Transfer amount plus transfer fee. Amount to be deducted from user bank account
-  // const total = parseFloat(transferAmt) + transferFee;
-  // console.log(totalToPay);
+  useEffect(() => {
+    setCountry((prev) => ({
+      name: user?.destinationCountry,
+      countryCode: user?.destinationCountryCode,
+      currencyCode: user?.destinationCountryCurrencyCode,
+      currencyName: user?.destinationCountryCurrencyCode,
+      currencySymbol: user?.destinationCountryCurrencySymbol,
+      flag: user?.destinationCountryFlag,
+    }));
+  }, []);
 
   const fullName = !recipientFirstName
     ? null
@@ -120,48 +120,6 @@ const Send = () => {
     }
     setTransferAmt(transferable);
   };
-  // console.log(typeof rates.offeredExchangeRate);
-
-  // const handleTransferAmtChange = (amt) => {
-  //   amt = amt.replace(/[^0-9.,]/g, ''); // Allow numbers, periods, and commas
-
-  //   setTransferAmt(amt);
-  //   const normalizedAmt = amt.replace(',', '.'); // Replace comma with period
-  //   if (!isNaN(parseFloat(normalizedAmt))) {
-  //     const receivable = (
-  //       parseFloat(normalizedAmt) * rates.offeredExchangeRate
-  //     ).toFixed(2);
-  //     setAmtReceivable(receivable);
-
-  //     setTransferData((prev) => ({
-  //       ...prev,
-  //       transferAmount: amt,
-  //       receivableAmount: receivable,
-  //     }));
-  //   } else {
-  //     setAmtReceivable('0.00');
-  //   }
-  //   console.log(amountToPay);
-  // };
-
-  // const handleAmtReceivableChange = (amt) => {
-  //   amt = amt.replace(/[^0-9.,]/g, ''); // Allow numbers, periods, and commas
-  //   setAmtReceivable(amt);
-  //   const normalizedAmt = amt.replace(',', '.'); // Replace comma with period
-  //   if (!isNaN(parseFloat(normalizedAmt))) {
-  //     const toSend = (
-  //       parseFloat(normalizedAmt) / rates.offeredExchangeRate
-  //     ).toFixed(2);
-  //     setTransferAmt(toSend);
-  //     setTransferData((prev) => ({
-  //       ...prev,
-  //       transferAmount: toSend,
-  //       receivableAmount: amt,
-  //     }));
-  //   } else {
-  //     setTransferAmt('0.00');
-  //   }
-  // };
 
   useEffect(() => {
     setTransferData((prev) => ({
@@ -215,28 +173,6 @@ const Send = () => {
       );
       return;
     }
-
-    setTransferData({
-      ...transferData,
-      transferAmount: transferAmt,
-      receivableAmount: amtReceivable,
-      totalToPay: amountToPay,
-      destinationCountry: country.name || user?.destinationCountry,
-      destinationCountryCode:
-        country.countryCode || user?.destinationCountryCode,
-      transferCurrency:
-        country.currencyName || user?.destinationCountryCurrencyName,
-      transferCurrencyCode:
-        country.currencyCode || user?.destinationCountryCurrencyCode,
-      offeredExchangeRate: rates?.offeredExchangeRate,
-      actualExchangeRate: rates?.actualExchangeRate,
-      transferProfit: profit,
-      identifier: '',
-    });
-    // router.push('/extrascreens/transferoverview');
-    console.log(user);
-    console.log('COUNTRY===>', country);
-    console.log('TRANSFERDATA====>', transferData);
   };
 
   const getAccountId = async () => {
@@ -254,14 +190,46 @@ const Send = () => {
     if (initialRender.current) {
       // Skip the first render
       initialRender.current = false;
-    } else {
-      const callUser = async () => {
-        const response = await getUserById(accountId);
-        setUser(response);
-      };
-      callUser();
+      return;
     }
-  }, [country]);
+
+    // AbortController to cancel the request on component unmount
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    const callUser = async () => {
+      if (!accountId) return;
+
+      try {
+        const response = await getUserById(accountId, { signal });
+        setUser(response);
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('Failed to fetch user:', error);
+        }
+      }
+    };
+
+    callUser();
+
+    // Cleanup function to cancel the request if the component unmounts
+    return () => {
+      controller.abort();
+    };
+  }, [country, accountId, setUser]);
+
+  // useEffect(() => {
+  //   if (initialRender.current) {
+  //     // Skip the first render
+  //     initialRender.current = false;
+  //   } else {
+  //     const callUser = async () => {
+  //       const response = await getUserById(accountId);
+  //       setUser(response);
+  //     };
+  //     callUser();
+  //   }
+  // }, [country]);
 
   useEffect(() => {
     getAccountId();
@@ -270,6 +238,8 @@ const Send = () => {
   if (isUpdating) {
     return <LoadingOverlay message='Applying changes...' />;
   }
+
+  console.log('COUNTRY====>', country);
 
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
