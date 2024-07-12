@@ -15,18 +15,11 @@ import LoadingOverlay from '../../components/LoadingOverlay';
 
 const Profile = () => {
   const navigation = useNavigation();
-  const { user, setUser, setIsLoggedIn } = useGlobalContext();
+  const { user, setUser, setIsLoggedIn, country, setCountry } =
+    useGlobalContext();
   const [showCountries, setShowCountries] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [accountId, setAccountId] = useState(null);
-  const [country, setCountry] = useState({
-    name: '',
-    countryCode: '',
-    currencyCode: '',
-    currencyName: '',
-    currencySymbol: '',
-    flag: '',
-  });
 
   const initialRender = useRef(true); // Ref to track initial render
 
@@ -60,12 +53,14 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {}, [country]);
+  // useEffect(() => {}, []);
 
   useEffect(() => {
     if (initialRender.current) {
       // Skip the first render
       initialRender.current = false;
+      // New code
+      return;
     } else {
       const callUser = async () => {
         const response = await getUserById(accountId);

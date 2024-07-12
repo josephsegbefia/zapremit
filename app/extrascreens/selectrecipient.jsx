@@ -23,18 +23,20 @@ const SelectRecipient = () => {
   const { recipientFirstName } = transferData;
 
   const selectExistingRecipient = () => {
-    setTransferData({
-      ...transferData,
+    setTransferData((prev) => ({
+      ...prev,
       identifier: 'select-existing-recipient',
-    });
+    }));
+
     router.replace('/recipients');
   };
 
   const addNewRecipient = () => {
-    setTransferData({
-      ...transferData,
+    setTransferData((prev) => ({
+      ...prev,
       identifier: 'add-new-recipient',
-    });
+    }));
+
     router.replace('/extrascreens/addnewrecipient');
   };
 
