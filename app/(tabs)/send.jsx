@@ -61,16 +61,29 @@ const Send = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [accountId, setAccountId] = useState(null);
 
-  const [transferAmt, setTransferAmt] = useState('');
-  const [amtReceivable, setAmtReceivable] = useState('');
+  const [transferAmt, setTransferAmt] = useState(
+    transferData.transferAmount || ''
+  );
+  const [amtReceivable, setAmtReceivable] = useState(
+    transferData.receivableAmount || ''
+  );
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Fee plus transferAmt
-  const [amountToPay, setAmountToPay] = useState(0);
+  // // Fee plus transferAmt
+  // const [amountToPay, setAmountToPay] = useState(null);
 
-  useEffect(() => {
-    setAmountToPay(parseFloat(transferAmt + fee));
-  }, [transferAmt, amtReceivable]);
+  // useEffect(() => {
+  //   const transferAmountFloat = parseFloat(transferAmt);
+  //   console.log(
+  //     'TRANSFER AMOUNT & FEE=====>',
+  //     typeof transferAmountFloat,
+  //     typeof fee
+  //   );
+  //   const amountTotal = transferAmountFloat + fee;
+  //   console.log('TOTAL=====>', amountTotal);
+
+  //   setAmountToPay(amountTotal);
+  // }, [transferAmt, amtReceivable]);
 
   useEffect(() => {
     // force component therefore the screen to update to present new country info
@@ -189,14 +202,20 @@ const Send = () => {
   };
 
   const handleNext = () => {
+    // Calculate the total amount to pay immediately
+    const transferAmountFloat = parseFloat(transferAmt);
+    const totalAmountToPay = transferAmountFloat + fee;
+    console.log('PAY THIS===>', transferAmt);
+
     setTransferData((prev) => ({
-      ...prev, // Spread the previous state
+      ...prev,
       destinationCountry: country?.name,
       destinationCountryCode: country?.countryCode,
       transferCurrency: country?.currencyName,
       transferCurrencyCode: country?.currencyCode,
       offeredExchangeRate: rates?.offeredExchangeRate,
       actualExchangeRate: rates?.actualExchangeRate,
+      totalToPay: totalAmountToPay, // Use the calculated total amount
     }));
 
     if (transferAmt === '' || amtReceivable === '') {
@@ -206,6 +225,7 @@ const Send = () => {
       );
       return;
     }
+    console.log('LOGTD====>', transferData, totalAmountToPay);
   };
 
   useEffect(() => {
@@ -294,7 +314,8 @@ const Send = () => {
                   </View>
                   <TextInput
                     className='flex-1 text-primary font-semibold text-2xl text-center'
-                    value={transferAmt || transferData.transferAmount}
+                    // value={transferAmt || transferData.transferAmount}
+                    value={transferData.transferAmount}
                     placeholder='0'
                     onChangeText={handleTransferAmtChange}
                     keyboardType='numeric'
@@ -344,7 +365,8 @@ const Send = () => {
                   </View>
                   <TextInput
                     className='flex-1 text-primary font-semibold text-2xl text-center'
-                    value={amtReceivable || transferData.receivableAmount}
+                    // value={amtReceivable || transferData.receivableAmount}
+                    value={transferData.receivableAmount}
                     placeholder='0'
                     onChangeText={handleAmtReceivableChange}
                     keyboardType='numeric'
