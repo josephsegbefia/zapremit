@@ -46,17 +46,24 @@ const Send = () => {
   } = transferData;
 
   const actualRate = rates?.actualExchangeRate;
+  const offeredRate = rates?.offeredExchangeRate;
 
   // Convert transferFee, actualRate, and profit margin to floats
   const fee = parseFloat(transferFee);
   const actualTransferRate = parseFloat(actualRate);
   const margin = parseFloat(profitMargin);
 
-  const { offeredRate, profit } = applyProfitMargin(
-    actualTransferRate,
-    margin,
-    fee
-  );
+  // const { offeredRate, profit } = applyProfitMargin(
+  //   actualTransferRate,
+  //   margin,
+  //   fee
+  // );
+
+  // const transferEarning = transferProfit(
+  //   actualTransferRate,
+  //   margin,
+  //   transferAmt
+  // );
   const [showCountries, setShowCountries] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [accountId, setAccountId] = useState(null);
@@ -85,20 +92,20 @@ const Send = () => {
   //   setAmountToPay(amountTotal);
   // }, [transferAmt, amtReceivable]);
 
-  useEffect(() => {
-    // force component therefore the screen to update to present new country info
-  }, [country]);
+  // useEffect(() => {
+  //   // force component therefore the screen to update to present new country info
+  // }, [user]);
 
   useEffect(() => {
     getAccountId();
-  }, []);
+  }, [country]);
 
   useEffect(() => {
-    if (initialRender.current) {
-      // Skip the first render
-      initialRender.current = false;
-      return;
-    }
+    // if (initialRender.current) {
+    //   // Skip the first render
+    //   initialRender.current = false;
+    //   return;
+    // }
     setCountry((prev) => ({
       name: user?.destinationCountry,
       countryCode: user?.destinationCountryCode,
@@ -205,7 +212,7 @@ const Send = () => {
     // Calculate the total amount to pay immediately
     const transferAmountFloat = parseFloat(transferAmt);
     const totalAmountToPay = transferAmountFloat + fee;
-    console.log('PAY THIS===>', transferAmt);
+    console.log('PROFIT===>', profit);
 
     setTransferData((prev) => ({
       ...prev,
@@ -216,6 +223,7 @@ const Send = () => {
       offeredExchangeRate: rates?.offeredExchangeRate,
       actualExchangeRate: rates?.actualExchangeRate,
       totalToPay: totalAmountToPay, // Use the calculated total amount
+      transferProfit: transferEarning,
     }));
 
     if (transferAmt === '' || amtReceivable === '') {
@@ -273,7 +281,7 @@ const Send = () => {
     return () => {
       controller.abort();
     };
-  }, [accountId]);
+  }, [country]);
 
   // Show loading screen when applying changes...
   if (isUpdating) {

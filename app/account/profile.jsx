@@ -53,7 +53,11 @@ const Profile = () => {
     }
   };
 
-  // useEffect(() => {}, []);
+  // useEffect(() => {}, [country]);
+
+  useEffect(() => {
+    getAccountId();
+  }, [country]);
 
   useEffect(() => {
     if (initialRender.current) {
@@ -69,10 +73,6 @@ const Profile = () => {
       callUser();
     }
   }, [country]);
-
-  useEffect(() => {
-    getAccountId();
-  }, []);
 
   if (isUpdating) {
     return <LoadingOverlay message='Applying changes...' />;
