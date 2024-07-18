@@ -4,13 +4,20 @@ import { router } from 'expo-router';
 import CountryFlag from 'react-native-country-flag';
 import { FontAwesome } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
-import { getRate } from '../lib/appwrite';
+import { adminProfitInfo, getRate } from '../lib/appwrite';
 import { useGlobalContext } from '../context/GlobalProvider';
-import { calculateExchangeProfit } from '../lib/profitCalculator';
+import {
+  calculateOfferedRateAndUnitProfit,
+  calculateTotalProfit,
+} from '../lib/profitCalculator';
 import LoadingOverlay from './LoadingOverlay';
+import useAppwrite from '../lib/useAppwrite';
 
 const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
-  const { user, profitMargin, setRates, rates } = useGlobalContext();
+  const { data: transferProfitInfo } = useAppwrite(adminProfitInfo);
+  const { user, setRates, profitMargin, rates } = useGlobalContext();
+
+  const [transferFee, setTransferFee] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Uncomment the code in the useEffect to get actual rates when ready. This is to prevent unneccessary API calls
@@ -24,7 +31,11 @@ const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
 
       const parsedRate = JSON.parse(rateData);
       const actualRate = parsedRate?.rate;
-      const { offeredRate } = applyProfitMargin(actualRate, profitMargin);
+      console.log('ACTUAL RATE===>', actualRate);
+      const { offeredRate, unitProfit } = calculateOfferedRateAndUnitProfit(
+        actualRate,
+        profitMargin
+      );
 
       setRates((prev) => ({
         ...prev,

@@ -16,7 +16,7 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 import CustomButton from '../../components/CustomButton';
 import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
 import ReasonsModal from '../extrascreens/reasonsModal';
-import { infoData } from '../../lib/profitCalculator';
+import { calculateTotalProfit } from '../../lib/profitCalculator';
 import ChangeSendCountry from '../../components/ChangeSendCountry';
 import { updateUserCurrencyInfo } from '../../lib/appwrite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -37,15 +37,9 @@ const Send = () => {
   const navigation = useNavigation();
   const initialRender = useRef(true);
 
-  const {
-    deliveryMethod,
-    transferFee,
-    recipientFirstName,
-    recipientLastName,
-    reason,
-  } = transferData;
+  const { deliveryMethod, recipientFirstName, recipientLastName, reason } =
+    transferData;
 
-  const actualRate = rates?.actualExchangeRate;
   const offeredRate = rates?.offeredExchangeRate;
 
   const [showCountries, setShowCountries] = useState(false);
@@ -252,13 +246,6 @@ const Send = () => {
     return <LoadingOverlay message='Applying changes...' />;
   }
 
-  useEffect(() => {
-    const getData = async () => {
-      const res = await infoData();
-      return res;
-    };
-    getData();
-  }, []);
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>

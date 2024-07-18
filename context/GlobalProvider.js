@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getCurrentUser } from '../lib/appwrite';
+import { getCurrentUser, adminProfitInfo } from '../lib/appwrite';
+import useAppwrite from '../lib/useAppwrite';
 
 const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
@@ -9,10 +10,12 @@ const GlobalProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [profitMargin, setProfitMargin] = useState(0);
+  const [transferFee, setTransferFee] = useState(0);
   const [transferData, setTransferData] = useState({
     transferAmount: '',
     receivableAmount: '',
-    transferFee: 0.99,
+    transferFee: '',
     totalToPay: '',
     recipientPhone: '',
     recipientFirstName: '',
@@ -44,7 +47,7 @@ const GlobalProvider = ({ children }) => {
     flag: '',
   });
 
-  const [profitMargin, setProfitMargin] = useState(1);
+  // const [profitMargin, setProfitMargin] = useState(1);
   const [rates, setRates] = useState({
     actualExchangeRate: null,
     offeredExchangeRate: null,
@@ -70,8 +73,19 @@ const GlobalProvider = ({ children }) => {
     }
   };
 
+  const setProfitInfo = async () => {
+    try {
+      const response = await adminProfitInfo();
+      setProfitMargin(response.profitMargin);
+      setTransferFee(response.transferFee);
+    } catch (error) {
+      console.log('Error', error);
+    }
+  };
+
   useEffect(() => {
     fetchCurrentUser();
+    setProfitInfo();
   }, []);
 
   const value = {
@@ -87,6 +101,7 @@ const GlobalProvider = ({ children }) => {
     userIsVerified,
     setUserIsVerified,
     profitMargin,
+    transferFee,
     country,
     setCountry,
   };
