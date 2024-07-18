@@ -16,7 +16,7 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 import CustomButton from '../../components/CustomButton';
 import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
 import ReasonsModal from '../extrascreens/reasonsModal';
-import { applyProfitMargin, transferProfit } from '../../lib/profitCalculator';
+import { infoData } from '../../lib/profitCalculator';
 import ChangeSendCountry from '../../components/ChangeSendCountry';
 import { updateUserCurrencyInfo } from '../../lib/appwrite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -48,22 +48,6 @@ const Send = () => {
   const actualRate = rates?.actualExchangeRate;
   const offeredRate = rates?.offeredExchangeRate;
 
-  // Convert transferFee, actualRate, and profit margin to floats
-  const fee = parseFloat(transferFee);
-  const actualTransferRate = parseFloat(actualRate);
-  const margin = parseFloat(profitMargin);
-
-  // const { offeredRate, profit } = applyProfitMargin(
-  //   actualTransferRate,
-  //   margin,
-  //   fee
-  // );
-
-  // const transferEarning = transferProfit(
-  //   actualTransferRate,
-  //   margin,
-  //   transferAmt
-  // );
   const [showCountries, setShowCountries] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [accountId, setAccountId] = useState(null);
@@ -75,26 +59,6 @@ const Send = () => {
     transferData.receivableAmount || ''
   );
   const [modalVisible, setModalVisible] = useState(false);
-
-  // // Fee plus transferAmt
-  // const [amountToPay, setAmountToPay] = useState(null);
-
-  // useEffect(() => {
-  //   const transferAmountFloat = parseFloat(transferAmt);
-  //   console.log(
-  //     'TRANSFER AMOUNT & FEE=====>',
-  //     typeof transferAmountFloat,
-  //     typeof fee
-  //   );
-  //   const amountTotal = transferAmountFloat + fee;
-  //   console.log('TOTAL=====>', amountTotal);
-
-  //   setAmountToPay(amountTotal);
-  // }, [transferAmt, amtReceivable]);
-
-  // useEffect(() => {
-  //   // force component therefore the screen to update to present new country info
-  // }, [user]);
 
   useEffect(() => {
     getAccountId();
@@ -288,8 +252,13 @@ const Send = () => {
     return <LoadingOverlay message='Applying changes...' />;
   }
 
-  // console.log('COUNTRY====>', country);
-
+  useEffect(() => {
+    const getData = async () => {
+      const res = await infoData();
+      return res;
+    };
+    getData();
+  }, []);
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>

@@ -46,8 +46,8 @@ const GlobalProvider = ({ children }) => {
 
   const [profitMargin, setProfitMargin] = useState(1);
   const [rates, setRates] = useState({
-    actualExchangeRate: 16.9,
-    offeredExchangeRate: 16.6,
+    actualExchangeRate: null,
+    offeredExchangeRate: null,
   });
   const [userIsVerified, setUserIsVerified] = useState(false);
 

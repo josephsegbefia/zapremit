@@ -6,7 +6,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
 import { getRate } from '../lib/appwrite';
 import { useGlobalContext } from '../context/GlobalProvider';
-import { applyProfitMargin } from '../lib/profitCalculator';
+import { calculateExchangeProfit } from '../lib/profitCalculator';
 import LoadingOverlay from './LoadingOverlay';
 
 const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
@@ -15,33 +15,33 @@ const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
 
   // Uncomment the code in the useEffect to get actual rates when ready. This is to prevent unneccessary API calls
   useEffect(() => {
-    // const fetchRate = async () => {
-    //   const rateData = await getRate(
-    //     user?.currencyCode,
-    //     user?.destinationCountryCurrencyCode,
-    //     1
-    //   );
+    const fetchRate = async () => {
+      const rateData = await getRate(
+        user?.currencyCode,
+        user?.destinationCountryCurrencyCode,
+        1
+      );
 
-    //   const parsedRate = JSON.parse(rateData);
-    //   const actualRate = parsedRate?.rate;
-    //   const { offeredRate } = applyProfitMargin(actualRate, profitMargin);
+      const parsedRate = JSON.parse(rateData);
+      const actualRate = parsedRate?.rate;
+      const { offeredRate } = applyProfitMargin(actualRate, profitMargin);
 
-    //   setRates((prev) => ({
-    //     ...prev,
-    //     actualExchangeRate: actualRate,
-    //     offeredExchangeRate: offeredRate,
-    //   }));
-    //   setIsLoading(false);
-    // };
+      setRates((prev) => ({
+        ...prev,
+        actualExchangeRate: actualRate,
+        offeredExchangeRate: offeredRate,
+      }));
+      setIsLoading(false);
+    };
 
     // Remove this from here when you uncomment the code above
-    setIsLoading(false);
+    // setIsLoading(false);
 
     // Uncomment this tooo
 
-    // if (user?.currencyCode && user?.destinationCountryCurrencyCode) {
-    //   fetchRate();
-    // }
+    if (user?.currencyCode && user?.destinationCountryCurrencyCode) {
+      fetchRate();
+    }
   }, [
     user?.currencyCode,
     user?.destinationCountryCurrencyCode,

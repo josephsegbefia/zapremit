@@ -60,7 +60,7 @@ const Account = () => {
     },
     {
       title: 'About',
-      icon: <AntDesign name='infocirlceo' size={30} color='black' />,
+      icon: <AntDesign name='infocirlceo' size={30} color='#004d40' />,
       onClick: () => {
         router.push('/account/about');
       },
