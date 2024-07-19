@@ -60,6 +60,11 @@ const Send = () => {
     if (navigateToProfile) {
       router.push('/account/profile');
       setNavigateToProfile(false);
+      setTransferData((prev) => ({
+        ...prev,
+        transferAmount: '',
+        receivableAmount: '',
+      }));
     }
   }, [navigateToProfile, navigation]);
 
@@ -91,14 +96,18 @@ const Send = () => {
       }));
       setTransferData((prev) => ({
         ...prev,
-        transferAmount: '',
-        receivableAmount: '',
+        destinationCountry: country?.name,
+        destinationCountryCode: country?.countryCode,
+        transferCurrency: country?.currencyName,
+        transferCurrencyCode: country?.currencyCode,
+        offeredExchangeRate: rates?.offeredExchangeRate,
+        actualExchangeRate: rates?.actualExchangeRate,
       }));
     } catch (error) {
     } finally {
       setIsUpdating(false);
     }
-  }, [user]);
+  }, []);
 
   const fullName = !recipientFirstName
     ? null
@@ -173,7 +182,7 @@ const Send = () => {
     navigation.navigate('extrascreens/selectrecipient');
   };
 
-  const handleNext = useCallback(() => {
+  const handleNext = () => {
     const transferAmountFloat = parseFloat(transferAmt);
     if (
       isNaN(transferAmountFloat) ||
@@ -189,24 +198,16 @@ const Send = () => {
     const totalAmountToPay = transferAmountFloat + transferFee;
     setTransferData((prev) => ({
       ...prev,
-      destinationCountry: country?.name,
-      destinationCountryCode: country?.countryCode,
-      transferCurrency: country?.currencyName,
-      transferCurrencyCode: country?.currencyCode,
-      offeredExchangeRate: rates?.offeredExchangeRate,
-      actualExchangeRate: rates?.actualExchangeRate,
+      // destinationCountry: country?.name,
+      // destinationCountryCode: country?.countryCode,
+      // transferCurrency: country?.currencyName,
+      // transferCurrencyCode: country?.currencyCode,
+      // offeredExchangeRate: rates?.offeredExchangeRate,
+      // actualExchangeRate: rates?.actualExchangeRate,
       totalToPay: totalAmountToPay,
     }));
     console.log('LOGTD====>', transferData, totalAmountToPay);
-  }, [
-    transferAmt,
-    amtReceivable,
-    transferFee,
-    country,
-    rates,
-    setTransferData,
-    transferData,
-  ]);
+  };
 
   const handleCountryChangePress = () => {
     Alert.alert(
