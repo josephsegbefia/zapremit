@@ -84,8 +84,11 @@ const GlobalProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchCurrentUser();
     setProfitInfo();
+  });
+
+  useEffect(() => {
+    fetchCurrentUser();
   }, []);
 
   const value = {

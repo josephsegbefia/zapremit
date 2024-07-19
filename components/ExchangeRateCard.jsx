@@ -6,6 +6,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import CustomButton from './CustomButton';
 import { adminProfitInfo, getRate } from '../lib/appwrite';
 import { useGlobalContext } from '../context/GlobalProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   calculateOfferedRateAndUnitProfit,
   calculateTotalProfit,
@@ -15,14 +16,43 @@ import useAppwrite from '../lib/useAppwrite';
 
 const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
   const { data: transferProfitInfo } = useAppwrite(adminProfitInfo);
-  const { user, setRates, profitMargin, rates } = useGlobalContext();
+  const { user, setRates, profitMargin, rates, country } = useGlobalContext();
 
   const [transferFee, setTransferFee] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasFetchedRates, setHasFetchedRates] = useState(false);
 
-  // Uncomment the code in the useEffect to get actual rates when ready. This is to prevent unneccessary API calls
-  useEffect(() => {
-    const fetchRate = async () => {
+  const RATE_FETCH_INTERVAL = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+
+  const fetchRate = async () => {
+    const rateKey = `${user?.currencyCode}_${user?.destinationCountryCurrencyCode}`;
+    const lastFetchKey = `lastFetch_${rateKey}`;
+
+    try {
+      // Check the timestamp of the last fetch
+      const lastFetchTime = await AsyncStorage.getItem(lastFetchKey);
+      const now = Date.now();
+
+      if (
+        lastFetchTime &&
+        now - parseInt(lastFetchTime) < RATE_FETCH_INTERVAL
+      ) {
+        // If the rates were fetched recently, use the stored rates
+        const storedRate = await AsyncStorage.getItem(rateKey);
+        if (storedRate) {
+          const parsedStoredRate = JSON.parse(storedRate);
+          setRates((prev) => ({
+            ...prev,
+            actualExchangeRate: parsedStoredRate.actualRate,
+            offeredExchangeRate: parsedStoredRate.offeredRate,
+          }));
+          setIsLoading(false);
+          setHasFetchedRates(true);
+          return;
+        }
+      }
+
+      // If not stored or the stored rates are outdated, fetch the rate
       const rateData = await getRate(
         user?.currencyCode,
         user?.destinationCountryCurrencyCode,
@@ -37,20 +67,33 @@ const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
         profitMargin
       );
 
+      // Store the rate and timestamp in AsyncStorage
+      await AsyncStorage.setItem(
+        rateKey,
+        JSON.stringify({ actualRate, offeredRate })
+      );
+      await AsyncStorage.setItem(lastFetchKey, now.toString());
+
+      // Update state with the fetched rate
       setRates((prev) => ({
         ...prev,
         actualExchangeRate: actualRate,
         offeredExchangeRate: offeredRate,
       }));
       setIsLoading(false);
-    };
+      setHasFetchedRates(true);
+    } catch (error) {
+      console.error('Failed to fetch and store rate:', error);
+      setIsLoading(false);
+    }
+  };
 
-    // Remove this from here when you uncomment the code above
-    // setIsLoading(false);
-
-    // Uncomment this tooo
-
-    if (user?.currencyCode && user?.destinationCountryCurrencyCode) {
+  useEffect(() => {
+    if (
+      user?.currencyCode &&
+      user?.destinationCountryCurrencyCode //&&
+      // !hasFetchedRates
+    ) {
       fetchRate();
     }
   }, [
@@ -58,6 +101,7 @@ const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
     user?.destinationCountryCurrencyCode,
     profitMargin,
     setRates,
+    country,
   ]);
 
   if (isLoading) {

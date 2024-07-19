@@ -1,156 +1,387 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
   ScrollView,
+  TextInput,
   TouchableOpacity,
   Image,
-  TextInput,
-  Modal,
-  TouchableWithoutFeedback,
-  Dimensions,
-  FlatList,
+  Alert,
 } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { router, useNavigation } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CountryFlag from 'react-native-country-flag';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
+import { useGlobalContext } from '../../context/GlobalProvider';
+import CustomButton from '../../components/CustomButton';
+import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
+import ReasonsModal from '../extrascreens/reasonsModal';
+import { calculateTotalProfit } from '../../lib/profitCalculator';
+import ChangeSendCountry from '../../components/ChangeSendCountry';
+import { updateUserCurrencyInfo } from '../../lib/appwrite';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoadingOverlay from '../../components/LoadingOverlay';
+import { getUserById } from '../../lib/appwrite';
 
-const { width, height } = Dimensions.get('window');
+const Send = () => {
+  const {
+    user,
+    setUser,
+    transferData,
+    setTransferData,
+    rates,
+    transferFee,
+    country,
+    setCountry,
+  } = useGlobalContext();
+  const navigation = useNavigation();
+  const initialRender = useRef(true);
 
-const CustomCountryPhone = () => {
-  const [areas, setAreas] = useState([]);
-  const [selectedArea, setSelectedArea] = useState(null);
+  const { deliveryMethod, recipientFirstName, recipientLastName, reason } =
+    transferData;
+
+  const offeredRate = rates?.offeredExchangeRate;
+
+  const [showCountries, setShowCountries] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [accountId, setAccountId] = useState(null);
+
+  const [transferAmt, setTransferAmt] = useState(
+    transferData.transferAmount || ''
+  );
+  const [amtReceivable, setAmtReceivable] = useState(
+    transferData.receivableAmount || ''
+  );
   const [modalVisible, setModalVisible] = useState(false);
-  //  fetch codes from rescountries api
 
   useEffect(() => {
-    fetch('https://restcountries.com/v3.1/all')
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('DATA====>', data[0]);
-        let areaData = data.map((item) => {
-          return {
-            code: item.alpha2Code,
-            item: item.name,
-            callingCode: `+${item.callingCodes[0]}`,
-            flag: `https://countryflagsapi.com/png/${item.name}`,
-          };
-        });
-        setAreas(areaData);
-        if (areaData.length > 0) {
-          let defaultData = areaData.filter((a) => a.code === 'DE');
-          if (defaultData.length > 0) {
-            setSelectedArea(defaultData[0]);
-          }
-        }
-      })
-      .catch((error) => {
-        console.log(error);
+    getAccountId();
+  }, [country]);
+
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    if (user) {
+      setCountry({
+        name: user.destinationCountry,
+        countryCode: user.destinationCountryCode,
+        currencyCode: user.destinationCountryCurrencyCode,
+        currencyName: user.destinationCountryCurrencyName,
+        currencySymbol: user.destinationCountryCurrencySymbol,
+        flag: user.destinationCountryFlag,
       });
+    }
+  }, [user, setCountry]);
+
+  const fullName = recipientFirstName
+    ? `${recipientFirstName.trim()} ${recipientLastName.trim()}`
+    : null;
+
+  // Functions to handle text change in the amount fields
+  const handleTransferAmtChange = (amt) => {
+    amt = amt.replace(/[^0-9.,]/g, '');
+    setTransferAmt(amt);
+    const normalizedAmt = amt.replace(',', '.');
+    const receivable = (
+      parseFloat(normalizedAmt || 0) * rates.offeredExchangeRate
+    ).toFixed(2);
+    setAmtReceivable(normalizedAmt === '' ? '' : receivable);
+    setTransferData((prev) => ({
+      ...prev,
+      transferAmount: amt,
+      receivableAmount: normalizedAmt === '' ? '' : receivable,
+    }));
+  };
+
+  const handleAmtReceivableChange = (amt) => {
+    amt = amt.replace(/[^0-9.,]/g, '');
+    setAmtReceivable(amt);
+    const normalizedAmt = amt.replace(',', '.');
+    const transferable = (
+      parseFloat(normalizedAmt || 0) / rates.offeredExchangeRate
+    ).toFixed(2);
+    setTransferAmt(normalizedAmt === '' ? '' : transferable);
+    setTransferData((prev) => ({
+      ...prev,
+      transferAmount: normalizedAmt === '' ? '' : transferable,
+      receivableAmount: amt,
+    }));
+  };
+
+  useEffect(() => {
+    setTransferData((prev) => ({
+      ...prev,
+      identifier: '',
+    }));
+  }, [setTransferData]);
+
+  const openModal = useCallback(() => {
+    setModalVisible(true);
   }, []);
 
-  const renderAreaCodesModal = () => {
-    const renderItem = ({ item }) => {
-      return (
-        <TouchableOpacity
-          style={{ padding: 10, flexDirection: 'row' }}
-          onPress={() => {
-            setSelectedArea(item);
-            setModalVisible(false);
-          }}
-        >
-          <Image
-            source={{ uri: item.flag }}
-            style={{ height: 30, width: 30, marginRight: 10 }}
-          />
-          <Text className='text-sm text-primary'>{item.item}</Text>
-        </TouchableOpacity>
-      );
-    };
-    return (
-      <Modal animationType='slide' transparent={true} visible={modalVisible}>
-        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-          <View className='flex-1 items-center justify-center'>
-            <View
-              style={{
-                height: 400,
-                width: width * 0.8,
-                color: '#004d40',
-                backgroundColor: '#e0f2f1',
-                borderRadius: 12,
-              }}
-            >
-              <FlatList
-                data={areas}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.code}
-                showsVerticalScrollIndicator={false}
-                style={{
-                  padding: 20,
-                  marginBottom: 20,
-                }}
-              />
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-    );
-  };
-  return (
-    <View className='px-8'>
-      <ScrollView>
-        <View>
-          <Text className='text-primary text-xl font-pbold my-8'>Phone</Text>
-          <Text className='text-primary text-sm font-psemibold'>
-            Phone Number
-          </Text>
-          <Text className='font-sm font-pregular'>Add a new number</Text>
+  const closeReasons = useCallback(() => {
+    setModalVisible(false);
+  }, []);
 
-          <View className='w-[100%] px-[22px py-[66px]'>
-            <View className='flex flex-row'>
-              <TouchableOpacity
-                className='w-[100px] h-[50px] bg-primary-50 flex flex-row border-b-2 mx-5 border-primary text-sm'
-                onPress={() => setModalVisible(true)}
-              >
-                <View className='justify-center'>
-                  <Image name='down' size={15} color='black' />
+  const closeModal = useCallback(() => {
+    setModalVisible(false);
+  }, []);
+
+  const openDeliveryMethods = useCallback(() => {
+    router.push('/extrascreens/deliveryoptions');
+  }, []);
+
+  const openReasons = useCallback(() => {
+    openModal();
+  }, [openModal]);
+
+  const selectReason = useCallback(
+    (selectedReason) => {
+      setTransferData((prev) => ({
+        ...prev,
+        reason: selectedReason,
+      }));
+      closeModal();
+    },
+    [closeModal, setTransferData]
+  );
+
+  const handleRecipientSelectPress = useCallback(() => {
+    navigation.navigate('extrascreens/selectrecipient');
+  }, [navigation]);
+
+  const handleNext = useCallback(() => {
+    const transferAmountFloat = parseFloat(transferAmt);
+    if (
+      isNaN(transferAmountFloat) ||
+      transferAmt === '' ||
+      amtReceivable === ''
+    ) {
+      Alert.alert(
+        'Error',
+        'Please set a valid amount to transfer or amount to receive'
+      );
+      return;
+    }
+    const totalAmountToPay = transferAmountFloat + transferFee;
+    setTransferData((prev) => ({
+      ...prev,
+      destinationCountry: country?.name,
+      destinationCountryCode: country?.countryCode,
+      transferCurrency: country?.currencyName,
+      transferCurrencyCode: country?.currencyCode,
+      offeredExchangeRate: rates?.offeredExchangeRate,
+      actualExchangeRate: rates?.actualExchangeRate,
+      totalToPay: totalAmountToPay,
+    }));
+    console.log('LOGTD====>', transferData, totalAmountToPay);
+  }, [
+    transferAmt,
+    amtReceivable,
+    transferFee,
+    country,
+    rates,
+    setTransferData,
+    transferData,
+  ]);
+
+  useEffect(() => {
+    console.log('TRANSFER DATA====>', transferData);
+  }, [transferData]);
+
+  const getAccountId = useCallback(async () => {
+    try {
+      const id = await AsyncStorage.getItem('accountId');
+      if (id !== null) {
+        setAccountId(id);
+      }
+    } catch (error) {
+      console.error('Error fetching accountId from AsyncStorage:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    const callUser = async () => {
+      if (!accountId) return;
+      try {
+        const response = await getUserById(accountId, { signal });
+        setUser(response);
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('Failed to fetch user:', error);
+        }
+      }
+    };
+
+    callUser();
+
+    return () => {
+      controller.abort();
+    };
+  }, [accountId, setUser]);
+
+  if (isUpdating) {
+    return <LoadingOverlay message='Applying changes...' />;
+  }
+
+  return (
+    <SafeAreaView className='flex-1 bg-primary-50'>
+      <ScrollView className='flex-1'>
+        <View className='py-10'>
+          <Text className='text-xl text-primary font-psemibold px-4 mt-10'>
+            Start sending some money, {user?.firstName}!
+          </Text>
+
+          <View className='items-center'>
+            <View className='bg-white rounded-xl mt-8 w-[95%] px-5 py-7'>
+              <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mb-5'>
+                <View className='bg-primary-50 px-7 py-5 rounded-lg flex-row'>
+                  <CountryFlag
+                    isoCode={user?.destinationCountryCode}
+                    size={40}
+                    className='w-[40px] h-[25px]'
+                  />
+
+                  <View className='justify-center'>
+                    <Text className='text-primary font-psemibold px-4'>
+                      {user?.currencyCode}
+                    </Text>
+                  </View>
                 </View>
-                <View className='justify-center ml-5'>
-                  <Image
-                    source={{ uri: selectedArea?.flag }}
-                    resizeMode='contain'
-                    style={{
-                      width: 30,
-                      height: 30,
-                    }}
+                <View className='px-5'>
+                  <View className='justify-center pt-1'>
+                    <Text className='text-primary text-xs font-pregular'>
+                      You send
+                    </Text>
+                  </View>
+                  <TextInput
+                    className='flex-1 text-primary font-semibold text-2xl text-center'
+                    value={transferAmt}
+                    placeholder='0'
+                    onChangeText={handleTransferAmtChange}
+                    keyboardType='numeric'
                   />
                 </View>
-                <View className='justify-center ml-5'>
-                  <Text className='text-primary text-sm font-psemibold'>
-                    {selectedArea?.callingCode}
+              </View>
+
+              <View className='items-center justify-center'>
+                <View className='flex flex-row w-[70%] p-1 justify-between rounded-lg'>
+                  <Text className='text-sm font-psemibold text-primary'>
+                    1 {user?.currencyCode}
+                  </Text>
+                  <FontAwesome name='bolt' size={20} color='#004d40' />
+                  <Text className='text-sm font-psemibold text-primary'>
+                    {offeredRate} {user?.destinationCountryCurrencyCode}
                   </Text>
                 </View>
+              </View>
+
+              <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row my-5'>
+                <View className='bg-primary-50 px-7 py-5 rounded-lg flex-row'>
+                  <CountryFlag
+                    isoCode={user?.destinationCountryCode}
+                    size={40}
+                    className='w-[40px] h-[25px]'
+                  />
+                  <View className='justify-center'>
+                    <Text className='text-primary font-psemibold px-4'>
+                      {user?.destinationCountryCurrencyCode}
+                    </Text>
+                  </View>
+                </View>
+
+                <View className='px-5'>
+                  <View className='justify-center pt-1'>
+                    <Text className='text-primary text-xs font-pregular'>
+                      Recipient gets
+                    </Text>
+                  </View>
+                  <TextInput
+                    className='flex-1 text-primary font-semibold text-2xl text-center'
+                    value={amtReceivable}
+                    placeholder='0'
+                    onChangeText={handleAmtReceivableChange}
+                    keyboardType='numeric'
+                  />
+                </View>
+              </View>
+
+              <View className='mb-2'>
+                <Text className='font-psemibold text-primary'>Send to</Text>
+              </View>
+              <TouchableOpacity
+                className='border border-primary-200 w-full h-16 bg-primary-50 rounded-xl focus:border-primary items-center justify-between flex-row px-4 mb-5'
+                onPress={handleRecipientSelectPress}
+              >
+                {fullName ? (
+                  <Text className='font-pregular text-base text-primary-600'>
+                    {fullName}
+                  </Text>
+                ) : (
+                  <Text className='font-pregular text-base text-primary-600'>
+                    Select Recipient
+                  </Text>
+                )}
+                <AntDesign name='caretright' size={24} color='#004d40' />
               </TouchableOpacity>
-              {/* Phone Number input */}
-              <TextInput
-                className='flex-1  border-b-2 h-[50px] text-xl text-primary'
-                placeholder='Enter phone number'
-                placeholderTextColor='#009688'
-                selectionColor='#004d40'
-                keyboardType='number-pad'
-              />
+
+              <View className='mb-2'>
+                <Text className='font-psemibold text-primary'>
+                  Delivery Method
+                </Text>
+              </View>
+              <TouchableOpacity
+                className='border border-primary-200 w-full h-16 bg-primary-50 rounded-xl focus:border-primary items-center justify-between flex-row px-4 mb-5'
+                onPress={openDeliveryMethods}
+              >
+                <Text className='font-pregular text-base text-primary-600'>
+                  {deliveryMethod || 'Select a delivery method'}
+                </Text>
+                <AntDesign name='caretright' size={24} color='#004d40' />
+              </TouchableOpacity>
+
+              <View className='mb-2'>
+                <Text className='font-psemibold text-primary'>
+                  Reason for Sending
+                </Text>
+              </View>
+              <TouchableOpacity
+                className='border border-primary-200 w-full h-16 bg-primary-50 rounded-xl focus:border-primary items-center justify-between flex-row px-4 mb-5'
+                onPress={openReasons}
+              >
+                <Text className='font-pregular text-base text-primary-600'>
+                  {reason || 'Select reason'}
+                </Text>
+                <AntDesign name='caretright' size={24} color='#004d40' />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              onPress={() => console.log('pressed')}
-              className='bg-primary py-5 items-center my-5 justify-center'
-            >
-              <Text>Submit</Text>
-            </TouchableOpacity>
+
+            <SendScreenOptionsCard styles='w-[95%]' />
+
+            <CustomButton onPress={handleNext} title='Next' />
           </View>
         </View>
-        {renderAreaCodesModal()}
       </ScrollView>
-    </View>
+
+      <ReasonsModal
+        visible={modalVisible}
+        onClose={closeReasons}
+        selectReason={selectReason}
+      />
+
+      {showCountries && <ChangeSendCountry />}
+    </SafeAreaView>
   );
 };
 
-export default CustomCountryPhone;
+export default Send;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -30,7 +30,7 @@ const Send = () => {
     transferData,
     setTransferData,
     rates,
-    profitMargin,
+    transferFee,
     country,
     setCountry,
   } = useGlobalContext();
@@ -54,6 +54,17 @@ const Send = () => {
   );
   const [modalVisible, setModalVisible] = useState(false);
 
+  const getAccountId = async () => {
+    try {
+      const id = await AsyncStorage.getItem('accountId');
+      if (id !== null) {
+        setAccountId(id);
+      }
+    } catch (error) {
+      console.error('Error fetching accountId from AsyncStorage:', error);
+    }
+  };
+
   useEffect(() => {
     getAccountId();
   }, [country]);
@@ -72,34 +83,24 @@ const Send = () => {
       currencySymbol: user?.destinationCountryCurrencySymbol,
       flag: user?.destinationCountryFlag,
     }));
-  }, [user]);
+  }, [user, setCountry]); // Added setCountry
 
   const fullName = !recipientFirstName
     ? null
     : `${recipientFirstName.trim()} ${recipientLastName.trim()}`;
 
-  // Functions to handle text change in the amount fields
   const handleTransferAmtChange = (amt) => {
     amt = amt.replace(/[^0-9.,]/g, '');
     setTransferAmt(amt);
     const normalizedAmt = amt.replace(',', '.');
     const receivable = (
-      parseFloat(normalizedAmt) * rates.offeredExchangeRate
+      parseFloat(normalizedAmt || 0) * rates.offeredExchangeRate
     ).toFixed(2);
-    if (normalizedAmt === '') {
-      setAmtReceivable('');
-      setTransferData((prev) => ({
-        ...prev,
-        transferAmount: '',
-        receivableAmount: '',
-      }));
-      return;
-    }
-    setAmtReceivable(receivable);
+    setAmtReceivable(normalizedAmt === '' ? '' : receivable);
     setTransferData((prev) => ({
       ...prev,
       transferAmount: amt,
-      receivableAmount: receivable,
+      receivableAmount: normalizedAmt === '' ? '' : receivable,
     }));
   };
 
@@ -108,21 +109,12 @@ const Send = () => {
     setAmtReceivable(amt);
     const normalizedAmt = amt.replace(',', '.');
     const transferable = (
-      parseFloat(normalizedAmt) / rates.offeredExchangeRate
+      parseFloat(normalizedAmt || 0) / rates.offeredExchangeRate
     ).toFixed(2);
-    if (normalizedAmt === '') {
-      setTransferAmt('');
-      setTransferData((prev) => ({
-        ...prev,
-        transferAmount: '',
-        receivableAmount: '',
-      }));
-      return;
-    }
-    setTransferAmt(transferable);
+    setTransferAmt(normalizedAmt === '' ? '' : transferable);
     setTransferData((prev) => ({
       ...prev,
-      transferAmount: transferable,
+      transferAmount: normalizedAmt === '' ? '' : transferable,
       receivableAmount: amt,
     }));
   };
@@ -132,7 +124,7 @@ const Send = () => {
       ...prev,
       identifier: '',
     }));
-  }, []);
+  }, [setTransferData]); // Added setTransferData
 
   const openModal = () => {
     setModalVisible(true);
@@ -166,12 +158,20 @@ const Send = () => {
     navigation.navigate('extrascreens/selectrecipient');
   };
 
-  const handleNext = () => {
-    // Calculate the total amount to pay immediately
+  const handleNext = useCallback(() => {
     const transferAmountFloat = parseFloat(transferAmt);
-    const totalAmountToPay = transferAmountFloat + fee;
-    console.log('PROFIT===>', profit);
-
+    if (
+      isNaN(transferAmountFloat) ||
+      transferAmt === '' ||
+      amtReceivable === ''
+    ) {
+      Alert.alert(
+        'Error',
+        'Please set a valid amount to transfer or amount to receive'
+      );
+      return;
+    }
+    const totalAmountToPay = transferAmountFloat + transferFee;
     setTransferData((prev) => ({
       ...prev,
       destinationCountry: country?.name,
@@ -180,66 +180,25 @@ const Send = () => {
       transferCurrencyCode: country?.currencyCode,
       offeredExchangeRate: rates?.offeredExchangeRate,
       actualExchangeRate: rates?.actualExchangeRate,
-      totalToPay: totalAmountToPay, // Use the calculated total amount
-      transferProfit: transferEarning,
+      totalToPay: totalAmountToPay,
     }));
-
-    if (transferAmt === '' || amtReceivable === '') {
-      Alert.alert(
-        'Error',
-        'Please set amount to transfer or amount to receive'
-      );
-      return;
-    }
     console.log('LOGTD====>', transferData, totalAmountToPay);
+  }, [
+    transferAmt,
+    amtReceivable,
+    transferFee,
+    country,
+    rates,
+    setTransferData,
+    transferData,
+  ]);
+
+  const handleCountryChangePress = () => {
+    Alert.alert(
+      'Information',
+      'Please go to your profile in the account screen to change the country to send to.'
+    );
   };
-
-  useEffect(() => {
-    console.log('TRANSFER DATA====>', transferData);
-  }, [transferData]);
-
-  const getAccountId = async () => {
-    try {
-      const id = await AsyncStorage.getItem('accountId');
-      if (id !== null) {
-        setAccountId(id);
-      }
-    } catch (error) {
-      console.error('Error fetching accountId from AsyncStorage:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (initialRender.current) {
-      // Skip the first render
-      initialRender.current = false;
-      return;
-    }
-
-    // AbortController to cancel the request on component unmount
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    const callUser = async () => {
-      if (!accountId) return;
-
-      try {
-        const response = await getUserById(accountId, { signal });
-        setUser(response);
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          console.error('Failed to fetch user:', error);
-        }
-      }
-    };
-
-    callUser();
-
-    // Cleanup function to cancel the request if the component unmounts
-    return () => {
-      controller.abort();
-    };
-  }, [country]);
 
   // Show loading screen when applying changes...
   if (isUpdating) {
@@ -259,7 +218,7 @@ const Send = () => {
               <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mb-5'>
                 <View className='bg-primary-50 px-7 py-5 rounded-lg flex-row'>
                   <CountryFlag
-                    isoCode={user?.code}
+                    isoCode={user?.code || 'DE'}
                     size={40}
                     className='w-[40px] h-[25px]'
                   />
@@ -302,7 +261,8 @@ const Send = () => {
               <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mt-5'>
                 <TouchableOpacity
                   className='bg-primary-50 px-5 py-5 rounded-lg flex-row'
-                  onPress={() => setShowCountries(true)}
+                  // onPress={() => setShowCountries(true)}
+                  onPress={handleCountryChangePress}
                 >
                   <CountryFlag
                     isoCode={user?.destinationCountryCode}
@@ -318,7 +278,7 @@ const Send = () => {
                     </View>
                   </View>
                   <View className='justify-center'>
-                    <AntDesign name='caretdown' size={14} color='#004d40' />
+                    {/* <AntDesign name='caretdown' size={14} color='#004d40' /> */}
                   </View>
                 </TouchableOpacity>
                 <View className='px-5'>
@@ -400,7 +360,7 @@ const Send = () => {
           selectReason={selectReason}
         />
       )}
-      {showCountries && (
+      {/* {showCountries && (
         <ChangeSendCountry
           country={country}
           setCountry={setCountry}
@@ -408,7 +368,7 @@ const Send = () => {
           updateUser={updateUserCurrencyInfo}
           setIsUpdating={setIsUpdating}
         />
-      )}
+      )} */}
     </SafeAreaView>
   );
 };
