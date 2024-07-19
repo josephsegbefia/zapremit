@@ -17,11 +17,11 @@ import CustomButton from '../../components/CustomButton';
 import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
 import ReasonsModal from '../extrascreens/reasonsModal';
 import { calculateTotalProfit } from '../../lib/profitCalculator';
-import ChangeSendCountry from '../../components/ChangeSendCountry';
-import { updateUserCurrencyInfo } from '../../lib/appwrite';
+// import ChangeSendCountry from '../../components/ChangeSendCountry';
+// import { updateUserCurrencyInfo } from '../../lib/appwrite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingOverlay from '../../components/LoadingOverlay';
-import { getUserById } from '../../lib/appwrite';
+// import { getUserById } from '../../lib/appwrite';
 
 const Send = () => {
   const {
@@ -35,7 +35,7 @@ const Send = () => {
     setCountry,
   } = useGlobalContext();
   const navigation = useNavigation();
-  const initialRender = useRef(true);
+  // const initialRender = useRef(true);
 
   const { deliveryMethod, recipientFirstName, recipientLastName, reason } =
     transferData;
@@ -54,6 +54,15 @@ const Send = () => {
   );
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [navigateToProfile, setNavigateToProfile] = useState(false);
+
+  useEffect(() => {
+    if (navigateToProfile) {
+      router.push('/account/profile');
+      setNavigateToProfile(false);
+    }
+  }, [navigateToProfile, navigation]);
+
   const getAccountId = async () => {
     try {
       const id = await AsyncStorage.getItem('accountId');
@@ -70,20 +79,26 @@ const Send = () => {
   }, [country]);
 
   useEffect(() => {
-    // if (initialRender.current) {
-    //   // Skip the first render
-    //   initialRender.current = false;
-    //   return;
-    // }
-    setCountry((prev) => ({
-      name: user?.destinationCountry,
-      countryCode: user?.destinationCountryCode,
-      currencyCode: user?.destinationCountryCurrencyCode,
-      currencyName: user?.destinationCountryCurrencyName,
-      currencySymbol: user?.destinationCountryCurrencySymbol,
-      flag: user?.destinationCountryFlag,
-    }));
-  }, [user, setCountry]); // Added setCountry
+    setIsUpdating(true);
+    try {
+      setCountry((prev) => ({
+        name: user?.destinationCountry,
+        countryCode: user?.destinationCountryCode,
+        currencyCode: user?.destinationCountryCurrencyCode,
+        currencyName: user?.destinationCountryCurrencyName,
+        currencySymbol: user?.destinationCountryCurrencySymbol,
+        flag: user?.destinationCountryFlag,
+      }));
+      setTransferData((prev) => ({
+        ...prev,
+        transferAmount: '',
+        receivableAmount: '',
+      }));
+    } catch (error) {
+    } finally {
+      setIsUpdating(false);
+    }
+  }, [user]);
 
   const fullName = !recipientFirstName
     ? null
@@ -196,10 +211,22 @@ const Send = () => {
   const handleCountryChangePress = () => {
     Alert.alert(
       'Information',
-      'Please go to your profile in the account screen to change the country to send to.'
+      'Please go to your profile in the account screen to change the country to send to.',
+      [
+        {
+          text: 'Cancel',
+          style: 'destructive',
+        },
+        {
+          text: 'Go to profile',
+          style: 'default',
+          onPress: () => {
+            setNavigateToProfile(true);
+          },
+        },
+      ]
     );
   };
-
   // Show loading screen when applying changes...
   if (isUpdating) {
     return <LoadingOverlay message='Applying changes...' />;
