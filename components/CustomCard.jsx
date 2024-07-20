@@ -12,6 +12,7 @@ const CustomCard = ({
   customStyles,
   isTransferHistory,
   empty,
+  currencyCode,
 }) => {
   const { user } = useGlobalContext();
   const initials =
@@ -48,8 +49,7 @@ const CustomCard = ({
 
           <View>
             <Text className='py-4 font-psemibold text-primary'>
-              {isTransferHistory && user?.destinationCountryCurrencyCode}{' '}
-              {amount}
+              {isTransferHistory && currencyCode} {amount}
             </Text>
           </View>
         </View>

@@ -63,6 +63,7 @@ const Home = () => {
                 amount={transfer.receivableAmount}
                 status={transfer.status}
                 date={formatDate(transfer.$createdAt)}
+                currencyCode={transfer.transferCurrencyCode}
               />
             ))
           ) : (
