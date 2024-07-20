@@ -24,6 +24,17 @@ const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
 
   const RATE_FETCH_INTERVAL = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
 
+  // const clearAsyncStorage = async () => {
+  //   try {
+  //     await AsyncStorage.clear();
+  //     // Alert.alert('Success', 'AsyncStorage has been cleared!');
+  //   } catch (error) {
+  //     // Alert.alert('Error', 'Failed to clear AsyncStorage');
+  //     console.error('Failed to clear AsyncStorage:', error);
+  //   }
+  // };
+
+  // clearAsyncStorage();
   const fetchRate = async () => {
     const rateKey = `${user?.currencyCode}_${user?.destinationCountryCurrencyCode}`;
     const lastFetchKey = `lastFetch_${rateKey}`;
@@ -41,10 +52,12 @@ const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
         const storedRate = await AsyncStorage.getItem(rateKey);
         if (storedRate) {
           const parsedStoredRate = JSON.parse(storedRate);
+
           setRates((prev) => ({
             ...prev,
             actualExchangeRate: parsedStoredRate.actualRate,
             offeredExchangeRate: parsedStoredRate.offeredRate,
+            unitProfit: parsedStoredRate.unitProfit,
           }));
           setIsLoading(false);
           setHasFetchedRates(true);
@@ -70,7 +83,7 @@ const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
       // Store the rate and timestamp in AsyncStorage
       await AsyncStorage.setItem(
         rateKey,
-        JSON.stringify({ actualRate, offeredRate })
+        JSON.stringify({ actualRate, offeredRate, unitProfit })
       );
       await AsyncStorage.setItem(lastFetchKey, now.toString());
 
@@ -79,6 +92,7 @@ const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
         ...prev,
         actualExchangeRate: actualRate,
         offeredExchangeRate: offeredRate,
+        unitProfit: unitProfit,
       }));
       setIsLoading(false);
       setHasFetchedRates(true);

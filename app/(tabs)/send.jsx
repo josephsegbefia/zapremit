@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
   ScrollView,
   TextInput,
   TouchableOpacity,
-  Image,
   Alert,
 } from 'react-native';
 import { router, useNavigation } from 'expo-router';
@@ -16,12 +15,9 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 import CustomButton from '../../components/CustomButton';
 import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
 import ReasonsModal from '../extrascreens/reasonsModal';
-import { calculateTotalProfit } from '../../lib/profitCalculator';
-// import ChangeSendCountry from '../../components/ChangeSendCountry';
-// import { updateUserCurrencyInfo } from '../../lib/appwrite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingOverlay from '../../components/LoadingOverlay';
-// import { getUserById } from '../../lib/appwrite';
+import { calculateTotalProfit } from '../../lib/profitCalculator';
 
 const Send = () => {
   const {
@@ -35,12 +31,12 @@ const Send = () => {
     setCountry,
   } = useGlobalContext();
   const navigation = useNavigation();
-  // const initialRender = useRef(true);
 
   const { deliveryMethod, recipientFirstName, recipientLastName, reason } =
     transferData;
 
   const offeredRate = rates?.offeredExchangeRate;
+  const unitProfit = rates?.unitProfit;
 
   const [showCountries, setShowCountries] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -64,9 +60,15 @@ const Send = () => {
         ...prev,
         transferAmount: '',
         receivableAmount: '',
+        recipientFirstName: '',
+        recipientMiddleName: '',
+        recipientLastName: '',
+        recipientId: '',
+        deliveryMethod: '',
+        reason: '',
       }));
     }
-  }, [navigateToProfile, navigation]);
+  }, [navigateToProfile]);
 
   const getAccountId = async () => {
     try {
@@ -104,10 +106,11 @@ const Send = () => {
         actualExchangeRate: rates?.actualExchangeRate,
       }));
     } catch (error) {
+      console.error('Error updating country or transfer data:', error);
     } finally {
       setIsUpdating(false);
     }
-  }, []);
+  }, [user, setCountry, setTransferData]);
 
   const fullName = !recipientFirstName
     ? null
@@ -115,12 +118,13 @@ const Send = () => {
 
   const handleTransferAmtChange = (amt) => {
     amt = amt.replace(/[^0-9.,]/g, '');
-    setTransferAmt(amt);
     const normalizedAmt = amt.replace(',', '.');
     const receivable = (
       parseFloat(normalizedAmt || 0) * rates.offeredExchangeRate
     ).toFixed(2);
+    setTransferAmt(amt);
     setAmtReceivable(normalizedAmt === '' ? '' : receivable);
+
     setTransferData((prev) => ({
       ...prev,
       transferAmount: amt,
@@ -130,12 +134,17 @@ const Send = () => {
 
   const handleAmtReceivableChange = (amt) => {
     amt = amt.replace(/[^0-9.,]/g, '');
-    setAmtReceivable(amt);
     const normalizedAmt = amt.replace(',', '.');
     const transferable = (
       parseFloat(normalizedAmt || 0) / rates.offeredExchangeRate
     ).toFixed(2);
+    setAmtReceivable(amt);
     setTransferAmt(normalizedAmt === '' ? '' : transferable);
+
+    // Calculate total to pay
+    const totalToPay = parseFloat(transferable || 0) + transferFee;
+    setTransferTotal(totalToPay.toFixed(2));
+
     setTransferData((prev) => ({
       ...prev,
       transferAmount: normalizedAmt === '' ? '' : transferable,
@@ -148,7 +157,7 @@ const Send = () => {
       ...prev,
       identifier: '',
     }));
-  }, [setTransferData]); // Added setTransferData
+  }, [setTransferData]);
 
   const openModal = () => {
     setModalVisible(true);
@@ -195,19 +204,27 @@ const Send = () => {
       );
       return;
     }
-    const totalAmountToPay = transferAmountFloat + transferFee;
+
+    // Calculate transfer profit
+
+    const transferProfit = calculateTotalProfit(
+      unitProfit,
+      transferFee,
+      transferAmountFloat
+    );
+
     setTransferData((prev) => ({
       ...prev,
-      // destinationCountry: country?.name,
-      // destinationCountryCode: country?.countryCode,
-      // transferCurrency: country?.currencyName,
-      // transferCurrencyCode: country?.currencyCode,
-      // offeredExchangeRate: rates?.offeredExchangeRate,
-      // actualExchangeRate: rates?.actualExchangeRate,
-      totalToPay: totalAmountToPay,
+      totalToPay: parseFloat(transferAmountFloat + transferFee),
+      transferProfit: transferProfit.totalProfitPerTransaction,
     }));
-    console.log('LOGTD====>', transferData, totalAmountToPay);
+
+    // console.log('LOGTD====>', transferData);
   };
+
+  useEffect(() => {
+    console.log(transferData);
+  }, [transferData]);
 
   const handleCountryChangePress = () => {
     Alert.alert(
@@ -228,11 +245,13 @@ const Send = () => {
       ]
     );
   };
+
   // Show loading screen when applying changes...
   if (isUpdating) {
     return <LoadingOverlay message='Applying changes...' />;
   }
 
+  console.log('UNITP===>', unitProfit);
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>
@@ -265,7 +284,6 @@ const Send = () => {
                   </View>
                   <TextInput
                     className='flex-1 text-primary font-semibold text-2xl text-center'
-                    // value={transferAmt || transferData.transferAmount}
                     value={transferData.transferAmount}
                     placeholder='0'
                     onChangeText={handleTransferAmtChange}
@@ -289,7 +307,6 @@ const Send = () => {
               <View className='border border-primary-200 w-full h-20 px-4 bg-white rounded-xl focus:border-primary items-center justify-between flex-row mt-5'>
                 <TouchableOpacity
                   className='bg-primary-50 px-5 py-5 rounded-lg flex-row'
-                  // onPress={() => setShowCountries(true)}
                   onPress={handleCountryChangePress}
                 >
                   <CountryFlag
@@ -305,9 +322,7 @@ const Send = () => {
                       </Text>
                     </View>
                   </View>
-                  <View className='justify-center'>
-                    {/* <AntDesign name='caretdown' size={14} color='#004d40' /> */}
-                  </View>
+                  <View className='justify-center'></View>
                 </TouchableOpacity>
                 <View className='px-5'>
                   <View className='justify-center pt-1'>
@@ -317,7 +332,6 @@ const Send = () => {
                   </View>
                   <TextInput
                     className='flex-1 text-primary font-semibold text-2xl text-center'
-                    // value={amtReceivable || transferData.receivableAmount}
                     value={transferData.receivableAmount}
                     placeholder='0'
                     onChangeText={handleAmtReceivableChange}

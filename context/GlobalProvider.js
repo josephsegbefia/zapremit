@@ -16,7 +16,7 @@ const GlobalProvider = ({ children }) => {
     transferAmount: '',
     receivableAmount: '',
     transferFee: '',
-    totalToPay: '',
+    totalToPay: 0,
     recipientPhone: '',
     recipientFirstName: '',
     recipientMiddleName: '',
@@ -51,6 +51,7 @@ const GlobalProvider = ({ children }) => {
   const [rates, setRates] = useState({
     actualExchangeRate: null,
     offeredExchangeRate: null,
+    unitProfit: null,
   });
   const [userIsVerified, setUserIsVerified] = useState(false);
 
