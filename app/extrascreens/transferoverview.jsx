@@ -11,7 +11,7 @@ const TransferOverView = () => {
   // const [isVerified, setIsVerified] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { user, userIsVerified, transferData, setTransferData } =
+  const { user, userIsVerified, transferData, setTransferData, rates } =
     useGlobalContext();
   const {
     recipientFirstName,
@@ -24,6 +24,8 @@ const TransferOverView = () => {
     totalToPay,
     transferFee,
     transferAmount,
+    transferCurrencyCode,
+    reason,
   } = transferData;
 
   // console.log(transferData);
@@ -45,7 +47,7 @@ const TransferOverView = () => {
             <View className='bg-white rounded-xl mt-5 px-4 py-4'>
               <InfoCard
                 title={`Transfer to ${recipientFirstName}`}
-                info={`${recipientFirstName.trim()} will receive GHS ${receivableAmount} in less than a minute`}
+                info={`${recipientFirstName.trim()} will receive ${transferCurrencyCode} ${receivableAmount} in less than a minute`}
                 styles='px-4'
               />
             </View>
@@ -79,7 +81,7 @@ const TransferOverView = () => {
                   Receivable Amount
                 </Text>
                 <Text className='text-primary font-pregular'>
-                  GHS {receivableAmount}
+                  {transferCurrencyCode} {receivableAmount}
                 </Text>
               </View>
               <View className='flex-row justify-between mb-3'>
@@ -87,21 +89,28 @@ const TransferOverView = () => {
                   Exchange Rate
                 </Text>
                 <Text className='text-primary font-pregular'>
-                  EUR 1 = GHS 16.42
+                  {user?.currencyCode} 1 = {transferCurrencyCode}{' '}
+                  {rates.offeredExchangeRate}
                 </Text>
               </View>
               <View className='flex-row justify-between mb-3'>
                 <Text className='text-primary font-psemibold'>
                   Transfer Fees
                 </Text>
-                {/* <Text className='text-primary font-pregular'>
-                  EUR {transferFee}
-                </Text> */}
+                <Text className='text-primary font-pregular'>
+                  {user?.currencyCode} {transferFee}
+                </Text>
               </View>
               <View className='flex-row justify-between mb-3'>
                 <Text className='text-primary font-psemibold'>ETA</Text>
                 <Text className='text-primary font-pregular'>
                   Less than a minute
+                </Text>
+              </View>
+              <View className='flex-row justify-between mb-3'>
+                <Text className='text-primary font-psemibold'>Total Due</Text>
+                <Text className='text-primary font-pregular'>
+                  {user?.currencyCode} {totalToPay}
                 </Text>
               </View>
             </View>
@@ -131,11 +140,13 @@ const TransferOverView = () => {
               </View>
               <View className='flex-row justify-between mb-3'>
                 <Text className='text-primary font-psemibold'>Location</Text>
-                <Text className='text-primary font-pregular'></Text>
+                <Text className='text-primary font-pregular'>
+                  {user?.destinationCountry}
+                </Text>
               </View>
               <View className='flex-row justify-between mb-3'>
                 <Text className='text-primary font-psemibold'>Reason</Text>
-                <Text className='text-primary font-pregular'></Text>
+                <Text className='text-primary font-pregular'>{reason}</Text>
               </View>
             </View>
           </View>

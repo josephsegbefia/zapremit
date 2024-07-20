@@ -37,6 +37,7 @@ const Send = () => {
 
   const offeredRate = rates?.offeredExchangeRate;
   const unitProfit = rates?.unitProfit;
+  const actualRate = rates?.actualExchangeRate;
 
   const [showCountries, setShowCountries] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -219,7 +220,7 @@ const Send = () => {
       transferProfit: transferProfit.totalProfitPerTransaction,
     }));
 
-    // console.log('LOGTD====>', transferData);
+    router.push('/extrascreens/transferoverview');
   };
 
   useEffect(() => {
@@ -251,7 +252,9 @@ const Send = () => {
     return <LoadingOverlay message='Applying changes...' />;
   }
 
-  console.log('UNITP===>', unitProfit);
+  console.log('UNITPROFIT===>', unitProfit);
+  console.log('ACTUALRATE===>', actualRate);
+
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>
       <ScrollView className='flex-1'>

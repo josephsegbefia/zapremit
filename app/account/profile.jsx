@@ -39,7 +39,7 @@ const Profile = () => {
     await signOut();
     setUser(null);
     setIsLoggedIn(false);
-    navigation.navigate('index');
+    return navigation.navigate('index');
   };
 
   const getAccountId = async () => {
