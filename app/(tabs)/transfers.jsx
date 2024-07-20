@@ -51,6 +51,7 @@ const Transfers = () => {
               status={item.status}
               amount={item.receivableAmount}
               isTransferHistory
+              currencyCode={item.transferCurrencyCode}
             />
           </TouchableOpacity>
         </View>
