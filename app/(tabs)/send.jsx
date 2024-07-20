@@ -15,7 +15,6 @@ import { useGlobalContext } from '../../context/GlobalProvider';
 import CustomButton from '../../components/CustomButton';
 import SendScreenOptionsCard from '../../components/SendScreenOptionsCard';
 import ReasonsModal from '../extrascreens/reasonsModal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingOverlay from '../../components/LoadingOverlay';
 import { calculateTotalProfit } from '../../lib/profitCalculator';
 
@@ -37,11 +36,9 @@ const Send = () => {
 
   const offeredRate = rates?.offeredExchangeRate;
   const unitProfit = rates?.unitProfit;
-  const actualRate = rates?.actualExchangeRate;
 
-  const [showCountries, setShowCountries] = useState(false);
+  // const [showCountries, setShowCountries] = useState(false); I might use this again later
   const [isUpdating, setIsUpdating] = useState(false);
-  const [accountId, setAccountId] = useState(null);
 
   const [transferAmt, setTransferAmt] = useState(
     transferData.transferAmount || ''
@@ -70,21 +67,6 @@ const Send = () => {
       }));
     }
   }, [navigateToProfile]);
-
-  const getAccountId = async () => {
-    try {
-      const id = await AsyncStorage.getItem('accountId');
-      if (id !== null) {
-        setAccountId(id);
-      }
-    } catch (error) {
-      console.error('Error fetching accountId from AsyncStorage:', error);
-    }
-  };
-
-  useEffect(() => {
-    getAccountId();
-  }, [country]);
 
   useEffect(() => {
     setIsUpdating(true);
@@ -206,8 +188,6 @@ const Send = () => {
       return;
     }
 
-    // Calculate transfer profit
-
     const transferProfit = calculateTotalProfit(
       unitProfit,
       transferFee,
@@ -251,9 +231,6 @@ const Send = () => {
   if (isUpdating) {
     return <LoadingOverlay message='Applying changes...' />;
   }
-
-  console.log('UNITPROFIT===>', unitProfit);
-  console.log('ACTUALRATE===>', actualRate);
 
   return (
     <SafeAreaView className='flex-1 bg-primary-50'>

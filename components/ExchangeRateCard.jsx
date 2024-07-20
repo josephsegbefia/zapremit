@@ -122,7 +122,6 @@ const ExchangeRateCard = ({ title, hostCountryFlag, recipientCountryFlag }) => {
     return <LoadingOverlay message='Loading exchange rate...' />;
   }
 
-  console.log('MARGIN====>', profitMargin);
   return (
     <View className='bg-white rounded-xl'>
       <Text className='text-center text-primary font-psemibold text-sm py-5'>
