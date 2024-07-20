@@ -88,6 +88,7 @@ const RecipientTransfers = () => {
                 status={item.status}
                 date={formatDate(item.$createdAt)}
                 isTransferHistory
+                currencyCode={item.transferCurrencyCode}
               />
             </View>
           </View>

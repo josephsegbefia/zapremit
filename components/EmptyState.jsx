@@ -19,13 +19,13 @@ const EmptyState = ({ title, subtitle, buttonLabel, handlePress }) => {
       <Text className='font-pmedium text-sm text-primary-500 mb-20'>
         {subtitle}
       </Text>
-      {!transferData.identifier === 'select-existing-recipient' && (
-        <CustomButton
-          title={buttonLabel}
-          containerStyles='w-full my-5'
-          handlePress={handlePress}
-        />
-      )}
+      {/* {!transferData.identifier === 'select-existing-recipient' && ( */}
+      <CustomButton
+        title={buttonLabel}
+        containerStyles='w-full my-5'
+        handlePress={handlePress}
+      />
+      {/* )} */}
     </View>
   );
 };
