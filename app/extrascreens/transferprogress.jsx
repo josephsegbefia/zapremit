@@ -50,8 +50,6 @@ const TransferProgress = () => {
     }
   };
 
-  console.log(completedTransfer);
-
   useEffect(() => {
     setTransferInitiated(true);
     setDateTime(getCurrentDateTime());
@@ -65,9 +63,10 @@ const TransferProgress = () => {
     setInProgress(true);
     const timer = setTimeout(() => {
       sendMoney();
+      router.push('/extrascreens/transferdetails');
     }, 3000);
 
-    return () => clearTimeout(timer); // Cleanup the timer on unmount
+    return () => clearTimeout(timer);
   }, []);
 
   return (
