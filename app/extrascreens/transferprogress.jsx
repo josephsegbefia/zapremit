@@ -87,7 +87,7 @@ const TransferProgress = () => {
         {status === 'Success' && (
           <TransferProgressTabs
             title='Completed'
-            subtitle={`${transfer.recipient.firstName} now has GHC ${transfer.receivableAmount}`}
+            subtitle={`${transfer.recipient.firstName} now has ${transfer.transferCurrencyCode} ${transfer.receivableAmount}`}
             date={formatDate(transfer.$createdAt)}
           />
         )}
