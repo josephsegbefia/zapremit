@@ -9,7 +9,7 @@ export const useGlobalContext = () => useContext(GlobalContext);
 const GlobalProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // This will also serve as the user data loading state
   const [profitMargin, setProfitMargin] = useState(0);
   const [transferFee, setTransferFee] = useState(0);
   const [transferData, setTransferData] = useState({
@@ -45,9 +45,9 @@ const GlobalProvider = ({ children }) => {
     currencyName: '',
     currencySymbol: '',
     flag: '',
+    callingCode: '',
   });
 
-  // const [profitMargin, setProfitMargin] = useState(1);
   const [rates, setRates] = useState({
     actualExchangeRate: null,
     offeredExchangeRate: null,
@@ -62,7 +62,6 @@ const GlobalProvider = ({ children }) => {
         setIsLoggedIn(true);
         setUser(res);
         await AsyncStorage.setItem('accountId', res.$id);
-        const storedAccountId = await AsyncStorage.getItem('accountId');
       } else {
         setIsLoggedIn(false);
         setUser(null);
@@ -70,7 +69,7 @@ const GlobalProvider = ({ children }) => {
     } catch (error) {
       console.error('Error fetching current user:', error);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Set loading to false after fetching user data
     }
   };
 
@@ -86,7 +85,7 @@ const GlobalProvider = ({ children }) => {
 
   useEffect(() => {
     setProfitInfo();
-  });
+  }, []);
 
   useEffect(() => {
     fetchCurrentUser();

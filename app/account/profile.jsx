@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from 'expo-router';
+import { useNavigation, router } from 'expo-router';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import ChangeSendCountry from '../../components/ChangeSendCountry';
@@ -36,10 +36,11 @@ const Profile = () => {
   }
 
   const signout = async () => {
-    await signOut();
     setUser(null);
     setIsLoggedIn(false);
+    await signOut();
     return navigation.navigate('index');
+    // return router.replace('/index');
   };
 
   const getAccountId = async () => {

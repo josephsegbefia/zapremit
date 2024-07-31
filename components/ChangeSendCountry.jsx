@@ -28,6 +28,7 @@ const ChangeSendCountry = ({
     const data = countriesData.map((country) => ({
       name: country.name,
       countryCode: country.alpha2Code,
+      callingCode: country.callingCode,
       currencyName: country.currencyName,
       currencyCode: country.currencyCode,
       currencySymbol: country.currencySymbol,
@@ -45,6 +46,7 @@ const ChangeSendCountry = ({
         currencyCode: item.currencyCode,
         currencySymbol: item.currencySymbol,
         currencyName: item.currencyName,
+        callingCode: item.callingCode,
         flag: item.flag,
       }));
 
@@ -55,7 +57,10 @@ const ChangeSendCountry = ({
         destinationCountryCode: item.countryCode,
         destinationCountryFlag: item.flag,
         destinationCountryCurrencySymbol: item.currencySymbol,
+        destinationCountryCallingCode: item.callingCode,
       };
+
+      console.log('DATA===>', data);
 
       try {
         setIsUpdating(true);

@@ -34,6 +34,8 @@ const AddNewRecipient = () => {
     phone: '',
   });
 
+  console.log('USER====>', user);
+
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -187,10 +189,24 @@ const AddNewRecipient = () => {
                 />
 
                 <View className='mt-3'>
-                  <CountryCodePicker
+                  <Text className='text-base text-primary font-pmedium mb-2'>
+                    Phone
+                  </Text>
+                  <View className='flex-row gap-1'>
+                    <View className='w-[27%]'>
+                      <FormField
+                        value={user?.destinationCountryCallingCode}
+                        editable={false}
+                      />
+                    </View>
+                    <View className='w-[71%]'>
+                      <FormField />
+                    </View>
+                  </View>
+                  {/* <CountryCodePicker
                     setCountryInfo={setCountryInfo}
                     countryInfo={countryInfo}
-                  />
+                  /> */}
                 </View>
               </View>
             </View>

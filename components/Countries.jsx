@@ -25,6 +25,7 @@ const Countries = ({ setCountry, country }) => {
   useEffect(() => {
     const data = countriesData.map((country) => ({
       name: country.name,
+      callingCode: country.callingCode,
       countryCode: country.alpha2Code,
       currencyName: country.currencyName,
       currencyCode: country.currencyCode,
@@ -47,6 +48,7 @@ const Countries = ({ setCountry, country }) => {
       ...prev,
       name: item.name,
       countryCode: item.countryCode,
+      countryCallingCode: item.callingCode,
       currencyCode: item.currencyCode,
       currencyName: item.currencyName,
       currencySymbol: item.currencySymbol,

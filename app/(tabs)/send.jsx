@@ -125,8 +125,8 @@ const Send = () => {
     setTransferAmt(normalizedAmt === '' ? '' : transferable);
 
     // Calculate total to pay
-    const totalToPay = parseFloat(transferable || 0) + transferFee;
-    setTransferTotal(totalToPay.toFixed(2));
+    // const totalToPay = parseFloat(transferable || 0) + transferFee;
+    // setTransferTotal(totalToPay.toFixed(2));
 
     setTransferData((prev) => ({
       ...prev,
