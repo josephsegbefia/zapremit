@@ -65,6 +65,7 @@ const ChangeSendCountry = ({
       try {
         setIsUpdating(true);
         const response = await updateUser(data, user.$id);
+        console.log('RESPONSE====>', response);
       } catch (error) {
         console.error('Error updating user:', error);
       } finally {
