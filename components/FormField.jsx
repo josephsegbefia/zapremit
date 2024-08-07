@@ -8,7 +8,7 @@ const FormField = ({
   value,
   placeholder,
   autoCapitalize,
-  autoComplete,
+  // autoComplete,
   autoCorrect,
   handleChangeText,
   otherStyles,
@@ -28,7 +28,7 @@ const FormField = ({
           placeholder={placeholder}
           placeholderTextColor='#7b7b8b'
           onChangeText={handleChangeText}
-          autoComplete={autoComplete}
+          // autoComplete={autoComplete}
           autoCapitalize={autoCapitalize}
           autoCorrect={autoCorrect}
           secureTextEntry={

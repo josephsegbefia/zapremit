@@ -23,16 +23,6 @@ const AddNewRecipient = () => {
   const navigation = useNavigation();
   const { user, transferData, setTransferData } = useGlobalContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [countryInfo, setCountryInfo] = useState({
-    name: '',
-    code: '',
-    callingCode: '',
-    currencyCode: '',
-    currencyName: '',
-    currencySymbol: '',
-    flag: '',
-    phone: '',
-  });
 
   console.log('USER====>', user);
 
@@ -41,18 +31,19 @@ const AddNewRecipient = () => {
     lastName: '',
     middleName: '',
     email: '',
+    phone: '',
   });
 
   const submit = async () => {
-    const code = countryInfo.code.trim();
-    const completePhone = countryInfo.completePhone.trim();
-    const phone = countryInfo.phone.trim();
-    const callingCode = countryInfo.callingCode;
-    const recipientCountry = countryInfo.name.trim();
-    const currencyCode = countryInfo.currencyCode.trim();
-    const currencyName = countryInfo.currencyName.trim();
-    const flag = countryInfo.flag.trim();
-    const currencySymbol = countryInfo.currencySymbol.trim();
+    const code = user.destinationCountryCode;
+    const phone = form.phone;
+    const callingCode = user.destinationCountryCallingCode;
+    const completePhone = callingCode + phone;
+    const recipientCountry = user.destinationCountry;
+    const currencyCode = user.destinationCountryCurrencyCode;
+    const currencyName = user.destinationCountryCurrencyName;
+    const flag = user.destinationCountryFlag;
+    const currencySymbol = user.destinationCountryCurrencySymbol;
 
     const data = {
       firstName: form.firstName.trim(),
@@ -70,7 +61,7 @@ const AddNewRecipient = () => {
       currencySymbol: currencySymbol,
       userId: user.$id,
     };
-    if (!form.firstName || !form.lastName || !form.email || !phone) {
+    if (!form.firstName || !form.lastName || !form.email || !form.phone) {
       return Alert.alert('Error', 'Please fill in all the fields');
     }
 
@@ -108,17 +99,6 @@ const AddNewRecipient = () => {
         lastName: '',
         email: '',
         middleName: '',
-      });
-      setCountryInfo({
-        callingCode: '',
-        code: '',
-        name: '',
-        phone: '',
-        flag: '',
-        completePhone: '',
-        currencyName: '',
-        currencyCode: '',
-        currencySymbol: '',
       });
       setIsSubmitting(false);
     }
@@ -200,7 +180,13 @@ const AddNewRecipient = () => {
                       />
                     </View>
                     <View className='w-[71%]'>
-                      <FormField />
+                      <FormField
+                        value={form.phone}
+                        handleChangeText={(e) => setForm({ ...form, phone: e })}
+                        autoComplete={false}
+                        autoCapitalize={false}
+                        autoCorrect={false}
+                      />
                     </View>
                   </View>
                   {/* <CountryCodePicker

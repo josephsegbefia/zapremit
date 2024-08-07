@@ -69,7 +69,7 @@ const Login = () => {
                 handleChangeText={(e) => setForm({ ...form, email: e })}
                 otherStyles='mt-7'
                 keyboardType='email-address'
-                autoComplete={false}
+                // autoComplete={false}
                 autoCapitalize={false}
                 autoCorrect={false}
               />
