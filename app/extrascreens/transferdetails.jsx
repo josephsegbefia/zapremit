@@ -20,7 +20,7 @@ const TransferDetails = () => {
         <View className="mx-5 mt-10">
           <CustomButton
             title="OK"
-            handlePress={() => navigation.navigate("transfers")}
+            handlePress={() => navigation.navigate("transfersr")}
           />
         </View>
       </ScrollView>
