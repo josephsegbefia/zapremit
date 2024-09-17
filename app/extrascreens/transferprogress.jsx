@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,24 +6,24 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
-} from 'react-native';
-import { router } from 'expo-router';
-import { createTransfer } from '../../lib/appwrite';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useGlobalContext } from '../../context/GlobalProvider';
-import formatDate from '../../lib/formatDate';
-import getCurrentDateTime from '../../lib/getCurrentDateTime';
+} from "react-native";
+import { router } from "expo-router";
+import { createTransfer } from "../../lib/appwrite";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import formatDate from "../../lib/formatDate";
+import getCurrentDateTime from "../../lib/getCurrentDateTime";
 
-import TransferProgressTabs from '../../components/TransferProgressTabs';
-import CustomButton from '../../components/CustomButton';
+import TransferProgressTabs from "../../components/TransferProgressTabs";
+import CustomButton from "../../components/CustomButton";
 
 const TransferProgress = () => {
   const { user, transferData, setTransferData } = useGlobalContext();
   const [transferInitiated, setTransferInitiated] = useState(false);
   const [inProgress, setInProgress] = useState(false);
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState("");
   const [completedTransfer, setCompletedTransfer] = useState({});
-  const [dateTime, setDateTime] = useState('');
+  const [dateTime, setDateTime] = useState("");
 
   const sendMoney = async () => {
     // setInProgress(false);
@@ -31,19 +31,19 @@ const TransferProgress = () => {
       transfer = await createTransfer({
         ...transferData,
         inProgress: false,
-        status: 'Success',
+        status: "Success",
         transferInitiated: true,
         initiationDateTime: dateTime,
         user: user.$id,
       });
-      setStatus('Success');
+      setStatus("Success");
       setCompletedTransfer({
         transfer,
       });
       // router.push('/extrascreens/transferprogress');
     } catch (error) {
-      Alert.alert('Error', 'Funds could not be sent.');
-      setStatus('Failed');
+      Alert.alert("Error", "Funds could not be sent.");
+      setStatus("Failed");
       console.log(error);
     } finally {
       setInProgress(false);
@@ -63,29 +63,30 @@ const TransferProgress = () => {
     setInProgress(true);
     const timer = setTimeout(() => {
       sendMoney();
-      router.push('/extrascreens/transferdetails');
+      router.replace("/extrascreens/transferdetails");
+      // router.push("/transfers");
     }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <SafeAreaView className='bg-primary-50 h-full'>
+    <SafeAreaView className="bg-primary-50 h-full">
       <ScrollView contentContainerStyle={styles.container}>
-        <Text className='text-primary text-lg font-psemibold'>
+        <Text className="text-primary text-lg font-psemibold">
           Transfer Progress
         </Text>
-        <TransferProgressTabs title='Transfer Initiated' date={dateTime} />
+        <TransferProgressTabs title="Transfer Initiated" date={dateTime} />
         {transferInitiated && inProgress && (
-          <TransferProgressTabs title='Processing' loading={inProgress} />
+          <TransferProgressTabs title="Processing" loading={inProgress} />
         )}
-        {status === 'Failed' && (
-          <TransferProgressTabs title='Processing Failed' />
+        {status === "Failed" && (
+          <TransferProgressTabs title="Processing Failed" />
         )}
-        {status === 'Success' && <TransferProgressTabs title='Processed' />}
-        {status === 'Success' && (
+        {status === "Success" && <TransferProgressTabs title="Processed" />}
+        {status === "Success" && (
           <TransferProgressTabs
-            title='Completed'
+            title="Completed"
             subtitle={`${transfer.recipient.firstName} now has ${transfer.transferCurrencyCode} ${transfer.receivableAmount}`}
             date={formatDate(transfer.$createdAt)}
           />
